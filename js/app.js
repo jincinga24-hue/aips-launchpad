@@ -298,4 +298,9 @@ async function init() {
   renderStats();
 }
 
-document.addEventListener('DOMContentLoaded', init);
+// Modules are deferred — DOM is already ready when this runs
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
