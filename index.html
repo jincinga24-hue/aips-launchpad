@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIPS Launchpad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --border: #d2d2d7;
+      --text: #1d1d1f;
+      --muted: #86868b;
+      --green: #2DB757;
+      --green-light: #e8f7ed;
+      --radius: 12px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    /* ─── NAV ─────────────────────────────────────────────────────── */
+    nav {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-logo {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--text);
+      text-decoration: none;
+      padding: 16px 0;
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-logo .chevron {
+      color: var(--green);
+      font-style: normal;
+    }
+
+    .nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex: 1;
+    }
+
+    .nav-tab {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      transition: color 0.15s, background 0.15s;
+      white-space: nowrap;
+    }
+
+    .nav-tab:hover { color: var(--text); background: rgba(0,0,0,0.04); }
+    .nav-tab.active { color: var(--text); background: rgba(0,0,0,0.06); font-weight: 600; }
+
+    #admin-tab-btn { display: none; }
+
+    /* ─── MAIN ─────────────────────────────────────────────────────── */
+    main {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ─── HOME ─────────────────────────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 72px 24px 64px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 20px;
+    }
+
+    .hero-eyebrow .chevron-mark {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 64px);
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span { color: var(--green); }
+
+    .hero p {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto 36px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 28px;
+      border-radius: 980px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn-primary:hover { opacity: 0.88; }
+
+    .btn-secondary {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover { background: var(--bg); }
+
+    .hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    /* Stats row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-top: 64px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .stat-card .stat-num {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .stat-card .stat-num span { color: var(--green); }
+
+    .stat-card .stat-label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* How it works */
+    .section-title {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .section-sub {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 32px;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .step-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--green-light);
+      color: var(--green);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .step-card h4 { font-size: 16px; margin-bottom: 6px; }
+    .step-card p { font-size: 13px; color: var(--muted); }
+
+    /* ─── SUBMIT ─────────────────────────────────────────────────── */
+    .form-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+      box-shadow: var(--shadow);
+      max-width: 680px;
+    }
+
+    .form-card h2 { font-size: 28px; margin-bottom: 6px; }
+    .form-card > p { color: var(--muted); margin-bottom: 32px; }
+
+    /* Track toggle */
+    .track-toggle {
+      display: inline-flex;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 3px;
+      margin-bottom: 32px;
+    }
+
+    .track-btn {
+      padding: 8px 24px;
+      border-radius: 6px;
+      border: none;
+      background: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .track-btn.active {
+      background: var(--card);
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* Form fields */
+    .form-group { margin-bottom: 24px; }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .form-group label span { color: var(--green); }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--card);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      appearance: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(45, 183, 87, 0.12);
+    }
+
+    .form-group input.error,
+    .form-group textarea.error,
+    .form-group select.error {
+      border-color: #ff3b30;
+      box-shadow: 0 0 0 3px rgba(255,59,48,0.1);
+    }
+
+    .form-group textarea { resize: vertical; min-height: 88px; }
+
+    .field-hint { font-size: 12px; color: var(--muted); margin-top: 5px; }
+    .field-error { font-size: 12px; color: #ff3b30; margin-top: 5px; display: none; }
+    .field-error.visible { display: block; }
+
+    /* Roles checkbox grid */
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 8px;
+    }
+
+    .role-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 14px;
+      user-select: none;
+      background: var(--card);
+    }
+
+    .role-chip input[type="checkbox"] { display: none; }
+    .role-chip.selected { border-color: var(--green); background: var(--green-light); color: var(--green); font-weight: 600; }
+
+    .mvp-only-fields { display: none; }
+    .mvp-only-fields.visible { display: block; }
+
+    .form-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 28px 0;
+    }
+
+    .form-actions { display: flex; justify-content: flex-end; margin-top: 32px; }
+
+    /* Alert / feedback */
+    .alert {
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+      margin-bottom: 24px;
+      display: none;
+    }
+
+    .alert.visible { display: block; }
+    .alert-success { background: var(--green-light); color: #1a6b38; border: 1px solid #a3d9b5; }
+    .alert-error { background: #fff2f1; color: #c0392b; border: 1px solid #ffbcba; }
+
+    /* ─── BOARD ─────────────────────────────────────────────────── */
+    .board-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .filter-btn {
+      padding: 7px 16px;
+      border: 1px solid var(--border);
+      border-radius: 980px;
+      font-size: 13px;
+      font-weight: 500;
+      background: var(--card);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-btn:hover { color: var(--text); border-color: #a0a0a5; }
+    .filter-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .project-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+
+    .stage-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .stage-tag.idea { background: #e8f4fd; color: #1a78c2; }
+    .stage-tag.mvp { background: var(--green-light); color: var(--green); }
+
+    .score-badge {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .card-title { font-size: 18px; margin-bottom: 6px; }
+    .card-pitch { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.4; }
+
+    .roles-needed { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .role-tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--muted);
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 72px 24px;
+      color: var(--muted);
+    }
+
+    .empty-state .empty-icon { font-size: 48px; margin-bottom: 16px; }
+    .empty-state h3 { font-size: 20px; color: var(--text); margin-bottom: 8px; }
+    .empty-state p { font-size: 14px; max-width: 360px; margin: 0 auto; }
+
+    /* ─── MY SUBMISSIONS ─────────────────────────────────────────── */
+    .lookup-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--shadow);
+      max-width: 540px;
+      margin-bottom: 32px;
+    }
+
+    .lookup-card h2 { font-size: 22px; margin-bottom: 6px; }
+    .lookup-card p { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
+
+    .lookup-row { display: flex; gap: 10px; }
+    .lookup-row input { flex: 1; }
+
+    .submission-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+    }
+
+    .submission-item-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+
+    .status-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 980px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .status-badge.pending { background: #fff8e6; color: #b07700; }
+    .status-badge.approved { background: var(--green-light); color: var(--green); }
+    .status-badge.revision { background: #fff2f1; color: #c0392b; }
+
+    .submission-meta { font-size: 12px; color: var(--muted); }
+
+    /* ─── ADMIN ─────────────────────────────────────────────────── */
+    .admin-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .admin-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 4px;
+      background: #fff8e6;
+      color: #b07700;
+      border: 1px solid #f5d980;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .admin-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+
+    /* ─── PAGE HEADINGS ──────────────────────────────────────────── */
+    .page-head { margin-bottom: 32px; }
+    .page-head h1 { font-size: 32px; margin-bottom: 4px; }
+    .page-head p { color: var(--muted); }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      main { padding: 24px 16px 64px; }
+      .form-card { padding: 24px 20px; }
+      .hero { padding: 48px 16px 40px; }
+      .nav-inner { overflow-x: auto; gap: 0; }
+      .nav-tab { padding: 8px 10px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ──────────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo" onclick="showTab('home'); return false;">
+      <i class="chevron">›</i> AIPS Launchpad
+    </a>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showTab('home')" id="tab-home">Home</button>
+      <button class="nav-tab" onclick="showTab('submit')" id="tab-submit">Submit</button>
+      <button class="nav-tab" onclick="showTab('board')" id="tab-board">Board</button>
+      <button class="nav-tab" onclick="showTab('my-submissions')" id="tab-my-submissions">My Submissions</button>
+      <button class="nav-tab" onclick="showTab('admin')" id="admin-tab-btn">Admin</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── MAIN ─────────────────────────────────────────────────────────── -->
+<main>
+
+  <!-- HOME PAGE -->
+  <div id="page-home" class="page active">
+    <div class="hero">
+      <div class="hero-eyebrow">
+        <span class="chevron-mark">›</span> AI Prototyping Studio · Unimelb
+      </div>
+      <h1>Launch Your <span>Startup Idea</span><br>Find Your Team</h1>
+      <p>Submit your idea or MVP for committee review. Get scored, get published, find collaborators.</p>
+      <div class="hero-ctas">
+        <button class="btn btn-primary" onclick="showTab('submit')">Submit an Idea</button>
+        <button class="btn btn-secondary" onclick="showTab('board')">Browse Projects</button>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-projects">0</div>
+        <div class="stat-label">Projects on board</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-contributors">0</div>
+        <div class="stat-label">Contributors</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-pending">0</div>
+        <div class="stat-label">Pending review</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 64px;">
+      <h2 class="section-title">How it works</h2>
+      <p class="section-sub">Three steps from idea to team</p>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h4>Submit</h4>
+          <p>Fill in your idea or MVP details. Tell us the problem, solution, and who you need on the team.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h4>Get Reviewed</h4>
+          <p>Our committee scores submissions on 5 criteria. Score 60+ and you're on the public board.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h4>Build Your Team</h4>
+          <p>Interested students create player cards — showing their skills and role — and join your project.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBMIT PAGE -->
+  <div id="page-submit" class="page">
+    <div class="form-card">
+      <h2>Submit a Project</h2>
+      <p>Share your startup idea or MVP with the AIPS community for committee review.</p>
+
+      <div id="submit-alert-success" class="alert alert-success">
+        Your submission has been received! Track your status in <strong>My Submissions</strong> using your email.
+      </div>
+      <div id="submit-alert-error" class="alert alert-error"></div>
+
+      <div class="track-toggle">
+        <button class="track-btn active" id="btn-track-idea" onclick="setTrack('idea')">💡 Idea</button>
+        <button class="track-btn" id="btn-track-mvp" onclick="setTrack('mvp')">🚀 MVP</button>
+      </div>
+
+      <form id="submit-form" novalidate>
+        <div class="form-group">
+          <label>Project Name <span>*</span></label>
+          <input type="text" id="f-name" placeholder="e.g. StudyMate AI" />
+          <div class="field-error" id="err-name">Please enter a project name.</div>
+        </div>
+
+        <div class="form-group">
+          <label>Problem Statement <span>*</span></label>
+          <textarea id="f-problem" placeholder="What problem are you solving? Be specific about who experiences this and how often."></textarea>
+          <div class="field-hint">Aim for 2–4 sentences. Specificity wins.</div>
+          <div class="field-error" id="err-problem">Please describe the problem.</div>
+        </div>
+
+        <div class="form-group">
+          <label>Your Solution <span>*</span></label>
+          <textarea id="f-solution" placeholder="How does your project solve this problem?"></textarea>
+          <div class="field-error" id="err-solution">Please describe your solution.</div>
+        </div>
+
+        <div class="form-group">
+          <label>Target User <span>*</span></label>
+          <input type="text" id="f-target" placeholder="e.g. University students preparing for exams" />
+          <div class="field-hint">Who specifically? The more precise, the better.</div>
+          <div class="field-error" id="err-target">Please define your target user.</div>
+        </div>
+
+        <div class="form-group">
+          <label>MVP Scope <span>*</span></label>
+          <textarea id="f-scope" placeholder="What is the smallest version you could ship in one semester?"></textarea>
+          <div class="field-hint">Think: one core feature, working end-to-end.</div>
+          <div class="field-error" id="err-scope">Please describe your MVP scope.</div>
+        </div>
+
+        <div class="form-group">
+          <label>Roles Needed <span>*</span></label>
+          <div class="roles-grid" id="roles-grid">
+            <label class="role-chip" onclick="toggleRole(this)">
+              <input type="checkbox" value="Build" /> Build
+            </label>
+            <label class="role-chip" onclick="toggleRole(this)">
+              <input type="checkbox" value="Design" /> Design
+            </label>
+            <label class="role-chip" onclick="toggleRole(this)">
+              <input type="checkbox" value="Research" /> Research
+            </label>
+            <label class="role-chip" onclick="toggleRole(this)">
+              <input type="checkbox" value="Grow" /> Grow
+            </label>
+            <label class="role-chip" onclick="toggleRole(this)">
+              <input type="checkbox" value="Advise" /> Advise
+            </label>
+          </div>
+          <div class="field-error" id="err-roles">Please select at least one role.</div>
+        </div>
+
+        <div class="form-group">
+          <label>Contact Email <span>*</span></label>
+          <input type="email" id="f-email" placeholder="your@student.unimelb.edu.au" />
+          <div class="field-hint">Used for status updates. Not shown publicly.</div>
+          <div class="field-error" id="err-email">Please enter a valid email address.</div>
+        </div>
+
+        <!-- MVP-only fields -->
+        <div class="mvp-only-fields" id="mvp-fields">
+          <hr class="form-divider" />
+          <div class="form-group">
+            <label>Demo Link</label>
+            <input type="url" id="f-demo" placeholder="https://your-demo.vercel.app" />
+            <div class="field-hint">Live link to your prototype or deployed app.</div>
+          </div>
+          <div class="form-group">
+            <label>Video Link</label>
+            <input type="url" id="f-video" placeholder="https://youtube.com/..." />
+            <div class="field-hint">2–3 min walkthrough of your MVP (YouTube or Loom).</div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Submit for Review →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- BOARD PAGE -->
+  <div id="page-board" class="page">
+    <div class="page-head">
+      <h1>Project Board</h1>
+      <p>Approved projects looking for collaborators</p>
+    </div>
+
+    <div class="board-header">
+      <div class="filter-bar" id="stage-filters">
+        <button class="filter-btn active" onclick="setStageFilter('all', this)">All</button>
+        <button class="filter-btn" onclick="setStageFilter('idea', this)">Idea</button>
+        <button class="filter-btn" onclick="setStageFilter('mvp', this)">MVP</button>
+      </div>
+      <div class="filter-bar" id="role-filters">
+        <button class="filter-btn active" onclick="setRoleFilter('all', this)">All Roles</button>
+        <button class="filter-btn" onclick="setRoleFilter('Build', this)">Build</button>
+        <button class="filter-btn" onclick="setRoleFilter('Design', this)">Design</button>
+        <button class="filter-btn" onclick="setRoleFilter('Research', this)">Research</button>
+        <button class="filter-btn" onclick="setRoleFilter('Grow', this)">Grow</button>
+        <button class="filter-btn" onclick="setRoleFilter('Advise', this)">Advise</button>
+      </div>
+    </div>
+
+    <div id="board-grid" class="projects-grid"></div>
+    <div id="board-empty" class="empty-state" style="display:none;">
+      <div class="empty-icon">🚀</div>
+      <h3>No projects yet</h3>
+      <p>Be the first! Submit your idea and get it reviewed by the AIPS committee.</p>
+    </div>
+  </div>
+
+  <!-- MY SUBMISSIONS PAGE -->
+  <div id="page-my-submissions" class="page">
+    <div class="page-head">
+      <h1>My Submissions</h1>
+      <p>Check the status of your submitted projects</p>
+    </div>
+
+    <div class="lookup-card">
+      <h2>Find your submissions</h2>
+      <p>Enter the email address you used when submitting your project.</p>
+      <div class="lookup-row">
+        <input type="email" id="lookup-email" placeholder="your@student.unimelb.edu.au" />
+        <button class="btn btn-primary" onclick="lookupSubmissions()">Search</button>
+      </div>
+    </div>
+
+    <div id="my-submissions-list"></div>
+    <div id="my-submissions-empty" class="empty-state" style="display:none;">
+      <div class="empty-icon">📭</div>
+      <h3>No submissions found</h3>
+      <p>No projects were found for that email address. Double-check and try again.</p>
+    </div>
+  </div>
+
+  <!-- ADMIN PAGE -->
+  <div id="page-admin" class="page">
+    <div class="admin-header">
+      <h1 style="font-size: 28px;">Admin Panel</h1>
+      <span class="admin-badge">AIPS Committee</span>
+    </div>
+
+    <div id="admin-pending-list"></div>
+    <div id="admin-empty" class="empty-state" style="display:none;">
+      <div class="empty-icon">✅</div>
+      <h3>Queue is clear</h3>
+      <p>No pending submissions to review right now.</p>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ─── STATE ──────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'aips_projects';
+let currentTrack = 'idea';
+let stageFilter = 'all';
+let roleFilter = 'all';
+
+function getProjects() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function saveProjects(projects) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+}
+
+function generateId() {
+  return 'proj_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+}
+
+// ─── TAB NAVIGATION ─────────────────────────────────────────────────────────
+function showTab(tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+  const page = document.getElementById('page-' + tab);
+  const btn = document.getElementById('tab-' + tab);
+
+  if (page) page.classList.add('active');
+  if (btn) btn.classList.add('active');
+
+  if (tab === 'board') renderBoard();
+  if (tab === 'home') renderStats();
+  if (tab === 'admin') renderAdmin();
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── TRACK TOGGLE ───────────────────────────────────────────────────────────
+function setTrack(track) {
+  currentTrack = track;
+  document.getElementById('btn-track-idea').classList.toggle('active', track === 'idea');
+  document.getElementById('btn-track-mvp').classList.toggle('active', track === 'mvp');
+
+  const mvpFields = document.getElementById('mvp-fields');
+  mvpFields.classList.toggle('visible', track === 'mvp');
+}
+
+// ─── ROLE CHIPS ─────────────────────────────────────────────────────────────
+function toggleRole(chip) {
+  const cb = chip.querySelector('input');
+  // toggle happens after click, so check new value
+  setTimeout(() => {
+    chip.classList.toggle('selected', cb.checked);
+  }, 0);
+}
+
+function getSelectedRoles() {
+  return Array.from(document.querySelectorAll('#roles-grid input:checked')).map(i => i.value);
+}
+
+// ─── FORM VALIDATION ────────────────────────────────────────────────────────
+function validateField(id, errorId, condition, msg) {
+  const el = document.getElementById(id);
+  const err = document.getElementById(errorId);
+  if (!condition) {
+    el.classList.add('error');
+    if (err) { err.textContent = msg || ''; err.classList.add('visible'); }
+    return false;
+  }
+  el.classList.remove('error');
+  if (err) err.classList.remove('visible');
+  return true;
+}
+
+function validateForm() {
+  const name = document.getElementById('f-name').value.trim();
+  const problem = document.getElementById('f-problem').value.trim();
+  const solution = document.getElementById('f-solution').value.trim();
+  const target = document.getElementById('f-target').value.trim();
+  const scope = document.getElementById('f-scope').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const roles = getSelectedRoles();
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const results = [
+    validateField('f-name', 'err-name', name.length > 0, 'Please enter a project name.'),
+    validateField('f-problem', 'err-problem', problem.length >= 20, 'Please describe the problem (at least 20 characters).'),
+    validateField('f-solution', 'err-solution', solution.length >= 20, 'Please describe your solution (at least 20 characters).'),
+    validateField('f-target', 'err-target', target.length > 0, 'Please define your target user.'),
+    validateField('f-scope', 'err-scope', scope.length >= 10, 'Please describe your MVP scope (at least 10 characters).'),
+    validateField('f-email', 'err-email', emailRegex.test(email), 'Please enter a valid email address.'),
+  ];
+
+  // Roles validation
+  const rolesErr = document.getElementById('err-roles');
+  if (roles.length === 0) {
+    if (rolesErr) rolesErr.classList.add('visible');
+    results.push(false);
+  } else {
+    if (rolesErr) rolesErr.classList.remove('visible');
+    results.push(true);
+  }
+
+  return results.every(Boolean);
+}
+
+// ─── FORM SUBMIT ────────────────────────────────────────────────────────────
+document.getElementById('submit-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const successAlert = document.getElementById('submit-alert-success');
+  const errorAlert = document.getElementById('submit-alert-error');
+  successAlert.classList.remove('visible');
+  errorAlert.classList.remove('visible');
+
+  if (!validateForm()) {
+    errorAlert.textContent = 'Please fix the errors above before submitting.';
+    errorAlert.classList.add('visible');
+    errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    return;
+  }
+
+  const project = {
+    id: generateId(),
+    track: currentTrack,
+    name: document.getElementById('f-name').value.trim(),
+    problem: document.getElementById('f-problem').value.trim(),
+    solution: document.getElementById('f-solution').value.trim(),
+    targetUser: document.getElementById('f-target').value.trim(),
+    mvpScope: document.getElementById('f-scope').value.trim(),
+    rolesNeeded: getSelectedRoles(),
+    contactEmail: document.getElementById('f-email').value.trim(),
+    demoLink: document.getElementById('f-demo').value.trim() || null,
+    videoLink: document.getElementById('f-video').value.trim() || null,
+    status: 'pending',
+    scores: null,
+    totalScore: null,
+    feedback: null,
+    submittedAt: new Date().toISOString(),
+    playerCards: [],
+  };
+
+  const existing = getProjects();
+  saveProjects([...existing, project]);
+
+  // Reset form
+  document.getElementById('submit-form').reset();
+  document.querySelectorAll('.role-chip').forEach(c => c.classList.remove('selected'));
+  setTrack('idea');
+
+  successAlert.classList.add('visible');
+  successAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+
+// ─── BOARD ──────────────────────────────────────────────────────────────────
+function setStageFilter(val, btn) {
+  stageFilter = val;
+  document.querySelectorAll('#stage-filters .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderBoard();
+}
+
+function setRoleFilter(val, btn) {
+  roleFilter = val;
+  document.querySelectorAll('#role-filters .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderBoard();
+}
+
+function renderBoard() {
+  const grid = document.getElementById('board-grid');
+  const empty = document.getElementById('board-empty');
+  const projects = getProjects().filter(p => p.status === 'approved');
+
+  const filtered = projects.filter(p => {
+    const stageOk = stageFilter === 'all' || p.track === stageFilter;
+    const roleOk = roleFilter === 'all' || (p.rolesNeeded || []).includes(roleFilter);
+    return stageOk && roleOk;
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+
+  empty.style.display = 'none';
+  grid.innerHTML = filtered.map(p => `
+    <div class="project-card" onclick="openProjectDetail('${p.id}')">
+      <div class="card-header">
+        <span class="stage-tag ${p.track}">${p.track === 'mvp' ? 'MVP' : 'Idea'}</span>
+        ${p.totalScore !== null ? `<span class="score-badge">${p.totalScore}/100</span>` : ''}
+      </div>
+      <div class="card-title">${escapeHtml(p.name)}</div>
+      <div class="card-pitch">${escapeHtml(p.problem.slice(0, 120))}${p.problem.length > 120 ? '…' : ''}</div>
+      <div class="roles-needed">
+        ${(p.rolesNeeded || []).map(r => `<span class="role-tag">${r}</span>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function openProjectDetail(id) {
+  // Placeholder — will be implemented in a later cycle
+  alert('Project detail view coming soon!');
+}
+
+// ─── STATS ──────────────────────────────────────────────────────────────────
+function renderStats() {
+  const projects = getProjects();
+  const approved = projects.filter(p => p.status === 'approved');
+  const pending = projects.filter(p => p.status === 'pending');
+  const contributors = projects.reduce((sum, p) => sum + (p.playerCards || []).length, 0);
+
+  document.getElementById('stat-projects').textContent = approved.length;
+  document.getElementById('stat-contributors').textContent = contributors;
+  document.getElementById('stat-pending').textContent = pending.length;
+}
+
+// ─── MY SUBMISSIONS ─────────────────────────────────────────────────────────
+function lookupSubmissions() {
+  const email = document.getElementById('lookup-email').value.trim().toLowerCase();
+  const list = document.getElementById('my-submissions-list');
+  const empty = document.getElementById('my-submissions-empty');
+
+  if (!email) {
+    list.innerHTML = '';
+    empty.style.display = 'none';
+    return;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    list.innerHTML = '<p style="color:#ff3b30;font-size:14px;">Please enter a valid email.</p>';
+    empty.style.display = 'none';
+    return;
+  }
+
+  const matches = getProjects().filter(p => p.contactEmail.toLowerCase() === email);
+
+  if (matches.length === 0) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+
+  empty.style.display = 'none';
+  list.innerHTML = matches.map(p => {
+    const date = new Date(p.submittedAt).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+    return `
+      <div class="submission-item">
+        <div class="submission-item-header">
+          <strong>${escapeHtml(p.name)}</strong>
+          <span class="status-badge ${p.status}">${p.status}</span>
+        </div>
+        <div class="submission-meta">Track: ${p.track === 'mvp' ? 'MVP' : 'Idea'} · Submitted ${date}${p.totalScore !== null ? ` · Score: ${p.totalScore}/100` : ''}</div>
+        ${p.feedback ? `<div style="margin-top:10px;font-size:13px;color:var(--muted);background:var(--bg);padding:10px 12px;border-radius:8px;">${escapeHtml(p.feedback)}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+// ─── ADMIN ──────────────────────────────────────────────────────────────────
+function renderAdmin() {
+  const list = document.getElementById('admin-pending-list');
+  const empty = document.getElementById('admin-empty');
+  const pending = getProjects().filter(p => p.status === 'pending');
+
+  if (pending.length === 0) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+
+  empty.style.display = 'none';
+  list.innerHTML = pending.map(p => {
+    const date = new Date(p.submittedAt).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+    return `
+      <div class="admin-item">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <strong style="font-size:16px;">${escapeHtml(p.name)}</strong>
+          <span class="stage-tag ${p.track}" style="margin-left:8px;">${p.track === 'mvp' ? 'MVP' : 'Idea'}</span>
+        </div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:12px;">
+          ${escapeHtml(p.contactEmail)} · Submitted ${date}
+        </div>
+        <div style="font-size:14px;margin-bottom:6px;"><strong>Problem:</strong> ${escapeHtml(p.problem)}</div>
+        <div style="font-size:14px;margin-bottom:12px;"><strong>Solution:</strong> ${escapeHtml(p.solution)}</div>
+        <div style="font-size:12px;color:var(--muted);">Admin scoring coming in a later cycle.</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ─── ADMIN ACCESS ───────────────────────────────────────────────────────────
+function checkAdminAccess() {
+  if (window.location.hash === '#admin=aips2026') {
+    document.getElementById('admin-tab-btn').style.display = 'inline-block';
+  }
+}
+
+window.addEventListener('hashchange', checkAdminAccess);
+
+// ─── UTILS ──────────────────────────────────────────────────────────────────
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+checkAdminAccess();
+renderStats();
+</script>
+</body>
+</html>
