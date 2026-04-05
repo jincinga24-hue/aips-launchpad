@@ -561,6 +561,314 @@
       margin-bottom: 16px;
     }
 
+    /* ─── SCORING SLIDERS ────────────────────────────────────────── */
+    .scoring-section {
+      margin-top: 20px;
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+    }
+
+    .scoring-section h4 {
+      font-size: 15px;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .criterion-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .criterion-label {
+      font-size: 13px;
+      color: var(--text);
+      width: 160px;
+      flex-shrink: 0;
+    }
+
+    .criterion-slider {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--border);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .criterion-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--green);
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      transition: transform 0.1s;
+    }
+
+    .criterion-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+    .criterion-value {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text);
+      width: 32px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .score-total-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: var(--bg);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .score-total-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .score-total-num {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      transition: color 0.2s;
+    }
+
+    .score-total-num.pass { color: var(--green); }
+    .score-total-num.fail { color: #ff3b30; }
+
+    .feedback-section {
+      margin-top: 16px;
+    }
+
+    .feedback-section textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--card);
+      outline: none;
+      resize: vertical;
+      min-height: 80px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .feedback-section textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(45,183,87,0.12);
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-approve {
+      background: var(--green);
+      color: #fff;
+      padding: 10px 24px;
+      border-radius: 980px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .btn-approve:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .btn-approve:not(:disabled):hover { opacity: 0.85; }
+
+    .btn-revise {
+      background: var(--card);
+      color: #c0392b;
+      padding: 10px 24px;
+      border-radius: 980px;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid #ffbcba;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-revise:hover { background: #fff2f1; }
+
+    /* ─── PROJECT DETAIL MODAL ───────────────────────────────────── */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      background: var(--card);
+      border-radius: 16px;
+      max-width: 680px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      padding: 36px;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      transition: background 0.15s;
+    }
+
+    .modal-close:hover { background: var(--border); color: var(--text); }
+
+    .modal-track-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+
+    .modal-score-bar {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: var(--green-light);
+      border-radius: 980px;
+      margin-bottom: 24px;
+    }
+
+    .modal-score-bar span {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--green);
+    }
+
+    .modal-section {
+      margin-bottom: 20px;
+    }
+
+    .modal-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .modal-section-text {
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .modal-criteria-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .modal-criterion-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .modal-criterion-card .crit-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .modal-criterion-card .crit-score {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .modal-video-embed {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border-radius: 10px;
+      border: none;
+      margin-top: 8px;
+    }
+
+    .modal-demo-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--green);
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      padding: 8px 14px;
+      border: 1px solid var(--green);
+      border-radius: 8px;
+      margin-top: 8px;
+      transition: background 0.15s;
+    }
+
+    .modal-demo-link:hover { background: var(--green-light); }
+
+    .modal-footer {
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+      margin-top: 24px;
+    }
+
     /* ─── PAGE HEADINGS ──────────────────────────────────────────── */
     .page-head { margin-bottom: 32px; }
     .page-head h1 { font-size: 32px; margin-bottom: 4px; }
@@ -822,6 +1130,14 @@
 
 </main>
 
+<!-- ─── PROJECT DETAIL MODAL ─────────────────────────────────────────────── -->
+<div id="project-modal" class="modal-backdrop" onclick="closeModalOnBackdrop(event)">
+  <div class="modal" id="project-modal-inner">
+    <button class="modal-close" onclick="closeProjectModal()" aria-label="Close">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
 <script>
 // ─── STATE ──────────────────────────────────────────────────────────────────
 const STORAGE_KEY = 'aips_projects';
@@ -1030,9 +1346,112 @@ function renderBoard() {
 }
 
 function openProjectDetail(id) {
-  // Placeholder — will be implemented in a later cycle
-  alert('Project detail view coming soon!');
+  const project = getProjects().find(p => p.id === id);
+  if (!project) return;
+
+  const criteriaLabels = {
+    problemClarity: 'Problem Clarity',
+    solutionFeasibility: 'Solution Feasibility',
+    targetUser: 'Target User',
+    mvpScope: 'MVP Scope',
+    teamNeeds: 'Team Needs',
+  };
+
+  const scoreBreakdown = project.scores
+    ? `<div class="modal-section">
+        <div class="modal-section-label">Score Breakdown</div>
+        <div class="modal-criteria-grid">
+          ${Object.entries(project.scores).map(([k, v]) => `
+            <div class="modal-criterion-card">
+              <div class="crit-label">${criteriaLabels[k] || k}</div>
+              <div class="crit-score">${v}<span style="font-size:13px;font-weight:400;color:var(--muted)">/20</span></div>
+            </div>
+          `).join('')}
+        </div>
+       </div>`
+    : '';
+
+  let videoEmbed = '';
+  if (project.videoLink) {
+    const youtubeMatch = project.videoLink.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    const loomMatch = project.videoLink.match(/loom\.com\/share\/([a-zA-Z0-9]+)/);
+    if (youtubeMatch) {
+      videoEmbed = `<iframe class="modal-video-embed" src="https://www.youtube.com/embed/${youtubeMatch[1]}" allowfullscreen></iframe>`;
+    } else if (loomMatch) {
+      videoEmbed = `<iframe class="modal-video-embed" src="https://www.loom.com/embed/${loomMatch[1]}" allowfullscreen></iframe>`;
+    } else {
+      videoEmbed = `<a href="${escapeHtml(project.videoLink)}" target="_blank" rel="noopener" class="modal-demo-link">▶ Watch Video</a>`;
+    }
+  }
+
+  const content = `
+    <div class="modal-track-tag">
+      <span class="stage-tag ${project.track}">${project.track === 'mvp' ? 'MVP' : 'Idea'}</span>
+    </div>
+    <div class="modal-title">${escapeHtml(project.name)}</div>
+    ${project.totalScore !== null ? `
+      <div class="modal-score-bar">
+        <span>Score: ${project.totalScore}/100</span>
+      </div>
+    ` : ''}
+
+    <div class="modal-section">
+      <div class="modal-section-label">Problem</div>
+      <div class="modal-section-text">${escapeHtml(project.problem)}</div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-label">Solution</div>
+      <div class="modal-section-text">${escapeHtml(project.solution)}</div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-label">Target User</div>
+      <div class="modal-section-text">${escapeHtml(project.targetUser)}</div>
+    </div>
+
+    <div class="modal-section">
+      <div class="modal-section-label">MVP Scope</div>
+      <div class="modal-section-text">${escapeHtml(project.mvpScope)}</div>
+    </div>
+
+    ${scoreBreakdown}
+
+    ${project.demoLink || project.videoLink ? `
+      <div class="modal-section">
+        <div class="modal-section-label">Links</div>
+        ${project.demoLink ? `<a href="${escapeHtml(project.demoLink)}" target="_blank" rel="noopener" class="modal-demo-link">↗ View Demo</a>` : ''}
+        ${videoEmbed}
+      </div>
+    ` : ''}
+
+    <div class="modal-footer">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <div class="roles-needed">
+          ${(project.rolesNeeded || []).map(r => `<span class="role-tag">${r}</span>`).join('')}
+        </div>
+        <button class="btn btn-primary" onclick="alert('Player card feature coming soon!')">Join This Team</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('modal-content').innerHTML = content;
+  document.getElementById('project-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
+
+function closeProjectModal() {
+  document.getElementById('project-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModalOnBackdrop(e) {
+  if (e.target === document.getElementById('project-modal')) closeProjectModal();
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeProjectModal();
+});
 
 // ─── STATS ──────────────────────────────────────────────────────────────────
 function renderStats() {
@@ -1090,6 +1509,14 @@ function lookupSubmissions() {
 }
 
 // ─── ADMIN ──────────────────────────────────────────────────────────────────
+const CRITERIA = [
+  { key: 'problemClarity', label: 'Problem Clarity' },
+  { key: 'solutionFeasibility', label: 'Solution Feasibility' },
+  { key: 'targetUser', label: 'Target User' },
+  { key: 'mvpScope', label: 'MVP Scope' },
+  { key: 'teamNeeds', label: 'Team Needs' },
+];
+
 function renderAdmin() {
   const list = document.getElementById('admin-pending-list');
   const empty = document.getElementById('admin-empty');
@@ -1104,8 +1531,18 @@ function renderAdmin() {
   empty.style.display = 'none';
   list.innerHTML = pending.map(p => {
     const date = new Date(p.submittedAt).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+    const sliders = CRITERIA.map(c => `
+      <div class="criterion-row">
+        <span class="criterion-label">${c.label}</span>
+        <input type="range" min="0" max="20" value="10" class="criterion-slider"
+          id="slider-${p.id}-${c.key}"
+          oninput="updateSlider('${p.id}', '${c.key}', this.value)" />
+        <span class="criterion-value" id="val-${p.id}-${c.key}">10</span>
+      </div>
+    `).join('');
+
     return `
-      <div class="admin-item">
+      <div class="admin-item" id="admin-item-${p.id}">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
           <strong style="font-size:16px;">${escapeHtml(p.name)}</strong>
           <span class="stage-tag ${p.track}" style="margin-left:8px;">${p.track === 'mvp' ? 'MVP' : 'Idea'}</span>
@@ -1115,10 +1552,86 @@ function renderAdmin() {
         </div>
         <div style="font-size:14px;margin-bottom:6px;"><strong>Problem:</strong> ${escapeHtml(p.problem)}</div>
         <div style="font-size:14px;margin-bottom:12px;"><strong>Solution:</strong> ${escapeHtml(p.solution)}</div>
-        <div style="font-size:12px;color:var(--muted);">Admin scoring coming in a later cycle.</div>
+        <div style="font-size:14px;margin-bottom:4px;"><strong>Target User:</strong> ${escapeHtml(p.targetUser)}</div>
+        <div style="font-size:14px;margin-bottom:12px;"><strong>MVP Scope:</strong> ${escapeHtml(p.mvpScope)}</div>
+
+        <div class="scoring-section">
+          <h4>Score Each Criterion (0–20)</h4>
+          ${sliders}
+          <div class="score-total-row">
+            <span class="score-total-label">Total Score</span>
+            <span class="score-total-num" id="total-${p.id}">50</span>
+          </div>
+        </div>
+
+        <div class="feedback-section" style="margin-top:16px;">
+          <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">Written Feedback</label>
+          <textarea id="feedback-${p.id}" placeholder="Provide feedback for the team…"></textarea>
+        </div>
+
+        <div class="admin-actions">
+          <button class="btn-approve" id="approve-btn-${p.id}" onclick="adminDecision('${p.id}', 'approved')" disabled>
+            ✓ Approve &amp; Publish
+          </button>
+          <button class="btn-revise" onclick="adminDecision('${p.id}', 'revision')">
+            ↩ Return for Revision
+          </button>
+        </div>
       </div>
     `;
   }).join('');
+
+  // initialise totals
+  pending.forEach(p => updateScoreTotal(p.id));
+}
+
+function updateSlider(projectId, criterionKey, value) {
+  document.getElementById(`val-${projectId}-${criterionKey}`).textContent = value;
+  updateScoreTotal(projectId);
+}
+
+function updateScoreTotal(projectId) {
+  let total = 0;
+  CRITERIA.forEach(c => {
+    const el = document.getElementById(`slider-${projectId}-${c.key}`);
+    if (el) total += parseInt(el.value, 10);
+  });
+  const totalEl = document.getElementById(`total-${projectId}`);
+  const approveBtn = document.getElementById(`approve-btn-${projectId}`);
+  if (totalEl) {
+    totalEl.textContent = total;
+    totalEl.className = 'score-total-num ' + (total >= 60 ? 'pass' : 'fail');
+  }
+  if (approveBtn) approveBtn.disabled = total < 60;
+}
+
+function getScoresForProject(projectId) {
+  const scores = {};
+  CRITERIA.forEach(c => {
+    const el = document.getElementById(`slider-${projectId}-${c.key}`);
+    scores[c.key] = el ? parseInt(el.value, 10) : 10;
+  });
+  return scores;
+}
+
+function adminDecision(projectId, decision) {
+  const feedback = document.getElementById(`feedback-${projectId}`).value.trim();
+  if (decision === 'revision' && !feedback) {
+    alert('Please provide written feedback before returning for revision.');
+    document.getElementById(`feedback-${projectId}`).focus();
+    return;
+  }
+  const scores = getScoresForProject(projectId);
+  const total = Object.values(scores).reduce((a, b) => a + b, 0);
+
+  const projects = getProjects();
+  const updated = projects.map(p => {
+    if (p.id !== projectId) return p;
+    return { ...p, status: decision, scores, totalScore: total, feedback: feedback || null };
+  });
+  saveProjects(updated);
+  renderAdmin();
+  renderStats();
 }
 
 // ─── ADMIN ACCESS ───────────────────────────────────────────────────────────
