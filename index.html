@@ -869,6 +869,205 @@
       margin-top: 24px;
     }
 
+    /* ─── PLAYER CARD SYSTEM ────────────────────────────────────── */
+    :root {
+      --role-build: #007AFF;
+      --role-design: #FF2D55;
+      --role-research: #5856D6;
+      --role-grow: #FF9500;
+      --role-advise: #34C759;
+    }
+
+    /* Player card creator modal */
+    .pc-modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 600;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .pc-modal-backdrop.open { display: flex; }
+
+    .pc-modal {
+      background: var(--card);
+      border-radius: 20px;
+      max-width: 560px;
+      width: 100%;
+      max-height: 92vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.3);
+      padding: 36px;
+      position: relative;
+    }
+
+    .pc-modal h2 { font-size: 24px; margin-bottom: 6px; }
+    .pc-modal > p { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+
+    .pc-close {
+      position: absolute; top: 16px; right: 16px;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--bg); border: 1px solid var(--border);
+      font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); transition: background 0.15s;
+    }
+    .pc-close:hover { background: var(--border); color: var(--text); }
+
+    /* Role selector for player card */
+    .pc-role-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .pc-role-btn {
+      padding: 8px 4px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: var(--card);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+      color: var(--muted);
+    }
+
+    .pc-role-btn.selected-build { border-color: var(--role-build); background: rgba(0,122,255,0.08); color: var(--role-build); }
+    .pc-role-btn.selected-design { border-color: var(--role-design); background: rgba(255,45,85,0.08); color: var(--role-design); }
+    .pc-role-btn.selected-research { border-color: var(--role-research); background: rgba(88,86,214,0.08); color: var(--role-research); }
+    .pc-role-btn.selected-grow { border-color: var(--role-grow); background: rgba(255,149,0,0.08); color: var(--role-grow); }
+    .pc-role-btn.selected-advise { border-color: var(--role-advise); background: rgba(52,199,89,0.08); color: var(--role-advise); }
+
+    /* Ability sliders */
+    .ability-row {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+    }
+    .ability-label { font-size: 12px; font-weight: 600; color: var(--text); width: 140px; flex-shrink: 0; }
+    .ability-slider {
+      flex: 1; -webkit-appearance: none; appearance: none;
+      height: 4px; border-radius: 2px; background: var(--border);
+      outline: none; cursor: pointer;
+    }
+    .ability-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--green); cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+    .ability-val { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 14px; width: 20px; text-align: right; color: var(--text); flex-shrink: 0; }
+
+    /* Radar preview */
+    #pc-radar-preview { display: block; margin: 20px auto 24px; }
+
+    /* Trading cards display */
+    .player-cards-section {
+      margin-top: 28px;
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+    }
+
+    .player-cards-section h3 {
+      font-size: 16px; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .player-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .trading-card {
+      border-radius: 16px;
+      padding: 18px 16px 16px;
+      background: var(--card);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1), 0 1px 4px rgba(0,0,0,0.06);
+      position: relative;
+      overflow: hidden;
+      border: 2px solid transparent;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .trading-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    }
+
+    .trading-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+    }
+
+    .trading-card.role-Build { border-color: rgba(0,122,255,0.2); }
+    .trading-card.role-Build::before { background: var(--role-build); }
+    .trading-card.role-Design { border-color: rgba(255,45,85,0.2); }
+    .trading-card.role-Design::before { background: var(--role-design); }
+    .trading-card.role-Research { border-color: rgba(88,86,214,0.2); }
+    .trading-card.role-Research::before { background: var(--role-research); }
+    .trading-card.role-Grow { border-color: rgba(255,149,0,0.2); }
+    .trading-card.role-Grow::before { background: var(--role-grow); }
+    .trading-card.role-Advise { border-color: rgba(52,199,89,0.2); }
+    .trading-card.role-Advise::before { background: var(--role-advise); }
+
+    .tc-role-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .tc-role-badge.role-Build { background: rgba(0,122,255,0.1); color: var(--role-build); }
+    .tc-role-badge.role-Design { background: rgba(255,45,85,0.1); color: var(--role-design); }
+    .tc-role-badge.role-Research { background: rgba(88,86,214,0.1); color: var(--role-research); }
+    .tc-role-badge.role-Grow { background: rgba(255,149,0,0.1); color: var(--role-grow); }
+    .tc-role-badge.role-Advise { background: rgba(52,199,89,0.1); color: var(--role-advise); }
+
+    .tc-name { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 2px; line-height: 1.2; }
+    .tc-degree { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+    .tc-superpower {
+      font-size: 11px; color: var(--text);
+      font-style: italic;
+      border-left: 2px solid var(--border);
+      padding-left: 8px;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    /* Revision flow */
+    .revision-box {
+      background: #fff8f0;
+      border: 1px solid #ffd5a0;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-top: 12px;
+      font-size: 13px;
+    }
+    .revision-box .rev-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: #b07700; margin-bottom: 6px;
+    }
+    .revision-box .rev-feedback { color: var(--text); line-height: 1.5; margin-bottom: 12px; }
+    .btn-resubmit {
+      background: #FF9500; color: #fff;
+      padding: 8px 20px; border-radius: 980px;
+      font-size: 13px; font-weight: 600;
+      border: none; cursor: pointer; transition: opacity 0.15s;
+    }
+    .btn-resubmit:hover { opacity: 0.85; }
+
     /* ─── PAGE HEADINGS ──────────────────────────────────────────── */
     .page-head { margin-bottom: 32px; }
     .page-head h1 { font-size: 32px; margin-bottom: 4px; }
@@ -1130,6 +1329,82 @@
 
 </main>
 
+<!-- ─── PLAYER CARD CREATOR MODAL ────────────────────────────────────────── -->
+<div id="pc-modal" class="pc-modal-backdrop" onclick="closePcModalOnBackdrop(event)">
+  <div class="pc-modal">
+    <button class="pc-close" onclick="closePcModal()" aria-label="Close">✕</button>
+    <h2>Create Your Player Card</h2>
+    <p>Tell this project what you bring to the table.</p>
+
+    <div id="pc-alert" class="alert" style="display:none;"></div>
+
+    <div class="form-group">
+      <label>Your Name <span style="color:var(--green)">*</span></label>
+      <input type="text" id="pc-name" placeholder="e.g. Alex Chen" />
+    </div>
+
+    <div class="form-group">
+      <label>Degree + Year <span style="color:var(--green)">*</span></label>
+      <input type="text" id="pc-degree" placeholder="e.g. BSc CS, Year 2" />
+    </div>
+
+    <div class="form-group">
+      <label>Your Role <span style="color:var(--green)">*</span></label>
+      <div class="pc-role-grid">
+        <button class="pc-role-btn" data-role="Build" onclick="selectPcRole('Build', this)">Build</button>
+        <button class="pc-role-btn" data-role="Design" onclick="selectPcRole('Design', this)">Design</button>
+        <button class="pc-role-btn" data-role="Research" onclick="selectPcRole('Research', this)">Research</button>
+        <button class="pc-role-btn" data-role="Grow" onclick="selectPcRole('Grow', this)">Grow</button>
+        <button class="pc-role-btn" data-role="Advise" onclick="selectPcRole('Advise', this)">Advise</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Superpower Tagline <span style="color:var(--green)">*</span></label>
+      <input type="text" id="pc-superpower" placeholder="e.g. I turn messy ideas into working prototypes" />
+    </div>
+
+    <div class="form-group">
+      <label>Contact Email <span style="color:var(--green)">*</span></label>
+      <input type="email" id="pc-email" placeholder="your@student.unimelb.edu.au" />
+    </div>
+
+    <div class="form-group">
+      <label>Self-Rate Your Abilities (1–10)</label>
+      <div class="ability-row">
+        <span class="ability-label">Coding</span>
+        <input type="range" class="ability-slider" id="ab-coding" min="1" max="10" value="5" oninput="updatePcRadar()" />
+        <span class="ability-val" id="abv-coding">5</span>
+      </div>
+      <div class="ability-row">
+        <span class="ability-label">Design</span>
+        <input type="range" class="ability-slider" id="ab-design" min="1" max="10" value="5" oninput="updatePcRadar()" />
+        <span class="ability-val" id="abv-design">5</span>
+      </div>
+      <div class="ability-row">
+        <span class="ability-label">Research</span>
+        <input type="range" class="ability-slider" id="ab-research" min="1" max="10" value="5" oninput="updatePcRadar()" />
+        <span class="ability-val" id="abv-research">5</span>
+      </div>
+      <div class="ability-row">
+        <span class="ability-label">Communication</span>
+        <input type="range" class="ability-slider" id="ab-comm" min="1" max="10" value="5" oninput="updatePcRadar()" />
+        <span class="ability-val" id="abv-comm">5</span>
+      </div>
+      <div class="ability-row">
+        <span class="ability-label">Domain Knowledge</span>
+        <input type="range" class="ability-slider" id="ab-domain" min="1" max="10" value="5" oninput="updatePcRadar()" />
+        <span class="ability-val" id="abv-domain">5</span>
+      </div>
+      <svg id="pc-radar-preview" width="200" height="200" viewBox="0 0 200 200"></svg>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="submitPlayerCard()">Submit Card →</button>
+    </div>
+  </div>
+</div>
+
 <!-- ─── PROJECT DETAIL MODAL ─────────────────────────────────────────────── -->
 <div id="project-modal" class="modal-backdrop" onclick="closeModalOnBackdrop(event)">
   <div class="modal" id="project-modal-inner">
@@ -1144,6 +1419,7 @@ const STORAGE_KEY = 'aips_projects';
 let currentTrack = 'idea';
 let stageFilter = 'all';
 let roleFilter = 'all';
+let editingProjectId = null;
 
 function getProjects() {
   try {
@@ -1265,8 +1541,7 @@ document.getElementById('submit-form').addEventListener('submit', function(e) {
     return;
   }
 
-  const project = {
-    id: generateId(),
+  const formData = {
     track: currentTrack,
     name: document.getElementById('f-name').value.trim(),
     problem: document.getElementById('f-problem').value.trim(),
@@ -1277,16 +1552,36 @@ document.getElementById('submit-form').addEventListener('submit', function(e) {
     contactEmail: document.getElementById('f-email').value.trim(),
     demoLink: document.getElementById('f-demo').value.trim() || null,
     videoLink: document.getElementById('f-video').value.trim() || null,
-    status: 'pending',
-    scores: null,
-    totalScore: null,
-    feedback: null,
-    submittedAt: new Date().toISOString(),
-    playerCards: [],
   };
 
-  const existing = getProjects();
-  saveProjects([...existing, project]);
+  if (editingProjectId) {
+    // Resubmission flow
+    const projects = getProjects();
+    const updated = projects.map(p => {
+      if (p.id !== editingProjectId) return p;
+      return { ...p, ...formData, status: 'pending', scores: null, totalScore: null, feedback: null, submittedAt: new Date().toISOString() };
+    });
+    saveProjects(updated);
+    editingProjectId = null;
+    const submitBtn = document.querySelector('#submit-form button[type="submit"]');
+    if (submitBtn) submitBtn.textContent = 'Submit for Review →';
+    successAlert.innerHTML = 'Your project has been resubmitted! Track your status in <strong>My Submissions</strong>.';
+  } else {
+    // New submission
+    const project = {
+      id: generateId(),
+      ...formData,
+      status: 'pending',
+      scores: null,
+      totalScore: null,
+      feedback: null,
+      submittedAt: new Date().toISOString(),
+      playerCards: [],
+    };
+    const existing = getProjects();
+    saveProjects([...existing, project]);
+    successAlert.innerHTML = 'Your submission has been received! Track your status in <strong>My Submissions</strong> using your email.';
+  }
 
   // Reset form
   document.getElementById('submit-form').reset();
@@ -1430,8 +1725,17 @@ function openProjectDetail(id) {
         <div class="roles-needed">
           ${(project.rolesNeeded || []).map(r => `<span class="role-tag">${r}</span>`).join('')}
         </div>
-        <button class="btn btn-primary" onclick="alert('Player card feature coming soon!')">Join This Team</button>
+        <button class="btn btn-primary" onclick="openPcModal('${project.id}')">Join This Team</button>
       </div>
+
+      ${(project.playerCards || []).length > 0 ? `
+        <div class="player-cards-section">
+          <h3>Team Applicants <span style="background:var(--bg);border:1px solid var(--border);border-radius:980px;font-size:12px;padding:2px 10px;font-family:system-ui;font-weight:600;">${project.playerCards.length}</span></h3>
+          <div class="player-cards-grid">
+            ${(project.playerCards || []).map(card => renderTradingCard(card)).join('')}
+          </div>
+        </div>
+      ` : ''}
     </div>
   `;
 
@@ -1502,7 +1806,13 @@ function lookupSubmissions() {
           <span class="status-badge ${p.status}">${p.status}</span>
         </div>
         <div class="submission-meta">Track: ${p.track === 'mvp' ? 'MVP' : 'Idea'} · Submitted ${date}${p.totalScore !== null ? ` · Score: ${p.totalScore}/100` : ''}</div>
-        ${p.feedback ? `<div style="margin-top:10px;font-size:13px;color:var(--muted);background:var(--bg);padding:10px 12px;border-radius:8px;">${escapeHtml(p.feedback)}</div>` : ''}
+        ${p.status === 'revision' && p.feedback ? `
+          <div class="revision-box">
+            <div class="rev-label">Committee Feedback</div>
+            <div class="rev-feedback">${escapeHtml(p.feedback)}</div>
+            <button class="btn-resubmit" onclick="prefillAndEdit('${p.id}')">Edit &amp; Resubmit</button>
+          </div>
+        ` : (p.feedback ? `<div style="margin-top:10px;font-size:13px;color:var(--muted);background:var(--bg);padding:10px 12px;border-radius:8px;">${escapeHtml(p.feedback)}</div>` : '')}
       </div>
     `;
   }).join('');
@@ -1653,9 +1963,256 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
+// ─── PLAYER CARD SYSTEM ─────────────────────────────────────────────────────
+let currentPcProjectId = null;
+let selectedPcRole = null;
+
+const ROLE_COLORS = {
+  Build: '#007AFF', Design: '#FF2D55', Research: '#5856D6',
+  Grow: '#FF9500', Advise: '#34C759'
+};
+
+const ABILITIES = [
+  { id: 'coding', label: 'Coding' },
+  { id: 'design', label: 'Design' },
+  { id: 'research', label: 'Research' },
+  { id: 'comm', label: 'Communication' },
+  { id: 'domain', label: 'Domain' },
+];
+
+function openPcModal(projectId) {
+  currentPcProjectId = projectId;
+  selectedPcRole = null;
+  // Reset form
+  ['pc-name', 'pc-degree', 'pc-superpower', 'pc-email'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  ABILITIES.forEach(a => {
+    document.getElementById('ab-' + a.id).value = 5;
+    document.getElementById('abv-' + a.id).textContent = 5;
+  });
+  document.querySelectorAll('.pc-role-btn').forEach(b => {
+    b.className = 'pc-role-btn';
+  });
+  const alert = document.getElementById('pc-alert');
+  alert.style.display = 'none';
+  updatePcRadar();
+  document.getElementById('pc-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePcModal() {
+  document.getElementById('pc-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closePcModalOnBackdrop(e) {
+  if (e.target === document.getElementById('pc-modal')) closePcModal();
+}
+
+function selectPcRole(role, btn) {
+  selectedPcRole = role;
+  const lowerRole = role.toLowerCase();
+  document.querySelectorAll('.pc-role-btn').forEach(b => {
+    b.className = 'pc-role-btn';
+  });
+  btn.className = 'pc-role-btn selected-' + lowerRole;
+}
+
+function getAbilityValues() {
+  return ABILITIES.map(a => parseInt(document.getElementById('ab-' + a.id).value, 10));
+}
+
+function updatePcRadar() {
+  ABILITIES.forEach(a => {
+    const val = document.getElementById('ab-' + a.id).value;
+    document.getElementById('abv-' + a.id).textContent = val;
+  });
+  const vals = getAbilityValues();
+  const color = selectedPcRole ? ROLE_COLORS[selectedPcRole] : '#2DB757';
+  renderRadarSvg('pc-radar-preview', vals, color, 100, 100, 80);
+}
+
+function renderRadarSvg(svgId, values, color, cx, cy, maxR) {
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  const n = values.length;
+  const angleStep = (2 * Math.PI) / n;
+  const startAngle = -Math.PI / 2;
+
+  // grid lines (3 rings)
+  let svgContent = '';
+  [0.33, 0.66, 1.0].forEach(pct => {
+    const pts = Array.from({ length: n }, (_, i) => {
+      const angle = startAngle + i * angleStep;
+      const r = maxR * pct;
+      return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
+    }).join(' ');
+    svgContent += `<polygon points="${pts}" fill="none" stroke="#e0e0e5" stroke-width="1"/>`;
+  });
+
+  // axis lines
+  for (let i = 0; i < n; i++) {
+    const angle = startAngle + i * angleStep;
+    svgContent += `<line x1="${cx}" y1="${cy}" x2="${cx + maxR * Math.cos(angle)}" y2="${cy + maxR * Math.sin(angle)}" stroke="#e0e0e5" stroke-width="1"/>`;
+  }
+
+  // filled area
+  const dataPts = values.map((v, i) => {
+    const angle = startAngle + i * angleStep;
+    const r = (v / 10) * maxR;
+    return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
+  }).join(' ');
+  svgContent += `<polygon points="${dataPts}" fill="${color}" fill-opacity="0.2" stroke="${color}" stroke-width="2"/>`;
+
+  // dots
+  values.forEach((v, i) => {
+    const angle = startAngle + i * angleStep;
+    const r = (v / 10) * maxR;
+    svgContent += `<circle cx="${cx + r * Math.cos(angle)}" cy="${cy + r * Math.sin(angle)}" r="3" fill="${color}"/>`;
+  });
+
+  // labels
+  const labels = ['Code', 'Design', 'Research', 'Comm', 'Domain'];
+  labels.forEach((lbl, i) => {
+    const angle = startAngle + i * angleStep;
+    const r = maxR + 14;
+    const x = cx + r * Math.cos(angle);
+    const y = cy + r * Math.sin(angle);
+    svgContent += `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#86868b" font-family="-apple-system,sans-serif">${lbl}</text>`;
+  });
+
+  svg.innerHTML = svgContent;
+}
+
+function renderMiniRadar(values, color) {
+  const n = values.length;
+  const cx = 50, cy = 50, maxR = 38;
+  const angleStep = (2 * Math.PI) / n;
+  const startAngle = -Math.PI / 2;
+
+  let svgContent = '';
+  [0.5, 1.0].forEach(pct => {
+    const pts = Array.from({ length: n }, (_, i) => {
+      const angle = startAngle + i * angleStep;
+      const r = maxR * pct;
+      return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
+    }).join(' ');
+    svgContent += `<polygon points="${pts}" fill="none" stroke="#e8e8ed" stroke-width="0.8"/>`;
+  });
+
+  const dataPts = values.map((v, i) => {
+    const angle = startAngle + i * angleStep;
+    const r = (v / 10) * maxR;
+    return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
+  }).join(' ');
+  svgContent += `<polygon points="${dataPts}" fill="${color}" fill-opacity="0.25" stroke="${color}" stroke-width="1.5"/>`;
+
+  return `<svg width="100" height="100" viewBox="0 0 100 100" style="display:block;margin:0 auto 4px;">${svgContent}</svg>`;
+}
+
+function renderTradingCard(card) {
+  const color = ROLE_COLORS[card.role] || '#2DB757';
+  const abilities = [card.abilities.coding, card.abilities.design, card.abilities.research, card.abilities.comm, card.abilities.domain];
+  const miniRadar = renderMiniRadar(abilities, color);
+  return `
+    <div class="trading-card role-${card.role}">
+      <div class="tc-role-badge role-${card.role}">${card.role}</div>
+      <div class="tc-name">${escapeHtml(card.name)}</div>
+      <div class="tc-degree">${escapeHtml(card.degree)}</div>
+      <div class="tc-superpower">"${escapeHtml(card.superpower)}"</div>
+      ${miniRadar}
+      <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:4px;">${escapeHtml(card.email)}</div>
+    </div>
+  `;
+}
+
+function submitPlayerCard() {
+  const name = document.getElementById('pc-name').value.trim();
+  const degree = document.getElementById('pc-degree').value.trim();
+  const superpower = document.getElementById('pc-superpower').value.trim();
+  const email = document.getElementById('pc-email').value.trim();
+  const alertEl = document.getElementById('pc-alert');
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!name || !degree || !superpower || !email || !selectedPcRole) {
+    alertEl.className = 'alert alert-error';
+    alertEl.textContent = 'Please fill in all fields and select a role.';
+    alertEl.style.display = 'block';
+    return;
+  }
+  if (!emailRegex.test(email)) {
+    alertEl.className = 'alert alert-error';
+    alertEl.textContent = 'Please enter a valid email address.';
+    alertEl.style.display = 'block';
+    return;
+  }
+
+  const abilities = {
+    coding: parseInt(document.getElementById('ab-coding').value, 10),
+    design: parseInt(document.getElementById('ab-design').value, 10),
+    research: parseInt(document.getElementById('ab-research').value, 10),
+    comm: parseInt(document.getElementById('ab-comm').value, 10),
+    domain: parseInt(document.getElementById('ab-domain').value, 10),
+  };
+
+  const newCard = { name, degree, role: selectedPcRole, superpower, email, abilities, createdAt: new Date().toISOString() };
+
+  const projects = getProjects();
+  const updated = projects.map(p => {
+    if (p.id !== currentPcProjectId) return p;
+    return { ...p, playerCards: [...(p.playerCards || []), newCard] };
+  });
+  saveProjects(updated);
+  renderStats();
+
+  closePcModal();
+  // Reopen project detail to show updated cards
+  openProjectDetail(currentPcProjectId);
+}
+
+// ─── REVISION FLOW ───────────────────────────────────────────────────────────
+function prefillAndEdit(projectId) {
+  const project = getProjects().find(p => p.id === projectId);
+  if (!project) return;
+
+  editingProjectId = projectId;
+
+  // Set track
+  setTrack(project.track);
+
+  // Fill form fields
+  document.getElementById('f-name').value = project.name || '';
+  document.getElementById('f-problem').value = project.problem || '';
+  document.getElementById('f-solution').value = project.solution || '';
+  document.getElementById('f-target').value = project.targetUser || '';
+  document.getElementById('f-scope').value = project.mvpScope || '';
+  document.getElementById('f-email').value = project.contactEmail || '';
+  document.getElementById('f-demo').value = project.demoLink || '';
+  document.getElementById('f-video').value = project.videoLink || '';
+
+  // Set roles
+  document.querySelectorAll('#roles-grid .role-chip').forEach(chip => {
+    const cb = chip.querySelector('input');
+    const isSelected = (project.rolesNeeded || []).includes(cb.value);
+    cb.checked = isSelected;
+    chip.classList.toggle('selected', isSelected);
+  });
+
+  // Switch to submit tab
+  showTab('submit');
+
+  // Update submit button text
+  const submitBtn = document.querySelector('#submit-form button[type="submit"]');
+  if (submitBtn) submitBtn.textContent = 'Resubmit for Review →';
+}
+
+
 // ─── INIT ────────────────────────────────────────────────────────────────────
 checkAdminAccess();
 renderStats();
+updatePcRadar();
 </script>
 </body>
 </html>
