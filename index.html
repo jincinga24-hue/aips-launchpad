@@ -1073,6 +1073,47 @@
     .page-head h1 { font-size: 32px; margin-bottom: 4px; }
     .page-head p { color: var(--muted); }
 
+    /* ─── ADMIN ITEM HEADER ──────────────────────────────────────── */
+    .admin-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .admin-item-title { font-size: 16px; }
+    .admin-item-meta { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+    .admin-item-field { font-size: 14px; margin-bottom: 6px; }
+    .admin-item-field-gap { font-size: 14px; margin-bottom: 12px; }
+    .admin-item-field-sm { font-size: 14px; margin-bottom: 4px; }
+
+    /* ─── MODAL FOOTER ROW ───────────────────────────────────────── */
+    .modal-footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* ─── TRADING CARD EMAIL ─────────────────────────────────────── */
+    .tc-email { font-size: 10px; color: var(--muted); text-align: center; margin-top: 4px; }
+
+    /* ─── MISC ───────────────────────────────────────────────────── */
+    .feedback-label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 6px; }
+    .admin-page-title { font-size: 28px; }
+    .player-cards-count {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 980px;
+      font-size: 12px;
+      padding: 2px 10px;
+      font-family: system-ui;
+      font-weight: 600;
+    }
+    .score-breakdown-inline { font-size: 13px; font-weight: 400; color: var(--muted); }
+    .mini-radar-svg { display: block; margin: 0 auto 4px; }
+    .approval-error-msg { display: none; margin-top: 10px; }
+
     /* ─── RESPONSIVE ─────────────────────────────────────────────── */
     @media (max-width: 640px) {
       main { padding: 24px 16px 64px; }
@@ -1209,19 +1250,19 @@
         <div class="form-group">
           <label>Roles Needed <span>*</span></label>
           <div class="roles-grid" id="roles-grid">
-            <label class="role-chip" onclick="toggleRole(this)">
+            <label class="role-chip">
               <input type="checkbox" value="Build" /> Build
             </label>
-            <label class="role-chip" onclick="toggleRole(this)">
+            <label class="role-chip">
               <input type="checkbox" value="Design" /> Design
             </label>
-            <label class="role-chip" onclick="toggleRole(this)">
+            <label class="role-chip">
               <input type="checkbox" value="Research" /> Research
             </label>
-            <label class="role-chip" onclick="toggleRole(this)">
+            <label class="role-chip">
               <input type="checkbox" value="Grow" /> Grow
             </label>
-            <label class="role-chip" onclick="toggleRole(this)">
+            <label class="role-chip">
               <input type="checkbox" value="Advise" /> Advise
             </label>
           </div>
@@ -1315,7 +1356,7 @@
   <!-- ADMIN PAGE -->
   <div id="page-admin" class="page">
     <div class="admin-header">
-      <h1 style="font-size: 28px;">Admin Panel</h1>
+      <h1 class="admin-page-title">Admin Panel</h1>
       <span class="admin-badge">AIPS Committee</span>
     </div>
 
@@ -1339,17 +1380,17 @@
     <div id="pc-alert" class="alert" style="display:none;"></div>
 
     <div class="form-group">
-      <label>Your Name <span style="color:var(--green)">*</span></label>
+      <label>Your Name <span>*</span></label>
       <input type="text" id="pc-name" placeholder="e.g. Alex Chen" />
     </div>
 
     <div class="form-group">
-      <label>Degree + Year <span style="color:var(--green)">*</span></label>
+      <label>Degree + Year <span>*</span></label>
       <input type="text" id="pc-degree" placeholder="e.g. BSc CS, Year 2" />
     </div>
 
     <div class="form-group">
-      <label>Your Role <span style="color:var(--green)">*</span></label>
+      <label>Your Role <span>*</span></label>
       <div class="pc-role-grid">
         <button class="pc-role-btn" data-role="Build" onclick="selectPcRole('Build', this)">Build</button>
         <button class="pc-role-btn" data-role="Design" onclick="selectPcRole('Design', this)">Design</button>
@@ -1360,12 +1401,12 @@
     </div>
 
     <div class="form-group">
-      <label>Superpower Tagline <span style="color:var(--green)">*</span></label>
+      <label>Superpower Tagline <span>*</span></label>
       <input type="text" id="pc-superpower" placeholder="e.g. I turn messy ideas into working prototypes" />
     </div>
 
     <div class="form-group">
-      <label>Contact Email <span style="color:var(--green)">*</span></label>
+      <label>Contact Email <span>*</span></label>
       <input type="email" id="pc-email" placeholder="your@student.unimelb.edu.au" />
     </div>
 
@@ -1466,11 +1507,12 @@ function setTrack(track) {
 }
 
 // ─── ROLE CHIPS ─────────────────────────────────────────────────────────────
-function toggleRole(chip) {
-  // Read checked state after browser's default label-click toggle
-  const cb = chip.querySelector('input');
-  chip.classList.toggle('selected', cb.checked);
-}
+document.getElementById('roles-grid').addEventListener('change', function(e) {
+  if (e.target.type === 'checkbox') {
+    const chip = e.target.closest('.role-chip');
+    if (chip) chip.classList.toggle('selected', e.target.checked);
+  }
+});
 
 function getSelectedRoles() {
   return Array.from(document.querySelectorAll('#roles-grid input:checked')).map(i => i.value);
@@ -1582,7 +1624,18 @@ document.getElementById('submit-form').addEventListener('submit', function(e) {
     if (submitBtn) submitBtn.textContent = 'Submit for Review →';
     successAlert.innerHTML = 'Your project has been resubmitted! Track your status in <strong>My Submissions</strong>.';
   } else {
-    // New submission
+    // New submission — dedup check
+    const existing = getProjects();
+    const duplicate = existing.find(p =>
+      p.contactEmail.toLowerCase() === formData.contactEmail.toLowerCase() &&
+      p.name.toLowerCase() === formData.name.toLowerCase()
+    );
+    if (duplicate) {
+      errorAlert.textContent = 'A submission with this email and project name already exists. Use My Submissions to track or resubmit it.';
+      errorAlert.classList.add('visible');
+      errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      return;
+    }
     const project = {
       id: generateId(),
       ...formData,
@@ -1593,7 +1646,6 @@ document.getElementById('submit-form').addEventListener('submit', function(e) {
       submittedAt: new Date().toISOString(),
       playerCards: [],
     };
-    const existing = getProjects();
     saveProjects([...existing, project]);
     successAlert.innerHTML = 'Your submission has been received! Track your status in <strong>My Submissions</strong> using your email.';
   }
@@ -1641,7 +1693,7 @@ function renderBoard() {
 
   empty.style.display = 'none';
   grid.innerHTML = filtered.map(p => `
-    <div class="project-card" onclick="openProjectDetail('${p.id}')">
+    <div class="project-card" data-project-id="${escapeHtml(p.id)}">
       <div class="card-header">
         <span class="stage-tag ${p.track}">${p.track === 'mvp' ? 'MVP' : 'Idea'}</span>
         ${p.totalScore !== null ? `<span class="score-badge">${p.totalScore}/100</span>` : ''}
@@ -1654,6 +1706,12 @@ function renderBoard() {
     </div>
   `).join('');
 }
+
+// Event delegation for board project cards
+document.getElementById('board-grid').addEventListener('click', function(e) {
+  const card = e.target.closest('[data-project-id]');
+  if (card) openProjectDetail(card.dataset.projectId);
+});
 
 function openProjectDetail(id) {
   const project = getProjects().find(p => p.id === id);
@@ -1674,7 +1732,7 @@ function openProjectDetail(id) {
           ${Object.entries(project.scores).map(([k, v]) => `
             <div class="modal-criterion-card">
               <div class="crit-label">${criteriaLabels[k] || k}</div>
-              <div class="crit-score">${v}<span style="font-size:13px;font-weight:400;color:var(--muted)">/20</span></div>
+              <div class="crit-score">${v}<span class="score-breakdown-inline">/20</span></div>
             </div>
           `).join('')}
         </div>
@@ -1736,7 +1794,7 @@ function openProjectDetail(id) {
     ` : ''}
 
     <div class="modal-footer">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <div class="modal-footer-row">
         <div class="roles-needed">
           ${(project.rolesNeeded || []).map(r => `<span class="role-tag">${r}</span>`).join('')}
         </div>
@@ -1745,7 +1803,7 @@ function openProjectDetail(id) {
 
       ${(project.playerCards || []).length > 0 ? `
         <div class="player-cards-section">
-          <h3>Team Applicants <span style="background:var(--bg);border:1px solid var(--border);border-radius:980px;font-size:12px;padding:2px 10px;font-family:system-ui;font-weight:600;">${project.playerCards.length}</span></h3>
+          <h3>Team Applicants <span class="player-cards-count">${project.playerCards.length}</span></h3>
           <div class="player-cards-grid">
             ${(project.playerCards || []).map(card => renderTradingCard(card)).join('')}
           </div>
@@ -1772,7 +1830,7 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     if (document.getElementById('pc-modal').classList.contains('open')) {
       closePcModal();
-    } else {
+    } else if (document.getElementById('project-modal').classList.contains('open')) {
       closeProjectModal();
     }
   }
@@ -1874,17 +1932,17 @@ function renderAdmin() {
 
     return `
       <div class="admin-item" id="admin-item-${p.id}">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-          <strong style="font-size:16px;">${escapeHtml(p.name)}</strong>
-          <span class="stage-tag ${p.track}" style="margin-left:8px;">${p.track === 'mvp' ? 'MVP' : 'Idea'}</span>
+        <div class="admin-item-header">
+          <strong class="admin-item-title">${escapeHtml(p.name)}</strong>
+          <span class="stage-tag ${p.track}">${p.track === 'mvp' ? 'MVP' : 'Idea'}</span>
         </div>
-        <div style="font-size:13px;color:var(--muted);margin-bottom:12px;">
+        <div class="admin-item-meta">
           ${escapeHtml(p.contactEmail)} · Submitted ${date}
         </div>
-        <div style="font-size:14px;margin-bottom:6px;"><strong>Problem:</strong> ${escapeHtml(p.problem)}</div>
-        <div style="font-size:14px;margin-bottom:12px;"><strong>Solution:</strong> ${escapeHtml(p.solution)}</div>
-        <div style="font-size:14px;margin-bottom:4px;"><strong>Target User:</strong> ${escapeHtml(p.targetUser)}</div>
-        <div style="font-size:14px;margin-bottom:12px;"><strong>MVP Scope:</strong> ${escapeHtml(p.mvpScope)}</div>
+        <div class="admin-item-field"><strong>Problem:</strong> ${escapeHtml(p.problem)}</div>
+        <div class="admin-item-field-gap"><strong>Solution:</strong> ${escapeHtml(p.solution)}</div>
+        <div class="admin-item-field-sm"><strong>Target User:</strong> ${escapeHtml(p.targetUser)}</div>
+        <div class="admin-item-field-gap"><strong>MVP Scope:</strong> ${escapeHtml(p.mvpScope)}</div>
 
         <div class="scoring-section">
           <h4>Score Each Criterion (0–20)</h4>
@@ -1896,7 +1954,7 @@ function renderAdmin() {
         </div>
 
         <div class="feedback-section" style="margin-top:16px;">
-          <label style="font-size:13px;font-weight:600;display:block;margin-bottom:6px;">Written Feedback</label>
+          <label class="feedback-label">Written Feedback</label>
           <textarea id="feedback-${p.id}" placeholder="Provide feedback for the team…"></textarea>
         </div>
 
@@ -1908,7 +1966,7 @@ function renderAdmin() {
             ↩ Return for Revision
           </button>
         </div>
-        <div id="admin-error-${p.id}" class="alert alert-error" style="display:none;margin-top:10px;"></div>
+        <div id="admin-error-${p.id}" class="alert alert-error approval-error-msg"></div>
       </div>
     `;
   }).join('');
@@ -2133,7 +2191,7 @@ function renderMiniRadar(values, color) {
   }).join(' ');
   svgContent += `<polygon points="${dataPts}" fill="${color}" fill-opacity="0.25" stroke="${color}" stroke-width="1.5"/>`;
 
-  return `<svg width="100" height="100" viewBox="0 0 100 100" style="display:block;margin:0 auto 4px;">${svgContent}</svg>`;
+  return `<svg width="100" height="100" viewBox="0 0 100 100" class="mini-radar-svg">${svgContent}</svg>`;
 }
 
 function renderTradingCard(card) {
@@ -2147,7 +2205,7 @@ function renderTradingCard(card) {
       <div class="tc-degree">${escapeHtml(card.degree)}</div>
       <div class="tc-superpower">"${escapeHtml(card.superpower)}"</div>
       ${miniRadar}
-      <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:4px;">${escapeHtml(card.email)}</div>
+      <div class="tc-email">${escapeHtml(card.email)}</div>
     </div>
   `;
 }
