@@ -1,6 +1,7 @@
 // js/submit.js — Project submission form
 import { supabase } from './supabase.js';
 import { getUser } from './auth.js';
+import { fireConfetti } from './effects.js';
 
 let currentTrack = 'idea';
 let editingProjectId = null;
@@ -125,6 +126,7 @@ async function handleSubmit(e) {
   successAlert.innerHTML = 'Your submission has been received! Track your status in <strong>My Submissions</strong>.';
   successAlert.classList.add('visible');
   successAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  fireConfetti();
 }
 
 export function prefillAndEdit(projectId, project) {

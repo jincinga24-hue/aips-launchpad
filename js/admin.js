@@ -2,6 +2,7 @@
 import { supabase } from './supabase.js';
 import { escapeHtml, CRITERIA } from './utils.js';
 import { isAdmin } from './auth.js';
+import { fireConfetti } from './effects.js';
 
 export function initAdmin() {
   // Nothing to init — renderAdmin is called on tab switch
@@ -124,5 +125,6 @@ window.__adminDecision = async function(id, decision) {
     return;
   }
 
+  if (decision === 'approved') fireConfetti();
   renderAdmin();
 };

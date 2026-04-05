@@ -5,6 +5,7 @@ import { renderAdmin, initAdmin } from './admin.js';
 import { initSubmit } from './submit.js';
 import { initMySubmissions, loadMySubmissions } from './my-submissions.js';
 import { initPlayerCard } from './player-card.js';
+import { initSpotlightCards, initClickSpark, initScrollReveal, initCountUp } from './effects.js';
 
 let currentTab = 'home';
 let isSignUp = false;
@@ -69,118 +70,6 @@ function escapeNavText(str) {
     .replace(/"/g, '&quot;');
 }
 
-function initCountUp() {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const el = entry.target;
-        const val = parseInt(el.textContent, 10) || 0;
-        if (val > 0) animateCountUp(el, val);
-        observer.unobserve(el);
-      }
-    });
-  }, { threshold: 0.5 });
-  document.querySelectorAll('.stat-num').forEach(el => observer.observe(el));
-}
-
-function animateCountUp(el, target) {
-  const duration = 1200;
-  const start = performance.now();
-  function step(now) {
-    const elapsed = now - start;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    el.textContent = Math.round(target * eased);
-    if (progress < 1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-}
-
-function initSpotlightCards() {
-  document.addEventListener('mousemove', function(e) {
-    const cards = document.querySelectorAll('.spotlight-card, .trading-card');
-    cards.forEach(card => {
-      const rect = card.getBoundingClientRect();
-      if (e.clientX >= rect.left && e.clientX <= rect.right &&
-          e.clientY >= rect.top && e.clientY <= rect.bottom) {
-        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-      }
-    });
-  });
-}
-
-function initClickSpark() {
-  const canvas = document.createElement('canvas');
-  canvas.id = 'click-spark-canvas';
-  document.body.appendChild(canvas);
-  const ctx = canvas.getContext('2d');
-  const sparks = [];
-  const SPARK_COLOR = '#2DB757';
-  const SPARK_COUNT = 8;
-  const SPARK_SIZE = 10;
-  const SPARK_RADIUS = 15;
-  const DURATION = 400;
-
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  function easeOut(t) { return t * (2 - t); }
-
-  function draw(timestamp) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = sparks.length - 1; i >= 0; i--) {
-      const s = sparks[i];
-      const elapsed = timestamp - s.startTime;
-      if (elapsed >= DURATION) { sparks.splice(i, 1); continue; }
-      const progress = elapsed / DURATION;
-      const eased = easeOut(progress);
-      const dist = eased * SPARK_RADIUS * 2;
-      const lineLen = SPARK_SIZE * (1 - eased);
-      const x1 = s.x + dist * Math.cos(s.angle);
-      const y1 = s.y + dist * Math.sin(s.angle);
-      const x2 = s.x + (dist + lineLen) * Math.cos(s.angle);
-      const y2 = s.y + (dist + lineLen) * Math.sin(s.angle);
-      ctx.strokeStyle = SPARK_COLOR;
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.stroke();
-    }
-    requestAnimationFrame(draw);
-  }
-  requestAnimationFrame(draw);
-
-  document.addEventListener('click', function(e) {
-    const target = e.target.closest('.star-border-container, .btn-primary, .btn-approve');
-    if (!target) return;
-    const now = performance.now();
-    for (let i = 0; i < SPARK_COUNT; i++) {
-      sparks.push({
-        x: e.clientX,
-        y: e.clientY,
-        angle: (2 * Math.PI * i) / SPARK_COUNT,
-        startTime: now
-      });
-    }
-  });
-}
-
-function initScrollReveal() {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '-40px' });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-}
 
 function initFilterPills() {
   document.querySelectorAll('.filter-bar').forEach(bar => {

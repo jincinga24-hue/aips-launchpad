@@ -2,6 +2,7 @@
 import { supabase } from './supabase.js';
 import { getUser } from './auth.js';
 import { escapeHtml, ROLE_COLORS, ABILITIES, renderRadarSvg, renderMiniRadar } from './utils.js';
+import { fireConfetti, showCardFlipReveal } from './effects.js';
 
 let currentPcProjectId = null;
 let selectedPcRoles = [];
@@ -135,6 +136,15 @@ async function handleSubmitCard() {
   }
 
   closePcModal();
+  fireConfetti();
+  showCardFlipReveal({
+    name,
+    degree,
+    roles: selectedPcRoles,
+    superpower,
+    email,
+    abilities,
+  });
   // Reopen project detail to show the new card
   window.__openProjectDetail?.(currentPcProjectId);
 }
