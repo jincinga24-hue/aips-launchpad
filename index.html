@@ -1022,6 +1022,7 @@
     .trading-card.role-Grow::before { background: var(--role-grow); }
     .trading-card.role-Advise { border-color: rgba(52,199,89,0.2); }
     .trading-card.role-Advise::before { background: var(--role-advise); }
+    .tc-roles { display: flex; gap: 4px; flex-wrap: wrap; }
 
     .tc-role-badge {
       display: inline-block;
@@ -2058,7 +2059,7 @@ function escapeHtml(str) {
 
 // ─── PLAYER CARD SYSTEM ─────────────────────────────────────────────────────
 let currentPcProjectId = null;
-let selectedPcRole = null;
+let selectedPcRoles = [];
 
 const ROLE_COLORS = {
   Build: '#007AFF', Design: '#FF2D55', Research: '#5856D6',
@@ -2075,7 +2076,7 @@ const ABILITIES = [
 
 function openPcModal(projectId) {
   currentPcProjectId = projectId;
-  selectedPcRole = null;
+  selectedPcRoles = [];
   // Reset form
   ['pc-name', 'pc-degree', 'pc-superpower', 'pc-email'].forEach(id => {
     document.getElementById(id).value = '';
@@ -2104,12 +2105,15 @@ function closePcModalOnBackdrop(e) {
 }
 
 function selectPcRole(role, btn) {
-  selectedPcRole = role;
-  const lowerRole = role.toLowerCase();
-  document.querySelectorAll('.pc-role-btn').forEach(b => {
-    b.className = 'pc-role-btn';
-  });
-  btn.className = 'pc-role-btn selected-' + lowerRole;
+  const idx = selectedPcRoles.indexOf(role);
+  if (idx >= 0) {
+    selectedPcRoles = selectedPcRoles.filter(r => r !== role);
+    btn.className = 'pc-role-btn';
+  } else {
+    selectedPcRoles = [...selectedPcRoles, role];
+    btn.className = 'pc-role-btn selected-' + role.toLowerCase();
+  }
+  updatePcRadar();
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -2134,7 +2138,7 @@ function updatePcRadar() {
     document.getElementById('abv-' + a.id).textContent = val;
   });
   const vals = getAbilityValues();
-  const color = selectedPcRole ? ROLE_COLORS[selectedPcRole] : '#2DB757';
+  const color = selectedPcRoles.length > 0 ? ROLE_COLORS[selectedPcRoles[0]] : '#2DB757';
   renderRadarSvg('pc-radar-preview', vals, color, 100, 100, 80);
 }
 
@@ -2217,12 +2221,16 @@ function renderMiniRadar(values, color) {
 }
 
 function renderTradingCard(card) {
-  const color = ROLE_COLORS[card.role] || '#2DB757';
+  // Support both old single role and new multi-role format
+  const roles = card.roles || (card.role ? [card.role] : []);
+  const primaryRole = roles[0] || 'Build';
+  const color = ROLE_COLORS[primaryRole] || '#2DB757';
   const abilities = [card.abilities.coding, card.abilities.design, card.abilities.research, card.abilities.comm, card.abilities.domain];
   const miniRadar = renderMiniRadar(abilities, color);
+  const roleBadges = roles.map(r => `<span class="tc-role-badge role-${escapeHtml(r)}">${escapeHtml(r)}</span>`).join(' ');
   return `
-    <div class="trading-card role-${card.role}">
-      <div class="tc-role-badge role-${card.role}">${card.role}</div>
+    <div class="trading-card role-${escapeHtml(primaryRole)}">
+      <div class="tc-roles">${roleBadges}</div>
       <div class="tc-name">${escapeHtml(card.name)}</div>
       <div class="tc-degree">${escapeHtml(card.degree)}</div>
       <div class="tc-superpower">"${escapeHtml(card.superpower)}"</div>
@@ -2241,9 +2249,9 @@ function submitPlayerCard() {
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  if (!name || !degree || !superpower || !email || !selectedPcRole) {
+  if (!name || !degree || !superpower || !email || selectedPcRoles.length === 0) {
     alertEl.className = 'alert alert-error visible';
-    alertEl.textContent = 'Please fill in all fields and select a role.';
+    alertEl.textContent = 'Please fill in all fields and select at least one role.';
     return;
   }
   if (!emailRegex.test(email)) {
@@ -2268,7 +2276,7 @@ function submitPlayerCard() {
     return;
   }
 
-  const newCard = { name, degree, role: selectedPcRole, superpower, email, abilities, createdAt: new Date().toISOString() };
+  const newCard = { name, degree, roles: selectedPcRoles, superpower, email, abilities, createdAt: new Date().toISOString() };
 
   const projects = getProjects();
   const updated = projects.map(p => {

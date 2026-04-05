@@ -6,7 +6,7 @@
 - **Success Metric:** Full loop: submit → admin score → publish → player card join
 - **Kill Metric:** Core submission → review → publish flow broken after 10 cycles
 - **Tech Stack:** Single HTML file, vanilla CSS/JS, localStorage
-- **Total Cycles:** 4
+- **Total Cycles:** 6
 - **Current Phase:** GENERATING
 
 ## Cycle Log
@@ -65,4 +65,32 @@
   3. Role chip label/checkbox double-toggle risk — use change event
   4. Inline styles in JS-rendered HTML — extract to CSS classes
   5. No dedup on project submissions (same email+name)
+- **MVP Status:** ALL DONE (35/35 features PASS)
+
+### Cycle 5
+- **Generator Action:** Fixed event delegation, dedup guard, inline styles→CSS classes, escape guard
+- **Files Changed:** index.html
+- **Scores:** Functionality=9.2, MVP=10, Runnability=9.5, Quality=8.5, Delta=7.5
+- **Overall Score:** 9.3
+- **Verdict:** POLISH
+- **Feedback:**
+  1. 4 residual inline style mutations — use CSS class toggles
+  2. data-role attribute on pc-role-btn unused — remove or use event delegation
+  3. Admin tab reveal via inline style — use CSS class
+  4. No success toast after player card submission
+  5. editingProjectId persists if user navigates away mid-edit
+- **MVP Status:** ALL DONE (35/35 features PASS)
+
+### Cycle 6
+- **Generator Action:** Class toggles for all remaining inline styles, pc-role event delegation, success toast, stale state fix
+- **Files Changed:** index.html
+- **Scores:** Functionality=9.2, MVP=10, Runnability=10, Quality=8.5, Delta=8
+- **Overall Score:** 9.4
+- **Verdict:** POLISH
+- **Feedback:**
+  1. Two residual inline styles in HTML
+  2. Inline style in lookupSubmissions error
+  3. checkAdminAccess not called in showTab
+  4. No keyboard trap in modals (a11y)
+  5. Race condition in submitPlayerCard setTimeout
 - **MVP Status:** ALL DONE (35/35 features PASS)

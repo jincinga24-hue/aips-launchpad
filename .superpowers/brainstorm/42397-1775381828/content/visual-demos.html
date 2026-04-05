@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIPS Launchpad — Visual Enhancement Demos</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    background: #0a0a0a;
+    color: #f5f5f7;
+    line-height: 1.5;
+  }
+  h1, h2, h3, h4 { font-family: 'Rajdhani', sans-serif; font-weight: 700; }
+
+  .section-label {
+    text-align: center;
+    padding: 48px 20px 16px;
+  }
+  .section-label h2 { font-size: 28px; color: #fff; }
+  .section-label p { color: #86868b; font-size: 14px; margin-top: 4px; }
+  .section-label .source { color: #2DB757; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+
+  .demo-frame {
+    max-width: 900px;
+    margin: 0 auto 64px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #222;
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     A: ANIMATED HERO BACKGROUND (Aurora/Mesh Gradient)
+     ═══════════════════════════════════════════════════════ */
+  .hero-demo {
+    position: relative;
+    height: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    background: #0d0d0d;
+  }
+
+  .aurora {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    filter: blur(80px);
+    opacity: 0.6;
+  }
+
+  .aurora .blob {
+    position: absolute;
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite;
+  }
+
+  .aurora .blob:nth-child(1) {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, #2DB757 0%, transparent 70%);
+    top: -100px; left: -50px;
+    animation-delay: 0s;
+  }
+  .aurora .blob:nth-child(2) {
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, #5EC847 0%, transparent 70%);
+    top: 50px; right: -80px;
+    animation-delay: -3s;
+    animation-duration: 10s;
+  }
+  .aurora .blob:nth-child(3) {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, #B8E63A 0%, transparent 70%);
+    bottom: -80px; left: 30%;
+    animation-delay: -5s;
+    animation-duration: 12s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(40px, -30px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.95); }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+  .hero-content .eyebrow {
+    font-size: 13px; font-weight: 600; color: #2DB757;
+    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px;
+  }
+  .hero-content h1 {
+    font-size: 52px; line-height: 1.05; margin-bottom: 16px;
+  }
+  .hero-content h1 span { color: #2DB757; }
+  .hero-content p { color: #86868b; font-size: 16px; max-width: 400px; margin: 0 auto 24px; }
+  .hero-btn {
+    display: inline-block; padding: 12px 32px; border-radius: 980px;
+    background: #2DB757; color: #fff; font-weight: 600; font-size: 15px;
+    border: none; cursor: pointer;
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     B: 3D TILT PROJECT CARDS
+     ═══════════════════════════════════════════════════════ */
+  .cards-demo {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 40px;
+    background: #f5f5f7;
+  }
+
+  .tilt-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px 24px;
+    border: 1px solid #d2d2d7;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.3s ease;
+    transform-style: preserve-3d;
+    perspective: 800px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tilt-card::before {
+    content: '';
+    position: absolute;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(45,183,87,0.15) 0%, transparent 70%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    transform: translate(-50%, -50%);
+  }
+
+  .tilt-card:hover {
+    transform: perspective(800px) rotateY(-5deg) rotateX(3deg) translateZ(10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(45,183,87,0.2);
+  }
+
+  .tilt-card:hover::before { opacity: 1; }
+
+  .tilt-card .tag {
+    display: inline-block;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 10px; border-radius: 20px;
+    background: #e8f7ed; color: #2DB757;
+    margin-bottom: 12px;
+  }
+  .tilt-card h3 { font-size: 18px; color: #1d1d1f; margin-bottom: 8px; }
+  .tilt-card p { font-size: 13px; color: #86868b; margin-bottom: 16px; }
+  .tilt-card .score {
+    font-family: 'Rajdhani', sans-serif; font-weight: 700;
+    font-size: 24px; color: #2DB757;
+  }
+  .tilt-card .roles {
+    display: flex; gap: 6px; margin-top: 12px;
+  }
+  .tilt-card .role-tag {
+    font-size: 11px; padding: 2px 8px; border-radius: 12px;
+    background: #f5f5f7; color: #86868b; border: 1px solid #d2d2d7;
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     C: HOLOGRAPHIC PLAYER / TRADING CARDS
+     ═══════════════════════════════════════════════════════ */
+  .player-cards-demo {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    padding: 60px 40px;
+    background: #0d0d0d;
+  }
+
+  .player-card {
+    width: 240px;
+    border-radius: 20px;
+    padding: 3px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .player-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    background: conic-gradient(from 0deg, #2DB757, #5EC847, #B8E63A, #2DB757);
+    animation: spin-border 4s linear infinite;
+  }
+
+  @keyframes spin-border {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Override: use a pseudo that doesn't rotate the whole card */
+  .player-card::before {
+    animation: none;
+    background: linear-gradient(135deg, #2DB757, #5EC847, #B8E63A, #2DB757, #5EC847);
+    background-size: 300% 300%;
+    animation: shimmer-border 3s ease infinite;
+  }
+
+  @keyframes shimmer-border {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .player-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 20px 60px rgba(45,183,87,0.3);
+  }
+
+  .player-card-inner {
+    position: relative;
+    z-index: 1;
+    background: #1a1a1a;
+    border-radius: 18px;
+    padding: 28px 20px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .player-card-inner::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.05) 50%, transparent 60%);
+    animation: holographic 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes holographic {
+    0% { transform: translateX(-30%) translateY(-30%) rotate(0deg); }
+    50% { transform: translateX(30%) translateY(30%) rotate(5deg); }
+    100% { transform: translateX(-30%) translateY(-30%) rotate(0deg); }
+  }
+
+  .player-avatar {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2DB757, #B8E63A);
+    margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+  }
+
+  .player-card-inner h3 { font-size: 20px; color: #fff; margin-bottom: 2px; }
+  .player-card-inner .degree { font-size: 12px; color: #86868b; margin-bottom: 16px; }
+  .player-card-inner .superpower {
+    font-size: 13px; font-style: italic; color: #5EC847;
+    margin-bottom: 20px;
+  }
+
+  /* Radar chart mock */
+  .radar-mock {
+    width: 140px; height: 140px;
+    margin: 0 auto 16px;
+    position: relative;
+  }
+  .radar-mock svg { width: 100%; height: 100%; }
+  .radar-bg { fill: none; stroke: #333; stroke-width: 1; }
+  .radar-shape { fill: rgba(45,183,87,0.2); stroke: #2DB757; stroke-width: 2; }
+  .radar-dot { fill: #2DB757; }
+
+  .player-role-badge {
+    display: inline-block;
+    font-size: 12px; font-weight: 600;
+    padding: 4px 14px; border-radius: 20px;
+    background: rgba(45,183,87,0.15); color: #2DB757;
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     D: HERO TEXT ANIMATION
+     ═══════════════════════════════════════════════════════ */
+  .text-anim-demo {
+    background: #f5f5f7;
+    text-align: center;
+    padding: 80px 24px;
+  }
+
+  .word-slide h1 {
+    font-size: 48px; color: #1d1d1f; overflow: hidden;
+  }
+
+  .word-slide .word {
+    display: inline-block;
+    animation: slideUp 0.6s ease forwards;
+    opacity: 0;
+    transform: translateY(100%);
+  }
+
+  .word-slide .word:nth-child(1) { animation-delay: 0.1s; }
+  .word-slide .word:nth-child(2) { animation-delay: 0.2s; }
+  .word-slide .word:nth-child(3) { animation-delay: 0.3s; }
+  .word-slide .word:nth-child(4) { animation-delay: 0.4s; color: #2DB757; }
+  .word-slide .word:nth-child(5) { animation-delay: 0.5s; color: #2DB757; }
+
+  @keyframes slideUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .text-anim-demo p {
+    color: #86868b; font-size: 16px; margin-top: 16px;
+    animation: fadeIn 1s ease 0.8s forwards; opacity: 0;
+  }
+
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  /* ═══════════════════════════════════════════════════════
+     E: SCROLL REVEAL (simulated)
+     ═══════════════════════════════════════════════════════ */
+  .scroll-demo {
+    background: #f5f5f7;
+    padding: 40px;
+  }
+  .scroll-demo .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .scroll-demo .step {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px 20px;
+    border: 1px solid #d2d2d7;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: revealUp 0.5s ease forwards;
+  }
+  .scroll-demo .step:nth-child(1) { animation-delay: 0.2s; }
+  .scroll-demo .step:nth-child(2) { animation-delay: 0.4s; }
+  .scroll-demo .step:nth-child(3) { animation-delay: 0.6s; }
+  .scroll-demo .step:nth-child(4) { animation-delay: 0.8s; }
+
+  @keyframes revealUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .scroll-demo .step .num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #e8f7ed; color: #2DB757;
+    font-family: 'Rajdhani', sans-serif; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 12px;
+  }
+  .scroll-demo .step h4 { font-size: 16px; color: #1d1d1f; margin-bottom: 6px; }
+  .scroll-demo .step p { font-size: 13px; color: #86868b; }
+
+  /* ═══════════════════════════════════════════════════════
+     F: MICRO-INTERACTIONS
+     ═══════════════════════════════════════════════════════ */
+  .micro-demo {
+    background: #f5f5f7;
+    padding: 48px;
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .magnetic-btn {
+    padding: 14px 36px;
+    border-radius: 980px;
+    background: #2DB757;
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+  }
+  .magnetic-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 24px rgba(45,183,87,0.35);
+  }
+
+  .tab-demo {
+    display: inline-flex;
+    background: #fff;
+    border: 1px solid #d2d2d7;
+    border-radius: 10px;
+    padding: 4px;
+    position: relative;
+  }
+  .tab-demo .tab-pill {
+    position: absolute;
+    height: calc(100% - 8px);
+    top: 4px;
+    border-radius: 7px;
+    background: #2DB757;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 0;
+  }
+  .tab-demo button {
+    padding: 8px 20px;
+    border: none; background: none;
+    font-size: 14px; font-weight: 600;
+    color: #86868b; cursor: pointer;
+    position: relative; z-index: 1;
+    transition: color 0.2s;
+  }
+  .tab-demo button.active { color: #fff; }
+
+  .input-demo {
+    position: relative;
+  }
+  .input-demo input {
+    padding: 12px 16px;
+    border: 2px solid #d2d2d7;
+    border-radius: 10px;
+    font-size: 14px;
+    background: #fff;
+    width: 200px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .input-demo input:focus {
+    border-color: #2DB757;
+    box-shadow: 0 0 0 4px rgba(45,183,87,0.12);
+  }
+  .input-demo label {
+    position: absolute;
+    left: 14px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px; color: #86868b;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    background: #fff;
+    padding: 0 4px;
+  }
+  .input-demo input:focus + label,
+  .input-demo input:not(:placeholder-shown) + label {
+    top: 0; font-size: 11px; color: #2DB757;
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     VOTE BAR
+     ═══════════════════════════════════════════════════════ */
+  .vote-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(10,10,10,0.95);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid #222;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    z-index: 100;
+  }
+  .vote-btn {
+    padding: 8px 20px;
+    border-radius: 980px;
+    border: 1px solid #333;
+    background: transparent;
+    color: #86868b;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .vote-btn:hover { border-color: #2DB757; color: #2DB757; }
+  .vote-btn.selected { background: #2DB757; color: #fff; border-color: #2DB757; }
+  .vote-hint {
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    color: #555;
+    margin-bottom: -4px;
+  }
+</style>
+</head>
+<body>
+
+<!-- A: ANIMATED HERO BG -->
+<div class="section-label">
+  <div class="source">Unicorn Studio Style</div>
+  <h2>A — Animated Aurora Hero Background</h2>
+  <p>Floating gradient blobs behind the hero. Feels alive and premium.</p>
+</div>
+<div class="demo-frame">
+  <div class="hero-demo">
+    <div class="aurora">
+      <div class="blob"></div>
+      <div class="blob"></div>
+      <div class="blob"></div>
+    </div>
+    <div class="hero-content">
+      <div class="eyebrow">‹› AI Prototyping Studio</div>
+      <h1>Launch Your <span>Idea</span></h1>
+      <p>Submit your startup concept, get scored by the committee, and find your team.</p>
+      <button class="hero-btn">Submit Your Idea</button>
+    </div>
+  </div>
+</div>
+
+<!-- B: TILT CARDS -->
+<div class="section-label">
+  <div class="source">React Bits Style</div>
+  <h2>B — 3D Tilt Project Cards</h2>
+  <p>Hover over the cards below — they tilt and glow.</p>
+</div>
+<div class="demo-frame">
+  <div class="cards-demo">
+    <div class="tilt-card">
+      <span class="tag">💡 Idea</span>
+      <h3>StudySync</h3>
+      <p>AI-powered study group matching for uni students</p>
+      <div class="score">82<span style="font-size:14px;color:#86868b">/100</span></div>
+      <div class="roles">
+        <span class="role-tag">Build</span>
+        <span class="role-tag">Design</span>
+      </div>
+    </div>
+    <div class="tilt-card">
+      <span class="tag" style="background:#fff3e0;color:#f57c00;">🚀 MVP</span>
+      <h3>FoodieMap</h3>
+      <p>Discover hidden food spots rated by locals, not tourists</p>
+      <div class="score">91<span style="font-size:14px;color:#86868b">/100</span></div>
+      <div class="roles">
+        <span class="role-tag">Grow</span>
+        <span class="role-tag">Research</span>
+      </div>
+    </div>
+    <div class="tilt-card">
+      <span class="tag">💡 Idea</span>
+      <h3>CarbonTrack</h3>
+      <p>Personal carbon footprint tracker for everyday purchases</p>
+      <div class="score">73<span style="font-size:14px;color:#86868b">/100</span></div>
+      <div class="roles">
+        <span class="role-tag">Build</span>
+        <span class="role-tag">Advise</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- C: PLAYER TRADING CARDS -->
+<div class="section-label">
+  <div class="source">React Bits + Unicorn Style</div>
+  <h2>C — Holographic Player Trading Cards</h2>
+  <p>球星卡 style — gradient border shimmer, holographic shine, radar chart.</p>
+</div>
+<div class="demo-frame">
+  <div class="player-cards-demo">
+    <div class="player-card">
+      <div class="player-card-inner">
+        <div class="player-avatar">🧑‍💻</div>
+        <h3>Alex Chen</h3>
+        <div class="degree">CompSci, Year 2</div>
+        <div class="superpower">"I ship fast"</div>
+        <div class="radar-mock">
+          <svg viewBox="0 0 140 140">
+            <!-- Pentagon grid -->
+            <polygon class="radar-bg" points="70,15 120,45 108,100 32,100 20,45" />
+            <polygon class="radar-bg" points="70,30 105,52 96,92 44,92 35,52" />
+            <polygon class="radar-bg" points="70,45 90,60 84,84 56,84 50,60" />
+            <!-- Data shape -->
+            <polygon class="radar-shape" points="70,20 115,50 85,95 38,80 30,48" />
+            <circle class="radar-dot" cx="70" cy="20" r="3" />
+            <circle class="radar-dot" cx="115" cy="50" r="3" />
+            <circle class="radar-dot" cx="85" cy="95" r="3" />
+            <circle class="radar-dot" cx="38" cy="80" r="3" />
+            <circle class="radar-dot" cx="30" cy="48" r="3" />
+          </svg>
+        </div>
+        <span class="player-role-badge">Build</span>
+      </div>
+    </div>
+
+    <div class="player-card">
+      <div class="player-card-inner">
+        <div class="player-avatar">🎨</div>
+        <h3>Mei Lin</h3>
+        <div class="degree">Design, Year 3</div>
+        <div class="superpower">"I make things pretty"</div>
+        <div class="radar-mock">
+          <svg viewBox="0 0 140 140">
+            <polygon class="radar-bg" points="70,15 120,45 108,100 32,100 20,45" />
+            <polygon class="radar-bg" points="70,30 105,52 96,92 44,92 35,52" />
+            <polygon class="radar-bg" points="70,45 90,60 84,84 56,84 50,60" />
+            <polygon class="radar-shape" points="70,40 110,42 100,90 40,95 25,50" />
+            <circle class="radar-dot" cx="70" cy="40" r="3" />
+            <circle class="radar-dot" cx="110" cy="42" r="3" />
+            <circle class="radar-dot" cx="100" cy="90" r="3" />
+            <circle class="radar-dot" cx="40" cy="95" r="3" />
+            <circle class="radar-dot" cx="25" cy="50" r="3" />
+          </svg>
+        </div>
+        <span class="player-role-badge">Design</span>
+      </div>
+    </div>
+
+    <div class="player-card">
+      <div class="player-card-inner">
+        <div class="player-avatar">📊</div>
+        <h3>Sam Patel</h3>
+        <div class="degree">Data Sci, Year 4</div>
+        <div class="superpower">"I find the signal in noise"</div>
+        <div class="radar-mock">
+          <svg viewBox="0 0 140 140">
+            <polygon class="radar-bg" points="70,15 120,45 108,100 32,100 20,45" />
+            <polygon class="radar-bg" points="70,30 105,52 96,92 44,92 35,52" />
+            <polygon class="radar-bg" points="70,45 90,60 84,84 56,84 50,60" />
+            <polygon class="radar-shape" points="70,25 95,55 105,88 45,85 35,42" />
+            <circle class="radar-dot" cx="70" cy="25" r="3" />
+            <circle class="radar-dot" cx="95" cy="55" r="3" />
+            <circle class="radar-dot" cx="105" cy="88" r="3" />
+            <circle class="radar-dot" cx="45" cy="85" r="3" />
+            <circle class="radar-dot" cx="35" cy="42" r="3" />
+          </svg>
+        </div>
+        <span class="player-role-badge">Research</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- D: TEXT ANIMATION -->
+<div class="section-label">
+  <div class="source">React Bits Style</div>
+  <h2>D — Hero Text Slide-Up Animation</h2>
+  <p>Words slide up one by one on load.</p>
+</div>
+<div class="demo-frame">
+  <div class="text-anim-demo">
+    <div class="word-slide">
+      <h1>
+        <span class="word">Launch</span>
+        <span class="word">Your</span>
+        <span class="word">Next</span>
+        <span class="word">Big</span>
+        <span class="word">Idea</span>
+      </h1>
+    </div>
+    <p>Submit your startup concept and find your dream team at AIPS.</p>
+  </div>
+</div>
+
+<!-- E: SCROLL REVEAL -->
+<div class="section-label">
+  <div class="source">Design Spells Style</div>
+  <h2>E — Scroll Reveal "How It Works"</h2>
+  <p>Steps cascade in with staggered timing.</p>
+</div>
+<div class="demo-frame">
+  <div class="scroll-demo">
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <h4>Submit</h4>
+        <p>Pitch your idea or share your MVP with the committee</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h4>Score</h4>
+        <p>Committee reviews and scores across 5 criteria</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h4>Publish</h4>
+        <p>Approved projects go live on the public board</p>
+      </div>
+      <div class="step">
+        <div class="num">4</div>
+        <h4>Team Up</h4>
+        <p>Others browse and join with their player card</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- F: MICRO-INTERACTIONS -->
+<div class="section-label">
+  <div class="source">Design Spells Style</div>
+  <h2>F — Micro-interactions</h2>
+  <p>Magnetic button, smooth tab slider, floating input label.</p>
+</div>
+<div class="demo-frame">
+  <div class="micro-demo">
+    <button class="magnetic-btn">Submit Your Idea</button>
+
+    <div class="tab-demo" id="tabDemo">
+      <div class="tab-pill" id="tabPill" style="left:4px;width:72px;"></div>
+      <button class="active" onclick="switchTab(this, 0)">Home</button>
+      <button onclick="switchTab(this, 1)">Submit</button>
+      <button onclick="switchTab(this, 2)">Board</button>
+    </div>
+
+    <div class="input-demo">
+      <input type="text" placeholder=" " />
+      <label>Project name</label>
+    </div>
+  </div>
+</div>
+
+<!-- VOTE BAR -->
+<div class="vote-bar" style="padding-bottom: 24px;">
+  <div class="vote-hint">Click all the effects you want in AIPS Launchpad (multi-select)</div>
+  <button class="vote-btn" onclick="toggleVote(this)">A — Aurora Hero</button>
+  <button class="vote-btn" onclick="toggleVote(this)">B — Tilt Cards</button>
+  <button class="vote-btn" onclick="toggleVote(this)">C — Player Cards</button>
+  <button class="vote-btn" onclick="toggleVote(this)">D — Text Anim</button>
+  <button class="vote-btn" onclick="toggleVote(this)">E — Scroll Reveal</button>
+  <button class="vote-btn" onclick="toggleVote(this)">F — Micro-interactions</button>
+</div>
+
+<div style="height: 100px;"></div>
+
+<script>
+  // Tab switcher
+  function switchTab(btn, index) {
+    const tabs = btn.parentElement.querySelectorAll('button');
+    const pill = document.getElementById('tabPill');
+    tabs.forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    pill.style.left = btn.offsetLeft + 'px';
+    pill.style.width = btn.offsetWidth + 'px';
+  }
+
+  // Vote toggle
+  function toggleVote(btn) {
+    btn.classList.toggle('selected');
+  }
+
+  // Simple tilt on mousemove for project cards
+  document.querySelectorAll('.tilt-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = (y - centerY) / 12;
+      const rotateY = (centerX - x) / 12;
+      card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+
+      const before = card.querySelector('::before') || card;
+      card.style.setProperty('--mx', x + 'px');
+      card.style.setProperty('--my', y + 'px');
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+</script>
+
+</body>
+</html>

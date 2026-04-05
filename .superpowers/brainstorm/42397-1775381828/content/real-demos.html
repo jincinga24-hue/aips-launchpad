@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIPS — React Bits Effects (Vanilla Ports)</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    background: #0a0a0a;
+    color: #f5f5f7;
+    line-height: 1.5;
+  }
+  h1, h2, h3, h4 { font-family: 'Rajdhani', sans-serif; font-weight: 700; }
+
+  .label-bar {
+    text-align: center;
+    padding: 48px 20px 16px;
+  }
+  .label-bar .src { color: #2DB757; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .label-bar h2 { font-size: 28px; color: #fff; }
+  .label-bar p { color: #86868b; font-size: 14px; margin-top: 4px; }
+
+  .frame {
+    max-width: 900px;
+    margin: 0 auto 80px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #222;
+  }
+
+  /* ═══════════════════════════════════════
+     1. SPOTLIGHT CARDS (from React Bits SpotlightCard)
+     Ported: CSS radial-gradient follows mouse via custom props
+     ═══════════════════════════════════════ */
+  .spotlight-demo {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 32px;
+    background: #0d0d0d;
+  }
+
+  .card-spotlight {
+    position: relative;
+    border-radius: 1.5rem;
+    border: 1px solid #222;
+    background: #111;
+    padding: 28px 20px;
+    overflow: hidden;
+    cursor: pointer;
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+    --spotlight-color: rgba(45, 183, 87, 0.25);
+  }
+
+  .card-spotlight::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 80%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+
+  .card-spotlight:hover::before { opacity: 0.6; }
+
+  .card-spotlight .tag {
+    display: inline-block; font-size: 11px; font-weight: 600;
+    padding: 3px 10px; border-radius: 20px;
+    background: rgba(45,183,87,0.15); color: #2DB757;
+    margin-bottom: 12px;
+  }
+  .card-spotlight .tag.mvp { background: rgba(245,124,0,0.15); color: #f57c00; }
+  .card-spotlight h3 { font-size: 18px; color: #fff; margin-bottom: 6px; }
+  .card-spotlight p { font-size: 13px; color: #86868b; margin-bottom: 14px; }
+  .card-spotlight .score {
+    font-family: 'Rajdhani', sans-serif; font-weight: 700;
+    font-size: 28px; color: #2DB757;
+  }
+  .card-spotlight .score small { font-size: 14px; color: #555; }
+  .card-spotlight .roles { display: flex; gap: 6px; margin-top: 10px; }
+  .card-spotlight .role {
+    font-size: 11px; padding: 2px 8px; border-radius: 12px;
+    border: 1px solid #333; color: #86868b;
+  }
+
+  /* ═══════════════════════════════════════
+     2. DECRYPTED TEXT (from React Bits DecryptedText)
+     Ported: scramble chars on hover, reveal sequentially
+     ═══════════════════════════════════════ */
+  .decrypt-demo {
+    text-align: center;
+    padding: 80px 24px;
+    background: #f5f5f7;
+  }
+  .decrypt-demo .eyebrow {
+    font-size: 13px; font-weight: 600; color: #2DB757;
+    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px;
+  }
+  .decrypt-text {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(36px, 6vw, 56px);
+    font-weight: 700;
+    color: #1d1d1f;
+    cursor: pointer;
+    display: inline-block;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .decrypt-text .char {
+    display: inline-block;
+    transition: color 0.1s;
+  }
+  .decrypt-text .char.scrambled {
+    color: #ccc;
+    font-family: monospace;
+  }
+  .decrypt-demo .hint {
+    color: #86868b; font-size: 14px; margin-top: 16px;
+  }
+
+  /* ═══════════════════════════════════════
+     3. SHINY TEXT (from React Bits ShinyText)
+     Ported: animated gradient sweep across text
+     ═══════════════════════════════════════ */
+  .shiny-demo {
+    text-align: center;
+    padding: 60px 24px;
+    background: #0d0d0d;
+  }
+  .shiny-text {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background-image: linear-gradient(
+      120deg,
+      #86868b 0%, #86868b 35%,
+      #2DB757 50%,
+      #86868b 65%, #86868b 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shiny-sweep 3s linear infinite;
+  }
+  @keyframes shiny-sweep {
+    0% { background-position: 150% center; }
+    100% { background-position: -50% center; }
+  }
+
+  /* ═══════════════════════════════════════
+     4. CLICK SPARK (from React Bits ClickSpark)
+     Ported: canvas spark burst on click
+     ═══════════════════════════════════════ */
+  .spark-demo {
+    position: relative;
+    text-align: center;
+    padding: 80px 24px;
+    background: #111;
+    cursor: crosshair;
+    user-select: none;
+  }
+  .spark-demo canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+  }
+  .spark-demo h3 { color: #fff; font-size: 24px; position: relative; z-index: 1; }
+  .spark-demo p { color: #555; font-size: 14px; margin-top: 8px; position: relative; z-index: 1; }
+
+  /* ═══════════════════════════════════════
+     5. STAR BORDER BUTTON (from React Bits StarBorder)
+     Ported: animated gradient border orbiting a button
+     ═══════════════════════════════════════ */
+  .starborder-demo {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    align-items: center;
+    padding: 60px;
+    background: #0d0d0d;
+  }
+
+  .star-border-container {
+    position: relative;
+    border-radius: 980px;
+    padding: 2px;
+    overflow: hidden;
+    display: inline-block;
+  }
+
+  .star-border-container .border-gradient-bottom,
+  .star-border-container .border-gradient-top {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    border-radius: 50%;
+    animation: star-orbit 4s linear infinite;
+    pointer-events: none;
+    opacity: 0.85;
+  }
+
+  .star-border-container .border-gradient-bottom {
+    bottom: -100%; left: -50%;
+    background: radial-gradient(circle, #2DB757, transparent 10%);
+  }
+  .star-border-container .border-gradient-top {
+    top: -100%; left: -50%;
+    background: radial-gradient(circle, #5EC847, transparent 10%);
+    animation-delay: -2s;
+  }
+
+  @keyframes star-orbit {
+    0% { transform: rotate(0deg) translateX(0); }
+    100% { transform: rotate(360deg) translateX(0); }
+  }
+
+  .star-border-container .inner-content {
+    position: relative;
+    z-index: 1;
+    background: #111;
+    border-radius: 980px;
+    padding: 12px 32px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    display: block;
+  }
+
+  /* ═══════════════════════════════════════
+     6. PLAYER CARD w/ SPOTLIGHT + STAR BORDER
+     Combining effects for the trading card
+     ═══════════════════════════════════════ */
+  .player-demo {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    padding: 60px 40px;
+    background: #0d0d0d;
+  }
+
+  .player-card {
+    width: 240px;
+    position: relative;
+    border-radius: 20px;
+    padding: 2px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .player-card .border-gradient-bottom,
+  .player-card .border-gradient-top {
+    position: absolute;
+    width: 300%;
+    height: 300%;
+    border-radius: 50%;
+    animation: star-orbit 5s linear infinite;
+    pointer-events: none;
+    opacity: 0.7;
+  }
+  .player-card .border-gradient-bottom {
+    bottom: -150%; left: -100%;
+    background: radial-gradient(circle, #2DB757, transparent 10%);
+  }
+  .player-card .border-gradient-top {
+    top: -150%; left: -100%;
+    background: radial-gradient(circle, #B8E63A, transparent 10%);
+    animation-delay: -2.5s;
+  }
+
+  .player-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 20px 60px rgba(45,183,87,0.25);
+  }
+
+  .player-card-inner {
+    position: relative;
+    z-index: 1;
+    background: #1a1a1a;
+    border-radius: 18px;
+    padding: 28px 20px;
+    text-align: center;
+    overflow: hidden;
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+  }
+
+  .player-card-inner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(45,183,87,0.15), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+  .player-card:hover .player-card-inner::before { opacity: 1; }
+
+  .player-avatar {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: linear-gradient(135deg, #2DB757, #B8E63A);
+    margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+  }
+  .player-card-inner h3 { font-size: 20px; color: #fff; margin-bottom: 2px; }
+  .player-card-inner .degree { font-size: 12px; color: #86868b; margin-bottom: 12px; }
+  .player-card-inner .superpower {
+    font-size: 13px; font-style: italic; color: #5EC847; margin-bottom: 16px;
+  }
+
+  /* Radar chart */
+  .radar-wrap { width: 140px; height: 140px; margin: 0 auto 14px; }
+  .radar-wrap svg { width: 100%; height: 100%; }
+  .radar-grid { fill: none; stroke: #333; stroke-width: 0.5; }
+  .radar-shape { fill: rgba(45,183,87,0.2); stroke: #2DB757; stroke-width: 1.5; }
+  .radar-dot { fill: #2DB757; r: 3; }
+  .radar-label { fill: #555; font-size: 8px; text-anchor: middle; }
+
+  .player-role-badge {
+    display: inline-block; font-size: 12px; font-weight: 600;
+    padding: 4px 14px; border-radius: 20px;
+    background: rgba(45,183,87,0.15); color: #2DB757;
+  }
+
+  /* ═══════════════════════════════════════
+     BOTTOM SPACER
+     ═══════════════════════════════════════ */
+  .spacer { height: 60px; }
+</style>
+</head>
+<body>
+
+<!-- 1. SPOTLIGHT CARDS -->
+<div class="label-bar">
+  <div class="src">React Bits → SpotlightCard (ported to vanilla)</div>
+  <h2>Project Board Cards with Spotlight Effect</h2>
+  <p>Move your mouse over the cards — the green glow follows your cursor.</p>
+</div>
+<div class="frame">
+  <div class="spotlight-demo" id="spotlightDemo">
+    <div class="card-spotlight">
+      <span class="tag">💡 Idea</span>
+      <h3>StudySync</h3>
+      <p>AI study group matching for uni students</p>
+      <div class="score">82<small>/100</small></div>
+      <div class="roles"><span class="role">Build</span><span class="role">Design</span></div>
+    </div>
+    <div class="card-spotlight">
+      <span class="tag mvp">🚀 MVP</span>
+      <h3>FoodieMap</h3>
+      <p>Hidden food spots rated by locals</p>
+      <div class="score">91<small>/100</small></div>
+      <div class="roles"><span class="role">Grow</span><span class="role">Research</span></div>
+    </div>
+    <div class="card-spotlight">
+      <span class="tag">💡 Idea</span>
+      <h3>CarbonTrack</h3>
+      <p>Personal carbon footprint tracker</p>
+      <div class="score">73<small>/100</small></div>
+      <div class="roles"><span class="role">Build</span><span class="role">Advise</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. DECRYPTED TEXT -->
+<div class="label-bar">
+  <div class="src">React Bits → DecryptedText (ported to vanilla)</div>
+  <h2>Hero Headline with Decrypt Effect</h2>
+  <p>Hover the text — it scrambles then decrypts character by character.</p>
+</div>
+<div class="frame">
+  <div class="decrypt-demo">
+    <div class="eyebrow">‹› AI Prototyping Studio</div>
+    <div class="decrypt-text" id="decryptText">Launch Your Next Big Idea</div>
+    <div class="hint">↑ hover me</div>
+  </div>
+</div>
+
+<!-- 3. SHINY TEXT -->
+<div class="label-bar">
+  <div class="src">React Bits → ShinyText (ported to vanilla)</div>
+  <h2>Shiny Eyebrow Text</h2>
+  <p>Animated gradient sweep — great for the "AI Prototyping Studio" label.</p>
+</div>
+<div class="frame">
+  <div class="shiny-demo">
+    <span class="shiny-text">‹› AI Prototyping Studio — University of Melbourne</span>
+  </div>
+</div>
+
+<!-- 4. CLICK SPARK -->
+<div class="label-bar">
+  <div class="src">React Bits → ClickSpark (ported to vanilla)</div>
+  <h2>Click Spark on Submit</h2>
+  <p>Click anywhere below — sparks burst from your cursor. Use on form submit or CTA click.</p>
+</div>
+<div class="frame">
+  <div class="spark-demo" id="sparkDemo">
+    <canvas id="sparkCanvas"></canvas>
+    <h3>Click anywhere!</h3>
+    <p>Sparks use canvas animation — lightweight and fun</p>
+  </div>
+</div>
+
+<!-- 5. STAR BORDER -->
+<div class="label-bar">
+  <div class="src">React Bits → StarBorder (ported to vanilla)</div>
+  <h2>Animated Border Buttons</h2>
+  <p>Orbiting gradient dot creates a living border. Great for CTAs.</p>
+</div>
+<div class="frame">
+  <div class="starborder-demo">
+    <div class="star-border-container">
+      <div class="border-gradient-bottom"></div>
+      <div class="border-gradient-top"></div>
+      <span class="inner-content">Submit Your Idea</span>
+    </div>
+    <div class="star-border-container">
+      <div class="border-gradient-bottom"></div>
+      <div class="border-gradient-top"></div>
+      <span class="inner-content">Browse Projects</span>
+    </div>
+  </div>
+</div>
+
+<!-- 6. PLAYER TRADING CARD (SpotlightCard + StarBorder combined) -->
+<div class="label-bar">
+  <div class="src">React Bits → SpotlightCard + StarBorder (combined)</div>
+  <h2>Player Trading Cards (球星卡)</h2>
+  <p>Orbiting border + spotlight glow + radar chart. Hover to interact.</p>
+</div>
+<div class="frame">
+  <div class="player-demo">
+    <div class="player-card">
+      <div class="border-gradient-bottom"></div>
+      <div class="border-gradient-top"></div>
+      <div class="player-card-inner">
+        <div class="player-avatar">🧑‍💻</div>
+        <h3>Alex Chen</h3>
+        <div class="degree">CompSci, Year 2</div>
+        <div class="superpower">"I ship fast"</div>
+        <div class="radar-wrap">
+          <svg viewBox="0 0 140 140">
+            <polygon class="radar-grid" points="70,10 127,38 113,102 27,102 13,38" />
+            <polygon class="radar-grid" points="70,25 110,45 100,90 40,90 30,45" />
+            <polygon class="radar-grid" points="70,40 93,52 87,78 53,78 47,52" />
+            <polygon class="radar-shape" points="70,15 122,42 90,98 32,82 18,40" />
+            <circle class="radar-dot" cx="70" cy="15" />
+            <circle class="radar-dot" cx="122" cy="42" />
+            <circle class="radar-dot" cx="90" cy="98" />
+            <circle class="radar-dot" cx="32" cy="82" />
+            <circle class="radar-dot" cx="18" cy="40" />
+            <text class="radar-label" x="70" y="6">Code</text>
+            <text class="radar-label" x="134" y="40">Design</text>
+            <text class="radar-label" x="118" y="108">Research</text>
+            <text class="radar-label" x="18" y="108">Comms</text>
+            <text class="radar-label" x="6" y="40">Domain</text>
+          </svg>
+        </div>
+        <span class="player-role-badge">Build</span>
+      </div>
+    </div>
+
+    <div class="player-card">
+      <div class="border-gradient-bottom"></div>
+      <div class="border-gradient-top"></div>
+      <div class="player-card-inner">
+        <div class="player-avatar">🎨</div>
+        <h3>Mei Lin</h3>
+        <div class="degree">Design, Year 3</div>
+        <div class="superpower">"I make things pretty"</div>
+        <div class="radar-wrap">
+          <svg viewBox="0 0 140 140">
+            <polygon class="radar-grid" points="70,10 127,38 113,102 27,102 13,38" />
+            <polygon class="radar-grid" points="70,25 110,45 100,90 40,90 30,45" />
+            <polygon class="radar-grid" points="70,40 93,52 87,78 53,78 47,52" />
+            <polygon class="radar-shape" points="70,38 125,35 105,95 35,98 20,48" />
+            <circle class="radar-dot" cx="70" cy="38" />
+            <circle class="radar-dot" cx="125" cy="35" />
+            <circle class="radar-dot" cx="105" cy="95" />
+            <circle class="radar-dot" cx="35" cy="98" />
+            <circle class="radar-dot" cx="20" cy="48" />
+            <text class="radar-label" x="70" y="6">Code</text>
+            <text class="radar-label" x="134" y="40">Design</text>
+            <text class="radar-label" x="118" y="108">Research</text>
+            <text class="radar-label" x="18" y="108">Comms</text>
+            <text class="radar-label" x="6" y="40">Domain</text>
+          </svg>
+        </div>
+        <span class="player-role-badge">Design</span>
+      </div>
+    </div>
+
+    <div class="player-card">
+      <div class="border-gradient-bottom"></div>
+      <div class="border-gradient-top"></div>
+      <div class="player-card-inner">
+        <div class="player-avatar">📊</div>
+        <h3>Sam Patel</h3>
+        <div class="degree">Data Sci, Year 4</div>
+        <div class="superpower">"Signal in the noise"</div>
+        <div class="radar-wrap">
+          <svg viewBox="0 0 140 140">
+            <polygon class="radar-grid" points="70,10 127,38 113,102 27,102 13,38" />
+            <polygon class="radar-grid" points="70,25 110,45 100,90 40,90 30,45" />
+            <polygon class="radar-grid" points="70,40 93,52 87,78 53,78 47,52" />
+            <polygon class="radar-shape" points="70,22 100,50 110,92 42,88 25,42" />
+            <circle class="radar-dot" cx="70" cy="22" />
+            <circle class="radar-dot" cx="100" cy="50" />
+            <circle class="radar-dot" cx="110" cy="92" />
+            <circle class="radar-dot" cx="42" cy="88" />
+            <circle class="radar-dot" cx="25" cy="42" />
+            <text class="radar-label" x="70" y="6">Code</text>
+            <text class="radar-label" x="134" y="40">Design</text>
+            <text class="radar-label" x="118" y="108">Research</text>
+            <text class="radar-label" x="18" y="108">Comms</text>
+            <text class="radar-label" x="6" y="40">Domain</text>
+          </svg>
+        </div>
+        <span class="player-role-badge">Research</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="spacer"></div>
+
+<script>
+  // ═══ 1. SPOTLIGHT CARDS — port of SpotlightCard.jsx ═══
+  document.querySelectorAll('.card-spotlight').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+      card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+    });
+  });
+
+  // Same for player card inner
+  document.querySelectorAll('.player-card-inner').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+      card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+    });
+  });
+
+  // ═══ 2. DECRYPTED TEXT — port of DecryptedText.jsx ═══
+  (function() {
+    const el = document.getElementById('decryptText');
+    const originalText = el.textContent;
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*';
+    let isAnimating = false;
+
+    function scrambleHTML(text, revealedSet) {
+      return text.split('').map((ch, i) => {
+        if (ch === ' ') return ' ';
+        if (revealedSet.has(i)) return `<span class="char">${ch}</span>`;
+        const rnd = chars[Math.floor(Math.random() * chars.length)];
+        return `<span class="char scrambled">${rnd}</span>`;
+      }).join('');
+    }
+
+    el.addEventListener('mouseenter', () => {
+      if (isAnimating) return;
+      isAnimating = true;
+
+      const revealed = new Set();
+      const len = originalText.length;
+      let frame = 0;
+
+      const interval = setInterval(() => {
+        // Reveal ~2 chars per tick
+        for (let j = 0; j < 2; j++) {
+          // Find next non-space unrevealed char from start
+          for (let i = 0; i < len; i++) {
+            if (originalText[i] !== ' ' && !revealed.has(i)) {
+              revealed.add(i);
+              break;
+            }
+          }
+        }
+        el.innerHTML = scrambleHTML(originalText, revealed);
+        frame++;
+
+        if (revealed.size >= len - originalText.split(' ').length + originalText.split(' ').length || frame > 60) {
+          clearInterval(interval);
+          el.innerHTML = scrambleHTML(originalText, new Set(Array.from({length: len}, (_, i) => i)));
+          isAnimating = false;
+        }
+      }, 40);
+    });
+
+    el.addEventListener('mouseleave', () => {
+      el.textContent = originalText;
+      isAnimating = false;
+    });
+  })();
+
+  // ═══ 4. CLICK SPARK — port of ClickSpark.jsx ═══
+  (function() {
+    const demo = document.getElementById('sparkDemo');
+    const canvas = document.getElementById('sparkCanvas');
+    const ctx = canvas.getContext('2d');
+    const sparks = [];
+    const SPARK_COLOR = '#2DB757';
+    const SPARK_COUNT = 8;
+    const SPARK_SIZE = 12;
+    const SPARK_RADIUS = 20;
+    const DURATION = 400;
+
+    function resize() {
+      const rect = demo.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    function easeOut(t) { return t * (2 - t); }
+
+    function draw(timestamp) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const s = sparks[i];
+        const elapsed = timestamp - s.startTime;
+        if (elapsed >= DURATION) { sparks.splice(i, 1); continue; }
+
+        const progress = elapsed / DURATION;
+        const eased = easeOut(progress);
+        const dist = eased * SPARK_RADIUS * 2;
+        const lineLen = SPARK_SIZE * (1 - eased);
+
+        const x1 = s.x + dist * Math.cos(s.angle);
+        const y1 = s.y + dist * Math.sin(s.angle);
+        const x2 = s.x + (dist + lineLen) * Math.cos(s.angle);
+        const y2 = s.y + (dist + lineLen) * Math.sin(s.angle);
+
+        ctx.strokeStyle = SPARK_COLOR;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
+
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
+
+    demo.addEventListener('click', e => {
+      const rect = demo.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const now = performance.now();
+
+      for (let i = 0; i < SPARK_COUNT; i++) {
+        sparks.push({
+          x, y,
+          angle: (2 * Math.PI * i) / SPARK_COUNT,
+          startTime: now
+        });
+      }
+    });
+  })();
+</script>
+
+</body>
+</html>
