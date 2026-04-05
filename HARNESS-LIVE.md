@@ -48,3 +48,28 @@ Waiting for first cycle...
 19:29:54 | Cycle 3 | write | /Users/jincinga24/Documents/Playground/aips-launchpad/FEATURES.json
 19:29:59 | Cycle 2 | Editing | FEATURES.json
 19:30:10 | Cycle 2 | Editing | FEATURES.json
+19:30:45 | Cycle 2 | Reading | FEATURES.json
+19:30:48 | Cycle 2 | Reading | index.html
+19:30:51 | Cycle 2 | Reading | index.html
+19:30:55 | Cycle 2 | Reading | index.html
+19:31:02 | Cycle 2 | Reading | index.html
+19:31:07 | Cycle 2 | Reading | index.html
+19:31:11 | Cycle 2 | Reading | index.html
+19:32:24 | Cycle 4 | read | directory listing
+19:32:29 | Cycle 4 | read | index.html
+19:32:32 | Cycle 3 | Reading | index.html
+19:32:48 | Cycle 3 | Reading | index.html
+19:32:49 | Cycle 3 | Reading | index.html
+19:32:51 | Cycle 3 | Reading | index.html
+19:32:54 | Cycle 3 | Reading | index.html
+19:32:58 | Cycle 4 | write | index.html (fix 1: escape key closes pc-modal)
+19:33:02 | Cycle 3 | Editing | index.html
+19:33:09 | Cycle 3 | Editing | index.html
+19:33:13 | Cycle 3 | Editing | index.html
+19:33:20 | Cycle 3 | Editing | index.html
+19:33:25 | Cycle 3 | Editing | index.html
+19:33:29 | Cycle 3 | Reading | index.html
+19:33:35 | Cycle 3 | Editing | index.html
+19:33:40 | Cycle 3 | Reading | index.html
+19:33:50 | Cycle 3 | Editing | index.html
+19:33:55 | Cycle 4 | commit | all 5 fixes

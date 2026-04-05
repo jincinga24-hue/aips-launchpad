@@ -1467,11 +1467,9 @@ function setTrack(track) {
 
 // ─── ROLE CHIPS ─────────────────────────────────────────────────────────────
 function toggleRole(chip) {
+  // Read checked state after browser's default label-click toggle
   const cb = chip.querySelector('input');
-  // toggle happens after click, so check new value
-  setTimeout(() => {
-    chip.classList.toggle('selected', cb.checked);
-  }, 0);
+  chip.classList.toggle('selected', cb.checked);
 }
 
 function getSelectedRoles() {
@@ -1536,6 +1534,23 @@ document.getElementById('submit-form').addEventListener('submit', function(e) {
 
   if (!validateForm()) {
     errorAlert.textContent = 'Please fix the errors above before submitting.';
+    errorAlert.classList.add('visible');
+    errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    return;
+  }
+
+  // URL XSS guard: only allow http(s) links
+  const safeUrlPattern = /^https?:\/\//i;
+  const demoVal = document.getElementById('f-demo').value.trim();
+  const videoVal = document.getElementById('f-video').value.trim();
+  if (demoVal && !safeUrlPattern.test(demoVal)) {
+    errorAlert.textContent = 'Demo link must start with http:// or https://';
+    errorAlert.classList.add('visible');
+    errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    return;
+  }
+  if (videoVal && !safeUrlPattern.test(videoVal)) {
+    errorAlert.textContent = 'Video link must start with http:// or https://';
     errorAlert.classList.add('visible');
     errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     return;
@@ -1754,7 +1769,13 @@ function closeModalOnBackdrop(e) {
 }
 
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeProjectModal();
+  if (e.key === 'Escape') {
+    if (document.getElementById('pc-modal').classList.contains('open')) {
+      closePcModal();
+    } else {
+      closeProjectModal();
+    }
+  }
 });
 
 // ─── STATS ──────────────────────────────────────────────────────────────────
@@ -1887,6 +1908,7 @@ function renderAdmin() {
             ↩ Return for Revision
           </button>
         </div>
+        <div id="admin-error-${p.id}" class="alert alert-error" style="display:none;margin-top:10px;"></div>
       </div>
     `;
   }).join('');
@@ -1927,10 +1949,13 @@ function getScoresForProject(projectId) {
 function adminDecision(projectId, decision) {
   const feedback = document.getElementById(`feedback-${projectId}`).value.trim();
   if (decision === 'revision' && !feedback) {
-    alert('Please provide written feedback before returning for revision.');
+    const errEl = document.getElementById(`admin-error-${projectId}`);
+    if (errEl) { errEl.textContent = 'Please provide written feedback before returning for revision.'; errEl.style.display = 'block'; }
     document.getElementById(`feedback-${projectId}`).focus();
     return;
   }
+  const errEl = document.getElementById(`admin-error-${projectId}`);
+  if (errEl) errEl.style.display = 'none';
   const scores = getScoresForProject(projectId);
   const total = Object.values(scores).reduce((a, b) => a + b, 0);
 
@@ -2156,6 +2181,15 @@ function submitPlayerCard() {
     comm: parseInt(document.getElementById('ab-comm').value, 10),
     domain: parseInt(document.getElementById('ab-domain').value, 10),
   };
+
+  // Guard: prevent duplicate email per project
+  const existingProject = getProjects().find(p => p.id === currentPcProjectId);
+  if (existingProject && (existingProject.playerCards || []).some(c => c.email.toLowerCase() === email.toLowerCase())) {
+    alertEl.className = 'alert alert-error';
+    alertEl.textContent = 'You have already submitted a player card for this project.';
+    alertEl.style.display = 'block';
+    return;
+  }
 
   const newCard = { name, degree, role: selectedPcRole, superpower, email, abilities, createdAt: new Date().toISOString() };
 
