@@ -1602,10 +1602,10 @@
           <div class="field-error" id="err-email">Please enter a valid email address.</div>
         </div>
 
-        <div class="form-group float-group">
-          <input type="url" id="f-groupchat" placeholder=" " />
-          <label class="float-label">Team Chat Link</label>
-          <div class="field-hint">Optional. Discord, WhatsApp, or group chat link for your team. Shown to approved applicants only.</div>
+        <div class="form-group">
+          <label class="form-label">How should teammates reach you?</label>
+          <input type="text" id="f-contact-method" placeholder="e.g. @yourhandle on Instagram, iMessage 04xx xxx xxx, Discord link..." />
+          <div class="field-hint">Optional. Your preferred way for approved applicants to contact you. Not shown publicly until they apply.</div>
         </div>
 
         <!-- MVP-only fields -->
@@ -1944,15 +1944,8 @@ document.getElementById('submit-form').addEventListener('submit', function(e) {
 
   // URL XSS guard: only allow http(s) links
   const safeUrlPattern = /^https?:\/\//i;
-  const groupChatVal = document.getElementById('f-groupchat').value.trim();
   const demoVal = document.getElementById('f-demo').value.trim();
   const videoVal = document.getElementById('f-video').value.trim();
-  if (groupChatVal && !safeUrlPattern.test(groupChatVal)) {
-    errorAlert.textContent = 'Team chat link must start with http:// or https://';
-    errorAlert.classList.add('visible');
-    errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    return;
-  }
   if (demoVal && !safeUrlPattern.test(demoVal)) {
     errorAlert.textContent = 'Demo link must start with http:// or https://';
     errorAlert.classList.add('visible');
@@ -1981,7 +1974,7 @@ document.getElementById('submit-form').addEventListener('submit', function(e) {
     mvpScope: document.getElementById('f-scope').value.trim(),
     rolesNeeded: getSelectedRoles(),
     contactEmail: document.getElementById('f-email').value.trim(),
-    groupChatLink: document.getElementById('f-groupchat').value.trim() || null,
+    contactMethod: document.getElementById('f-contact-method').value.trim() || null,
     demoLink: document.getElementById('f-demo').value.trim() || null,
     videoLink: document.getElementById('f-video').value.trim() || null,
     currentTeam: document.getElementById('f-team').value.trim() || null,
@@ -2194,11 +2187,11 @@ function openProjectDetail(id) {
         </div>
       ` : ''}
 
-      ${project.groupChatLink ? `
+      ${project.contactMethod ? `
         <div class="modal-section" style="margin-top: 16px;">
           <div class="modal-section-label">Want to connect?</div>
-          <p style="color: var(--muted); font-size: 13px; margin-bottom: 8px;">Submit a player card above, then join the team chat:</p>
-          <a href="${escapeHtml(project.groupChatLink)}" target="_blank" rel="noopener" class="modal-demo-link">💬 Join Team Chat</a>
+          <p style="color: var(--muted); font-size: 13px; margin-bottom: 8px;">Submit a player card above, then reach out to the founder:</p>
+          <div style="background: var(--bg); padding: 12px 16px; border-radius: 10px; font-size: 14px; color: var(--text);">📱 ${escapeHtml(project.contactMethod)}</div>
         </div>
       ` : ''}
     </div>
@@ -2683,7 +2676,7 @@ function submitPlayerCard() {
 
   // Check if project has a group chat link
   const currentProject = projects.find(p => p.id === currentPcProjectId);
-  const hasChat = currentProject && currentProject.groupChatLink;
+  const hasChat = currentProject && currentProject.contactMethod;
 
   // Show card flip reveal, then close and reopen project detail
   closePcModal();
@@ -2705,8 +2698,11 @@ function showConnectPrompt(project) {
       <div style="font-size: 36px; margin-bottom: 12px;">🎉</div>
       <h2 style="margin-bottom: 8px;">You're in!</h2>
       <p style="color: var(--muted); margin-bottom: 24px;">Your player card has been sent to the ${escapeHtml(project.name)} team.</p>
-      <a href="${escapeHtml(project.groupChatLink)}" target="_blank" rel="noopener" class="btn btn-primary" style="display:inline-block; text-decoration:none; margin-bottom: 12px;">💬 Join the Team Chat</a>
-      <p style="font-size: 12px; color: var(--muted);">The project founder will also be able to see your card and contact you.</p>
+      <div style="background: var(--bg); padding: 16px 20px; border-radius: 12px; margin-bottom: 16px; text-align: left;">
+        <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Reach the founder:</div>
+        <div style="font-size: 15px; color: var(--text); font-weight: 500;">📱 ${escapeHtml(project.contactMethod)}</div>
+      </div>
+      <p style="font-size: 12px; color: var(--muted);">The founder can also see your card and email in their dashboard.</p>
     </div>
   `;
   document.getElementById('modal-content').innerHTML = content;
@@ -2731,7 +2727,7 @@ function prefillAndEdit(projectId) {
   document.getElementById('f-target').value = project.targetUser || '';
   document.getElementById('f-scope').value = project.mvpScope || '';
   document.getElementById('f-email').value = project.contactEmail || '';
-  document.getElementById('f-groupchat').value = project.groupChatLink || '';
+  document.getElementById('f-contact-method').value = project.contactMethod || '';
   document.getElementById('f-demo').value = project.demoLink || '';
   document.getElementById('f-video').value = project.videoLink || '';
   document.getElementById('f-team').value = project.currentTeam || '';
