@@ -10,8 +10,8 @@ let currentTab = 'home';
 let isSignUp = false;
 
 export function showTab(tab) {
-  // Auth guard — require login for submit, my-submissions
-  if (['submit', 'my-submissions'].includes(tab) && !isLoggedIn()) {
+  // Auth guard — everything except home and board requires login
+  if (tab !== 'home' && tab !== 'board' && tab !== 'auth' && !isLoggedIn()) {
     showTab('auth');
     return;
   }
