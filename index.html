@@ -1535,7 +1535,7 @@
       <div id="submit-alert-error" class="alert alert-error"></div>
 
       <div class="track-toggle">
-        <button class="track-btn active" id="btn-track-idea" onclick="setTrack('idea')">💡 Idea</button>
+        <button class="track-btn active" id="btn-track-idea" onclick="setTrack('idea')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>Idea</button>
         <button class="track-btn" id="btn-track-mvp" onclick="setTrack('mvp')">🚀 MVP</button>
       </div>
 
@@ -1600,6 +1600,12 @@
           <label class="float-label">Contact Email <span>*</span></label>
           <div class="field-hint">Used for status updates. Not shown publicly.</div>
           <div class="field-error" id="err-email">Please enter a valid email address.</div>
+        </div>
+
+        <div class="form-group float-group">
+          <input type="url" id="f-groupchat" placeholder=" " />
+          <label class="float-label">Team Chat Link</label>
+          <div class="field-hint">Optional. Discord, WhatsApp, or group chat link for your team. Shown to approved applicants only.</div>
         </div>
 
         <!-- MVP-only fields -->
@@ -1667,7 +1673,7 @@
       <p>Support promising student projects</p>
     </div>
     <div style="text-align:center; padding: 80px 20px;">
-      <div style="font-size: 48px; margin-bottom: 16px;">💰</div>
+      <div style="font-size: 48px; margin-bottom: 16px; font-family: 'Rajdhani', sans-serif; font-weight: 700; color: var(--green);">$</div>
       <h2 class="glitch-text" data-text="Coming Soon" style="color: var(--text); margin-bottom: 8px;">Coming Soon</h2>
       <p style="color: var(--text-secondary); max-width: 400px; margin: 0 auto; line-height: 1.6;">
         We're working on a funding pool where sponsors, the university community, and external backers can support approved AIPS projects. Stay tuned.
@@ -1938,8 +1944,15 @@ document.getElementById('submit-form').addEventListener('submit', function(e) {
 
   // URL XSS guard: only allow http(s) links
   const safeUrlPattern = /^https?:\/\//i;
+  const groupChatVal = document.getElementById('f-groupchat').value.trim();
   const demoVal = document.getElementById('f-demo').value.trim();
   const videoVal = document.getElementById('f-video').value.trim();
+  if (groupChatVal && !safeUrlPattern.test(groupChatVal)) {
+    errorAlert.textContent = 'Team chat link must start with http:// or https://';
+    errorAlert.classList.add('visible');
+    errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    return;
+  }
   if (demoVal && !safeUrlPattern.test(demoVal)) {
     errorAlert.textContent = 'Demo link must start with http:// or https://';
     errorAlert.classList.add('visible');
@@ -1968,6 +1981,7 @@ document.getElementById('submit-form').addEventListener('submit', function(e) {
     mvpScope: document.getElementById('f-scope').value.trim(),
     rolesNeeded: getSelectedRoles(),
     contactEmail: document.getElementById('f-email').value.trim(),
+    groupChatLink: document.getElementById('f-groupchat').value.trim() || null,
     demoLink: document.getElementById('f-demo').value.trim() || null,
     videoLink: document.getElementById('f-video').value.trim() || null,
     currentTeam: document.getElementById('f-team').value.trim() || null,
@@ -2175,8 +2189,16 @@ function openProjectDetail(id) {
         <div class="player-cards-section">
           <h3>Team Applicants <span class="player-cards-count">${project.playerCards.length}</span></h3>
           <div class="player-cards-grid">
-            ${(project.playerCards || []).map(card => renderTradingCard(card)).join('')}
+            ${(project.playerCards || []).map(card => renderTradingCard(card, false)).join('')}
           </div>
+        </div>
+      ` : ''}
+
+      ${project.groupChatLink ? `
+        <div class="modal-section" style="margin-top: 16px;">
+          <div class="modal-section-label">Want to connect?</div>
+          <p style="color: var(--muted); font-size: 13px; margin-bottom: 8px;">Submit a player card above, then join the team chat:</p>
+          <a href="${escapeHtml(project.groupChatLink)}" target="_blank" rel="noopener" class="modal-demo-link">💬 Join Team Chat</a>
         </div>
       ` : ''}
     </div>
@@ -2262,6 +2284,19 @@ function lookupSubmissions() {
             <button class="btn-resubmit" onclick="prefillAndEdit('${p.id}')">Edit &amp; Resubmit</button>
           </div>
         ` : (p.feedback ? `<div style="margin-top:10px;font-size:13px;color:var(--muted);background:var(--bg);padding:10px 12px;border-radius:8px;">${escapeHtml(p.feedback)}</div>` : '')}
+        ${p.status === 'approved' && (p.playerCards || []).length > 0 ? `
+          <div class="applicants-section">
+            <h4 style="font-size:14px; margin: 16px 0 8px;">People who want to join (${p.playerCards.length})</h4>
+            <div class="player-cards-grid">
+              ${p.playerCards.map(card => renderTradingCard(card, true)).join('')}
+            </div>
+          </div>
+        ` : ''}
+        ${p.status === 'approved' && (p.playerCards || []).length === 0 ? `
+          <div style="margin-top:12px;font-size:13px;color:var(--muted);background:var(--bg);padding:12px;border-radius:8px;text-align:center;">
+            No applicants yet. Share your project link to attract teammates!
+          </div>
+        ` : ''}
       </div>
     `;
   }).join('');
@@ -2580,7 +2615,7 @@ function renderMiniRadar(values, color) {
   return `<svg width="100" height="100" viewBox="0 0 100 100" class="mini-radar-svg">${svgContent}</svg>`;
 }
 
-function renderTradingCard(card) {
+function renderTradingCard(card, showEmail) {
   // Support both old single role and new multi-role format
   const roles = card.roles || (card.role ? [card.role] : []);
   const primaryRole = roles[0] || 'Build';
@@ -2595,7 +2630,7 @@ function renderTradingCard(card) {
       <div class="tc-degree">${escapeHtml(card.degree)}</div>
       <div class="tc-superpower">"${escapeHtml(card.superpower)}"</div>
       ${miniRadar}
-      <div class="tc-email">${escapeHtml(card.email)}</div>
+      ${showEmail ? `<div class="tc-email">${escapeHtml(card.email)}</div>` : ''}
     </div>
   `;
 }
@@ -2646,13 +2681,37 @@ function submitPlayerCard() {
   saveProjects(updated);
   renderStats();
 
+  // Check if project has a group chat link
+  const currentProject = projects.find(p => p.id === currentPcProjectId);
+  const hasChat = currentProject && currentProject.groupChatLink;
+
   // Show card flip reveal, then close and reopen project detail
   closePcModal();
   fireConfetti();
   showCardFlipReveal(newCard);
   setTimeout(() => {
-    openProjectDetail(currentPcProjectId);
+    if (hasChat) {
+      // Show a connect modal instead of just reopening detail
+      showConnectPrompt(currentProject);
+    } else {
+      openProjectDetail(currentPcProjectId);
+    }
   }, 3200);
+}
+
+function showConnectPrompt(project) {
+  const content = `
+    <div style="text-align:center; padding: 20px 0;">
+      <div style="font-size: 36px; margin-bottom: 12px;">🎉</div>
+      <h2 style="margin-bottom: 8px;">You're in!</h2>
+      <p style="color: var(--muted); margin-bottom: 24px;">Your player card has been sent to the ${escapeHtml(project.name)} team.</p>
+      <a href="${escapeHtml(project.groupChatLink)}" target="_blank" rel="noopener" class="btn btn-primary" style="display:inline-block; text-decoration:none; margin-bottom: 12px;">💬 Join the Team Chat</a>
+      <p style="font-size: 12px; color: var(--muted);">The project founder will also be able to see your card and contact you.</p>
+    </div>
+  `;
+  document.getElementById('modal-content').innerHTML = content;
+  document.getElementById('project-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 
 // ─── REVISION FLOW ───────────────────────────────────────────────────────────
@@ -2672,6 +2731,7 @@ function prefillAndEdit(projectId) {
   document.getElementById('f-target').value = project.targetUser || '';
   document.getElementById('f-scope').value = project.mvpScope || '';
   document.getElementById('f-email').value = project.contactEmail || '';
+  document.getElementById('f-groupchat').value = project.groupChatLink || '';
   document.getElementById('f-demo').value = project.demoLink || '';
   document.getElementById('f-video').value = project.videoLink || '';
   document.getElementById('f-team').value = project.currentTeam || '';
