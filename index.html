@@ -98,6 +98,9 @@
     .nav-tab.active { color: var(--text); background: rgba(0,0,0,0.06); font-weight: 600; }
 
     #admin-tab-btn { display: none; }
+    #admin-tab-btn.visible { display: inline-block; }
+    .alert.visible { display: block; }
+    .approval-error-msg.visible { display: block; }
 
     /* ─── MAIN ─────────────────────────────────────────────────────── */
     main {
@@ -480,11 +483,13 @@
 
     /* Empty state */
     .empty-state {
+      display: none;
       text-align: center;
       padding: 72px 24px;
       color: var(--muted);
     }
 
+    .empty-state.visible { display: block; }
     .empty-state .empty-icon { font-size: 48px; margin-bottom: 16px; }
     .empty-state h3 { font-size: 20px; color: var(--text); margin-bottom: 8px; }
     .empty-state p { font-size: 14px; max-width: 360px; margin: 0 auto; }
@@ -1322,7 +1327,7 @@
     </div>
 
     <div id="board-grid" class="projects-grid"></div>
-    <div id="board-empty" class="empty-state" style="display:none;">
+    <div id="board-empty" class="empty-state">
       <div class="empty-icon">🚀</div>
       <h3>No projects yet</h3>
       <p>Be the first! Submit your idea and get it reviewed by the AIPS committee.</p>
@@ -1346,7 +1351,7 @@
     </div>
 
     <div id="my-submissions-list"></div>
-    <div id="my-submissions-empty" class="empty-state" style="display:none;">
+    <div id="my-submissions-empty" class="empty-state">
       <div class="empty-icon">📭</div>
       <h3>No submissions found</h3>
       <p>No projects were found for that email address. Double-check and try again.</p>
@@ -1361,7 +1366,7 @@
     </div>
 
     <div id="admin-pending-list"></div>
-    <div id="admin-empty" class="empty-state" style="display:none;">
+    <div id="admin-empty" class="empty-state">
       <div class="empty-icon">✅</div>
       <h3>Queue is clear</h3>
       <p>No pending submissions to review right now.</p>
@@ -1377,7 +1382,7 @@
     <h2>Create Your Player Card</h2>
     <p>Tell this project what you bring to the table.</p>
 
-    <div id="pc-alert" class="alert" style="display:none;"></div>
+    <div id="pc-alert" class="alert"></div>
 
     <div class="form-group">
       <label>Your Name <span>*</span></label>
@@ -1391,12 +1396,12 @@
 
     <div class="form-group">
       <label>Your Role <span>*</span></label>
-      <div class="pc-role-grid">
-        <button class="pc-role-btn" data-role="Build" onclick="selectPcRole('Build', this)">Build</button>
-        <button class="pc-role-btn" data-role="Design" onclick="selectPcRole('Design', this)">Design</button>
-        <button class="pc-role-btn" data-role="Research" onclick="selectPcRole('Research', this)">Research</button>
-        <button class="pc-role-btn" data-role="Grow" onclick="selectPcRole('Grow', this)">Grow</button>
-        <button class="pc-role-btn" data-role="Advise" onclick="selectPcRole('Advise', this)">Advise</button>
+      <div class="pc-role-grid" id="pc-role-grid">
+        <button class="pc-role-btn" data-role="Build">Build</button>
+        <button class="pc-role-btn" data-role="Design">Design</button>
+        <button class="pc-role-btn" data-role="Research">Research</button>
+        <button class="pc-role-btn" data-role="Grow">Grow</button>
+        <button class="pc-role-btn" data-role="Advise">Advise</button>
       </div>
     </div>
 
@@ -1492,6 +1497,11 @@ function showTab(tab) {
   if (tab === 'board') renderBoard();
   if (tab === 'home') renderStats();
   if (tab === 'admin') renderAdmin();
+  if (tab !== 'submit' && editingProjectId) {
+    editingProjectId = null;
+    const submitBtn = document.querySelector('#submit-form button[type="submit"]');
+    if (submitBtn) submitBtn.textContent = 'Submit for Review →';
+  }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -1687,11 +1697,11 @@ function renderBoard() {
 
   if (filtered.length === 0) {
     grid.innerHTML = '';
-    empty.style.display = 'block';
+    empty.classList.add('visible');
     return;
   }
 
-  empty.style.display = 'none';
+  empty.classList.remove('visible');
   grid.innerHTML = filtered.map(p => `
     <div class="project-card" data-project-id="${escapeHtml(p.id)}">
       <div class="card-header">
@@ -1856,14 +1866,14 @@ function lookupSubmissions() {
 
   if (!email) {
     list.innerHTML = '';
-    empty.style.display = 'none';
+    empty.classList.remove('visible');
     return;
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     list.innerHTML = '<p style="color:#ff3b30;font-size:14px;">Please enter a valid email.</p>';
-    empty.style.display = 'none';
+    empty.classList.remove('visible');
     return;
   }
 
@@ -1871,11 +1881,11 @@ function lookupSubmissions() {
 
   if (matches.length === 0) {
     list.innerHTML = '';
-    empty.style.display = 'block';
+    empty.classList.add('visible');
     return;
   }
 
-  empty.style.display = 'none';
+  empty.classList.remove('visible');
   list.innerHTML = matches.map(p => {
     const date = new Date(p.submittedAt).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
     return `
@@ -1913,11 +1923,11 @@ function renderAdmin() {
 
   if (pending.length === 0) {
     list.innerHTML = '';
-    empty.style.display = 'block';
+    empty.classList.add('visible');
     return;
   }
 
-  empty.style.display = 'none';
+  empty.classList.remove('visible');
   list.innerHTML = pending.map(p => {
     const date = new Date(p.submittedAt).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
     const sliders = CRITERIA.map(c => `
@@ -2008,12 +2018,12 @@ function adminDecision(projectId, decision) {
   const feedback = document.getElementById(`feedback-${projectId}`).value.trim();
   if (decision === 'revision' && !feedback) {
     const errEl = document.getElementById(`admin-error-${projectId}`);
-    if (errEl) { errEl.textContent = 'Please provide written feedback before returning for revision.'; errEl.style.display = 'block'; }
+    if (errEl) { errEl.textContent = 'Please provide written feedback before returning for revision.'; errEl.classList.add('visible'); }
     document.getElementById(`feedback-${projectId}`).focus();
     return;
   }
   const errEl = document.getElementById(`admin-error-${projectId}`);
-  if (errEl) errEl.style.display = 'none';
+  if (errEl) errEl.classList.remove('visible');
   const scores = getScoresForProject(projectId);
   const total = Object.values(scores).reduce((a, b) => a + b, 0);
 
@@ -2030,7 +2040,7 @@ function adminDecision(projectId, decision) {
 // ─── ADMIN ACCESS ───────────────────────────────────────────────────────────
 function checkAdminAccess() {
   if (window.location.hash === '#admin=aips2026') {
-    document.getElementById('admin-tab-btn').style.display = 'inline-block';
+    document.getElementById('admin-tab-btn').classList.add('visible');
   }
 }
 
@@ -2078,7 +2088,7 @@ function openPcModal(projectId) {
     b.className = 'pc-role-btn';
   });
   const alert = document.getElementById('pc-alert');
-  alert.style.display = 'none';
+  alert.className = 'alert';
   updatePcRadar();
   document.getElementById('pc-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -2101,6 +2111,18 @@ function selectPcRole(role, btn) {
   });
   btn.className = 'pc-role-btn selected-' + lowerRole;
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  const roleGrid = document.getElementById('pc-role-grid');
+  if (roleGrid) {
+    roleGrid.addEventListener('click', function(e) {
+      const btn = e.target.closest('.pc-role-btn');
+      if (!btn) return;
+      const role = btn.dataset.role;
+      if (role) selectPcRole(role, btn);
+    });
+  }
+});
 
 function getAbilityValues() {
   return ABILITIES.map(a => parseInt(document.getElementById('ab-' + a.id).value, 10));
@@ -2220,15 +2242,13 @@ function submitPlayerCard() {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!name || !degree || !superpower || !email || !selectedPcRole) {
-    alertEl.className = 'alert alert-error';
+    alertEl.className = 'alert alert-error visible';
     alertEl.textContent = 'Please fill in all fields and select a role.';
-    alertEl.style.display = 'block';
     return;
   }
   if (!emailRegex.test(email)) {
-    alertEl.className = 'alert alert-error';
+    alertEl.className = 'alert alert-error visible';
     alertEl.textContent = 'Please enter a valid email address.';
-    alertEl.style.display = 'block';
     return;
   }
 
@@ -2243,9 +2263,8 @@ function submitPlayerCard() {
   // Guard: prevent duplicate email per project
   const existingProject = getProjects().find(p => p.id === currentPcProjectId);
   if (existingProject && (existingProject.playerCards || []).some(c => c.email.toLowerCase() === email.toLowerCase())) {
-    alertEl.className = 'alert alert-error';
+    alertEl.className = 'alert alert-error visible';
     alertEl.textContent = 'You have already submitted a player card for this project.';
-    alertEl.style.display = 'block';
     return;
   }
 
@@ -2259,9 +2278,14 @@ function submitPlayerCard() {
   saveProjects(updated);
   renderStats();
 
-  closePcModal();
-  // Reopen project detail to show updated cards
-  openProjectDetail(currentPcProjectId);
+  // Show success toast, then close and reopen project detail
+  alertEl.className = 'alert alert-success visible';
+  alertEl.textContent = 'Player card submitted! ✓';
+  setTimeout(() => {
+    alertEl.className = 'alert';
+    closePcModal();
+    openProjectDetail(currentPcProjectId);
+  }, 1400);
 }
 
 // ─── REVISION FLOW ───────────────────────────────────────────────────────────
