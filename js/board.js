@@ -1,7 +1,7 @@
 // js/board.js — Project board, filters, detail modal
 import { supabase } from './supabase.js';
 import { escapeHtml, ROLE_COLORS, CRITERIA } from './utils.js';
-import { renderTradingCard } from './player-card.js';
+import { renderTradingCard, openPcModal } from './player-card.js';
 import { isLoggedIn } from './auth.js';
 
 let currentStageFilter = 'all';
@@ -237,7 +237,7 @@ async function openProjectDetail(projectId) {
   // Wire up "Join This Team" button via event delegation (avoids inline onclick)
   modalContent.querySelector('[data-open-pc]')?.addEventListener('click', (e) => {
     const id = e.currentTarget.dataset.openPc;
-    window.__openPcModal?.(id);
+    openPcModal(id);
   });
 
   document.getElementById('project-modal').classList.add('open');
