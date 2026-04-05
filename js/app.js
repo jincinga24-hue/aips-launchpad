@@ -251,11 +251,9 @@ async function init() {
     const btn = e.target.closest('.nav-tab');
     if (!btn) return;
     const tabMap = {
-      'tab-home': 'home',
-      'tab-submit': 'submit',
-      'tab-board': 'board',
-      'tab-funding': 'funding',
-      'tab-my-submissions': 'my-submissions',
+      'tab-launch': 'submit',
+      'tab-projects': 'board',
+      'tab-dashboard': 'my-submissions',
       'admin-tab-btn': 'admin',
     };
     const tab = tabMap[btn.id];
@@ -299,8 +297,22 @@ async function init() {
 }
 
 // Modules are deferred — DOM is already ready when this runs
+async function safeInit() {
+  try {
+    await init();
+  } catch (err) {
+    console.error('AIPS init failed:', err);
+    // Show error visually so user knows something went wrong
+    const nav = document.getElementById('nav-user');
+    if (nav) {
+      nav.style.display = 'flex';
+      nav.innerHTML = `<span style="color:red;font-size:12px;">Error: ${err.message}</span>`;
+    }
+  }
+}
+
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded', safeInit);
 } else {
-  init();
+  safeInit();
 }
