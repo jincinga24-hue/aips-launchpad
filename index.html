@@ -79,7 +79,11 @@
       align-items: center;
       gap: 2px;
       flex: 1;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
     }
+    .nav-tabs::-webkit-scrollbar { display: none; }
 
     .nav-tab {
       font-size: 14px;
@@ -109,8 +113,8 @@
       padding: 40px 20px 80px;
     }
 
-    .page { display: none; }
-    .page.active { display: block; }
+    .page { display: none; pointer-events: none; }
+    .page.active { display: block; pointer-events: auto; }
 
     /* ─── HOME ─────────────────────────────────────────────────────── */
     .hero {
@@ -1120,6 +1124,313 @@
     .mini-radar-svg { display: block; margin: 0 auto 4px; }
     .approval-error-msg { display: none; margin-top: 10px; }
 
+    /* ─── REACT BITS: SHINY TEXT (eyebrow sweep) ────────────────── */
+    .shiny-text {
+      background-image: linear-gradient(
+        120deg,
+        var(--green) 0%, var(--green) 35%,
+        #B8E63A 50%,
+        var(--green) 65%, var(--green) 100%
+      );
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shiny-sweep 3s linear infinite;
+    }
+    @keyframes shiny-sweep {
+      0% { background-position: 150% center; }
+      100% { background-position: -50% center; }
+    }
+
+    /* ─── REACT BITS: DECRYPTED TEXT ─────────────────────────────── */
+    .decrypt-target { cursor: pointer; }
+    .decrypt-target .char { display: inline-block; }
+    .decrypt-target .char.scrambled {
+      color: var(--border);
+      font-family: 'Courier New', monospace;
+    }
+
+    /* ─── REACT BITS: STAR BORDER (orbiting gradient buttons) ──── */
+    .star-border-container {
+      position: relative;
+      border-radius: 980px;
+      padding: 2px;
+      overflow: hidden;
+      display: inline-block;
+    }
+    .star-border-container .border-gradient-bottom,
+    .star-border-container .border-gradient-top {
+      position: absolute;
+      width: 200%; height: 200%;
+      border-radius: 50%;
+      animation: star-orbit 4s linear infinite;
+      pointer-events: none;
+      opacity: 0.85;
+    }
+    .star-border-container .border-gradient-bottom {
+      bottom: -100%; left: -50%;
+      background: radial-gradient(circle, var(--green), transparent 10%);
+    }
+    .star-border-container .border-gradient-top {
+      top: -100%; left: -50%;
+      background: radial-gradient(circle, #5EC847, transparent 10%);
+      animation-delay: -2s;
+    }
+    @keyframes star-orbit {
+      0% { transform: rotate(0deg) translateX(0); }
+      100% { transform: rotate(360deg) translateX(0); }
+    }
+    .star-border-container .star-inner {
+      position: relative;
+      z-index: 1;
+      display: block;
+      border-radius: 980px;
+      padding: 12px 28px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+    }
+    .star-inner-primary { background: var(--green); color: #fff; }
+    .star-inner-secondary { background: var(--card); color: var(--text); }
+    .star-border-container:hover .star-inner { opacity: 0.92; }
+
+    /* ─── REACT BITS: SPOTLIGHT CARD (cursor glow) ────────────── */
+    .spotlight-card {
+      position: relative;
+      overflow: hidden;
+      --mouse-x: 50%;
+      --mouse-y: 50%;
+      --spotlight-color: rgba(45, 183, 87, 0.25);
+    }
+    .spotlight-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 80%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .spotlight-card:hover::after { opacity: 1; }
+
+    /* ─── REACT BITS: CLICK SPARK ────────────────────────────────── */
+    #click-spark-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─── REACT BITS: COUNT UP ───────────────────────────────────── */
+    .stat-num {
+      transition: none;
+    }
+
+    /* ─── REACT BITS: FILTER SLIDING PILL ────────────────────────── */
+    .filter-bar {
+      position: relative;
+    }
+    .filter-pill {
+      position: absolute;
+      height: 100%;
+      border-radius: 980px;
+      background: var(--text);
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 0;
+    }
+    .filter-btn {
+      position: relative;
+      z-index: 1;
+      transition: color 0.2s;
+    }
+    .filter-btn.active {
+      background: transparent;
+      color: #fff;
+      border-color: transparent;
+    }
+
+    /* ─── CONFETTI ────────────────────────────────────────────────── */
+    #confetti-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    /* ─── EMPTY STATE ANIMATIONS ─────────────────────────────────── */
+    .empty-state .empty-icon {
+      animation: float-bounce 2.5s ease-in-out infinite;
+    }
+    @keyframes float-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    .empty-state h3, .empty-state p {
+      animation: fade-slide-in 0.6s ease forwards;
+      opacity: 0;
+    }
+    .empty-state h3 { animation-delay: 0.2s; }
+    .empty-state p { animation-delay: 0.4s; }
+    @keyframes fade-slide-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── PAGE TRANSITIONS ───────────────────────────────────────── */
+    .page {
+      opacity: 0;
+      transform: translateX(12px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .page.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* ─── GLITCH TEXT ────────────────────────────────────────────── */
+    .glitch-text {
+      position: relative;
+      display: inline-block;
+    }
+    .glitch-text::before,
+    .glitch-text::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+    }
+    .glitch-text::before {
+      color: var(--green);
+      animation: glitch-1 2.5s infinite linear;
+      clip-path: inset(0 0 65% 0);
+    }
+    .glitch-text::after {
+      color: #5EC847;
+      animation: glitch-2 2.5s infinite linear;
+      clip-path: inset(65% 0 0 0);
+    }
+    @keyframes glitch-1 {
+      0%, 100% { transform: translate(0); }
+      20% { transform: translate(-3px, 2px); }
+      40% { transform: translate(3px, -1px); }
+      60% { transform: translate(-2px, 1px); }
+      80% { transform: translate(2px, -2px); }
+    }
+    @keyframes glitch-2 {
+      0%, 100% { transform: translate(0); }
+      20% { transform: translate(3px, -1px); }
+      40% { transform: translate(-2px, 2px); }
+      60% { transform: translate(3px, 1px); }
+      80% { transform: translate(-3px, -1px); }
+    }
+
+    /* ─── FLOAT LABELS ───────────────────────────────────────────── */
+    .float-group {
+      position: relative;
+    }
+    .float-group .float-label {
+      position: absolute;
+      left: 14px;
+      top: 11px;
+      font-size: 15px;
+      color: var(--muted);
+      pointer-events: none;
+      transition: all 0.2s ease;
+      background: var(--card);
+      padding: 0 4px;
+      z-index: 1;
+    }
+    .float-group input:focus + .float-label,
+    .float-group input:not(:placeholder-shown) + .float-label,
+    .float-group textarea:focus + .float-label,
+    .float-group textarea:not(:placeholder-shown) + .float-label {
+      top: -8px;
+      font-size: 11px;
+      color: var(--green);
+      font-weight: 600;
+    }
+    .float-group select:focus + .float-label,
+    .float-group select.has-value + .float-label {
+      top: -8px;
+      font-size: 11px;
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    /* ─── PLAYER CARD FLIP REVEAL ────────────────────────────────── */
+    .card-flip-container {
+      perspective: 800px;
+      width: 200px;
+      height: 280px;
+      margin: 0 auto;
+    }
+    .card-flip-inner {
+      position: relative;
+      width: 100%; height: 100%;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .card-flip-inner.flipped {
+      transform: rotateY(180deg);
+    }
+    .card-flip-front, .card-flip-back {
+      position: absolute;
+      width: 100%; height: 100%;
+      backface-visibility: hidden;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .card-flip-front {
+      background: linear-gradient(135deg, var(--green), #5EC847, #B8E63A);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 48px;
+      font-weight: 700;
+    }
+    .card-flip-back {
+      transform: rotateY(180deg);
+      background: var(--card);
+      border: 2px solid var(--green);
+    }
+
+    /* ─── REACT BITS: SCROLL REVEAL ──────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── REACT BITS: ENHANCED TRADING CARDS ─────────────────────── */
+    .trading-card {
+      --mouse-x: 50%;
+      --mouse-y: 50%;
+    }
+    .trading-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(45,183,87,0.12), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+      border-radius: 16px;
+      z-index: 0;
+    }
+    .trading-card:hover::after { opacity: 1; }
+
     /* ─── RESPONSIVE ─────────────────────────────────────────────── */
     @media (max-width: 640px) {
       main { padding: 24px 16px 64px; }
@@ -1155,47 +1466,55 @@
   <!-- HOME PAGE -->
   <div id="page-home" class="page active">
     <div class="hero">
-      <div class="hero-eyebrow">
+      <div class="hero-eyebrow shiny-text">
         <span class="chevron-mark">›</span> AI Prototyping Studio · Unimelb
       </div>
       <h1>Launch Your <span>Startup Idea</span><br>Find Your Team</h1>
       <p>Submit your idea or MVP for committee review. Get scored, get published, find collaborators.</p>
       <div class="hero-ctas">
-        <button class="btn btn-primary" onclick="showTab('submit')">Submit an Idea</button>
-        <button class="btn btn-secondary" onclick="showTab('board')">Browse Projects</button>
+        <div class="star-border-container" onclick="showTab('submit')">
+          <div class="border-gradient-bottom"></div>
+          <div class="border-gradient-top"></div>
+          <span class="star-inner star-inner-primary">Submit an Idea</span>
+        </div>
+        <div class="star-border-container" onclick="showTab('board')">
+          <div class="border-gradient-bottom"></div>
+          <div class="border-gradient-top"></div>
+          <span class="star-inner star-inner-secondary">Browse Projects</span>
+        </div>
       </div>
     </div>
 
-    <div class="stats-row">
-      <div class="stat-card">
+    <div class="stats-row reveal">
+      <div class="stat-card spotlight-card">
         <div class="stat-num" id="stat-projects">0</div>
         <div class="stat-label">Projects on board</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card spotlight-card">
         <div class="stat-num" id="stat-contributors">0</div>
         <div class="stat-label">Contributors</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card spotlight-card">
         <div class="stat-num" id="stat-pending">0</div>
         <div class="stat-label">Pending review</div>
       </div>
     </div>
 
-    <div style="margin-top: 64px;">
+    <div style="margin-top: 64px;" class="reveal">
       <h2 class="section-title">How it works</h2>
       <p class="section-sub">Three steps from idea to team</p>
       <div class="steps-grid">
-        <div class="step-card">
+        <div class="step-card spotlight-card reveal" style="transition-delay: 0.1s;">
           <div class="step-num">1</div>
           <h4>Submit</h4>
           <p>Fill in your idea or MVP details. Tell us the problem, solution, and who you need on the team.</p>
         </div>
-        <div class="step-card">
+        <div class="step-card spotlight-card reveal" style="transition-delay: 0.2s;">
           <div class="step-num">2</div>
           <h4>Get Reviewed</h4>
           <p>Our committee scores submissions on 5 criteria. Score 60+ and you're on the public board.</p>
         </div>
-        <div class="step-card">
+        <div class="step-card spotlight-card reveal" style="transition-delay: 0.3s;">
           <div class="step-num">3</div>
           <h4>Build Your Team</h4>
           <p>Interested students create player cards — showing their skills and role — and join your project.</p>
@@ -1221,35 +1540,35 @@
       </div>
 
       <form id="submit-form" novalidate>
-        <div class="form-group">
-          <label>Project Name <span>*</span></label>
-          <input type="text" id="f-name" placeholder="e.g. StudyMate AI" />
+        <div class="form-group float-group">
+          <input type="text" id="f-name" placeholder=" " />
+          <label class="float-label">Project Name <span>*</span></label>
           <div class="field-error" id="err-name">Please enter a project name.</div>
         </div>
 
-        <div class="form-group">
-          <label>Problem Statement <span>*</span></label>
-          <textarea id="f-problem" placeholder="What problem are you solving? Be specific about who experiences this and how often."></textarea>
+        <div class="form-group float-group">
+          <textarea id="f-problem" placeholder=" "></textarea>
+          <label class="float-label">Problem Statement <span>*</span></label>
           <div class="field-hint">Aim for 2–4 sentences. Specificity wins.</div>
           <div class="field-error" id="err-problem">Please describe the problem.</div>
         </div>
 
-        <div class="form-group">
-          <label>Your Solution <span>*</span></label>
-          <textarea id="f-solution" placeholder="How does your project solve this problem?"></textarea>
+        <div class="form-group float-group">
+          <textarea id="f-solution" placeholder=" "></textarea>
+          <label class="float-label">Your Solution <span>*</span></label>
           <div class="field-error" id="err-solution">Please describe your solution.</div>
         </div>
 
-        <div class="form-group">
-          <label>Target User <span>*</span></label>
-          <input type="text" id="f-target" placeholder="e.g. University students preparing for exams" />
+        <div class="form-group float-group">
+          <input type="text" id="f-target" placeholder=" " />
+          <label class="float-label">Target User <span>*</span></label>
           <div class="field-hint">Who specifically? The more precise, the better.</div>
           <div class="field-error" id="err-target">Please define your target user.</div>
         </div>
 
-        <div class="form-group">
-          <label>MVP Scope <span>*</span></label>
-          <textarea id="f-scope" placeholder="What is the smallest version you could ship in one semester?"></textarea>
+        <div class="form-group float-group">
+          <textarea id="f-scope" placeholder=" "></textarea>
+          <label class="float-label">MVP Scope <span>*</span></label>
           <div class="field-hint">Think: one core feature, working end-to-end.</div>
           <div class="field-error" id="err-scope">Please describe your MVP scope.</div>
         </div>
@@ -1276,9 +1595,9 @@
           <div class="field-error" id="err-roles">Please select at least one role.</div>
         </div>
 
-        <div class="form-group">
-          <label>Contact Email <span>*</span></label>
-          <input type="email" id="f-email" placeholder="your@student.unimelb.edu.au" />
+        <div class="form-group float-group">
+          <input type="email" id="f-email" placeholder=" " />
+          <label class="float-label">Contact Email <span>*</span></label>
           <div class="field-hint">Used for status updates. Not shown publicly.</div>
           <div class="field-error" id="err-email">Please enter a valid email address.</div>
         </div>
@@ -1286,15 +1605,20 @@
         <!-- MVP-only fields -->
         <div class="mvp-only-fields" id="mvp-fields">
           <hr class="form-divider" />
-          <div class="form-group">
-            <label>Demo Link</label>
-            <input type="url" id="f-demo" placeholder="https://your-demo.vercel.app" />
+          <div class="form-group float-group">
+            <input type="url" id="f-demo" placeholder=" " />
+            <label class="float-label">Demo Link</label>
             <div class="field-hint">Live link to your prototype or deployed app.</div>
           </div>
-          <div class="form-group">
-            <label>Video Link</label>
-            <input type="url" id="f-video" placeholder="https://youtube.com/..." />
+          <div class="form-group float-group">
+            <input type="url" id="f-video" placeholder=" " />
+            <label class="float-label">Video Link</label>
             <div class="field-hint">2–3 min walkthrough of your MVP (YouTube or Loom).</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Current Team *</label>
+            <textarea id="f-team" rows="2" placeholder="e.g. Solo developer, CS Year 3. Or: 3-person team — 2 CS students + 1 Commerce."></textarea>
+            <div class="field-hint">Briefly describe your current team: size, backgrounds, roles.</div>
           </div>
         </div>
 
@@ -1344,7 +1668,7 @@
     </div>
     <div style="text-align:center; padding: 80px 20px;">
       <div style="font-size: 48px; margin-bottom: 16px;">💰</div>
-      <h2 style="color: var(--text); margin-bottom: 8px;">Coming Soon</h2>
+      <h2 class="glitch-text" data-text="Coming Soon" style="color: var(--text); margin-bottom: 8px;">Coming Soon</h2>
       <p style="color: var(--text-secondary); max-width: 400px; margin: 0 auto; line-height: 1.6;">
         We're working on a funding pool where sponsors, the university community, and external backers can support approved AIPS projects. Stay tuned.
       </p>
@@ -1515,8 +1839,8 @@ function showTab(tab) {
   if (page) page.classList.add('active');
   if (btn) btn.classList.add('active');
 
-  if (tab === 'board') renderBoard();
-  if (tab === 'home') renderStats();
+  if (tab === 'board') { renderBoard(); requestAnimationFrame(() => initFilterPills()); }
+  if (tab === 'home') { renderStats(); requestAnimationFrame(initCountUp); }
   if (tab === 'admin') renderAdmin();
   if (tab !== 'submit' && editingProjectId) {
     editingProjectId = null;
@@ -1628,6 +1952,12 @@ document.getElementById('submit-form').addEventListener('submit', function(e) {
     errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     return;
   }
+  if (currentTrack === 'mvp' && !document.getElementById('f-team').value.trim()) {
+    errorAlert.textContent = 'Please describe your current team for MVP submissions.';
+    errorAlert.classList.add('visible');
+    errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    return;
+  }
 
   const formData = {
     track: currentTrack,
@@ -1640,6 +1970,7 @@ document.getElementById('submit-form').addEventListener('submit', function(e) {
     contactEmail: document.getElementById('f-email').value.trim(),
     demoLink: document.getElementById('f-demo').value.trim() || null,
     videoLink: document.getElementById('f-video').value.trim() || null,
+    currentTeam: document.getElementById('f-team').value.trim() || null,
   };
 
   if (editingProjectId) {
@@ -1688,6 +2019,7 @@ document.getElementById('submit-form').addEventListener('submit', function(e) {
 
   successAlert.classList.add('visible');
   successAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  fireConfetti();
 });
 
 // ─── BOARD ──────────────────────────────────────────────────────────────────
@@ -1724,7 +2056,7 @@ function renderBoard() {
 
   empty.classList.remove('visible');
   grid.innerHTML = filtered.map(p => `
-    <div class="project-card" data-project-id="${escapeHtml(p.id)}">
+    <div class="project-card spotlight-card" data-project-id="${escapeHtml(p.id)}">
       <div class="card-header">
         <span class="stage-tag ${p.track}">${p.track === 'mvp' ? 'MVP' : 'Idea'}</span>
         ${p.totalScore !== null ? `<span class="score-badge">${p.totalScore}/100</span>` : ''}
@@ -1813,6 +2145,13 @@ function openProjectDetail(id) {
       <div class="modal-section-label">MVP Scope</div>
       <div class="modal-section-text">${escapeHtml(project.mvpScope)}</div>
     </div>
+
+    ${project.currentTeam ? `
+    <div class="modal-section">
+      <div class="modal-section-label">Current Team</div>
+      <div class="modal-section-text">${escapeHtml(project.currentTeam)}</div>
+    </div>
+    ` : ''}
 
     ${scoreBreakdown}
 
@@ -1974,6 +2313,7 @@ function renderAdmin() {
         <div class="admin-item-field-gap"><strong>Solution:</strong> ${escapeHtml(p.solution)}</div>
         <div class="admin-item-field-sm"><strong>Target User:</strong> ${escapeHtml(p.targetUser)}</div>
         <div class="admin-item-field-gap"><strong>MVP Scope:</strong> ${escapeHtml(p.mvpScope)}</div>
+        ${p.currentTeam ? `<div class="admin-item-field-sm"><strong>Current Team:</strong> ${escapeHtml(p.currentTeam)}</div>` : ''}
 
         <div class="scoring-section">
           <h4>Score Each Criterion (0–20)</h4>
@@ -2306,14 +2646,13 @@ function submitPlayerCard() {
   saveProjects(updated);
   renderStats();
 
-  // Show success toast, then close and reopen project detail
-  alertEl.className = 'alert alert-success visible';
-  alertEl.textContent = 'Player card submitted! ✓';
+  // Show card flip reveal, then close and reopen project detail
+  closePcModal();
+  fireConfetti();
+  showCardFlipReveal(newCard);
   setTimeout(() => {
-    alertEl.className = 'alert';
-    closePcModal();
     openProjectDetail(currentPcProjectId);
-  }, 1400);
+  }, 3200);
 }
 
 // ─── REVISION FLOW ───────────────────────────────────────────────────────────
@@ -2335,6 +2674,7 @@ function prefillAndEdit(projectId) {
   document.getElementById('f-email').value = project.contactEmail || '';
   document.getElementById('f-demo').value = project.demoLink || '';
   document.getElementById('f-video').value = project.videoLink || '';
+  document.getElementById('f-team').value = project.currentTeam || '';
 
   // Set roles
   document.querySelectorAll('#roles-grid .role-chip').forEach(chip => {
@@ -2353,10 +2693,302 @@ function prefillAndEdit(projectId) {
 }
 
 
+// ─── REACT BITS: SPOTLIGHT CARD (mouse tracking) ─────────────────────────────
+function initSpotlightCards() {
+  document.addEventListener('mousemove', function(e) {
+    const cards = document.querySelectorAll('.spotlight-card, .trading-card');
+    cards.forEach(card => {
+      const rect = card.getBoundingClientRect();
+      if (e.clientX >= rect.left && e.clientX <= rect.right &&
+          e.clientY >= rect.top && e.clientY <= rect.bottom) {
+        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+      }
+    });
+  });
+}
+
+// (DecryptedText removed — user didn't like it on hero headline)
+
+// ─── REACT BITS: CLICK SPARK ─────────────────────────────────────────────────
+function initClickSpark() {
+  const canvas = document.createElement('canvas');
+  canvas.id = 'click-spark-canvas';
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  const sparks = [];
+  const SPARK_COLOR = '#2DB757';
+  const SPARK_COUNT = 8;
+  const SPARK_SIZE = 10;
+  const SPARK_RADIUS = 15;
+  const DURATION = 400;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function easeOut(t) { return t * (2 - t); }
+
+  function draw(timestamp) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = sparks.length - 1; i >= 0; i--) {
+      const s = sparks[i];
+      const elapsed = timestamp - s.startTime;
+      if (elapsed >= DURATION) { sparks.splice(i, 1); continue; }
+      const progress = elapsed / DURATION;
+      const eased = easeOut(progress);
+      const dist = eased * SPARK_RADIUS * 2;
+      const lineLen = SPARK_SIZE * (1 - eased);
+      const x1 = s.x + dist * Math.cos(s.angle);
+      const y1 = s.y + dist * Math.sin(s.angle);
+      const x2 = s.x + (dist + lineLen) * Math.cos(s.angle);
+      const y2 = s.y + (dist + lineLen) * Math.sin(s.angle);
+      ctx.strokeStyle = SPARK_COLOR;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+
+  // Spark on CTA buttons and submit buttons
+  document.addEventListener('click', function(e) {
+    const target = e.target.closest('.star-border-container, .btn-primary, .btn-approve');
+    if (!target) return;
+    const now = performance.now();
+    for (let i = 0; i < SPARK_COUNT; i++) {
+      sparks.push({
+        x: e.clientX,
+        y: e.clientY,
+        angle: (2 * Math.PI * i) / SPARK_COUNT,
+        startTime: now
+      });
+    }
+  });
+}
+
+// ─── REACT BITS: COUNT UP ANIMATION ──────────────────────────────────────────
+function animateCountUp(el, target) {
+  const duration = 1200;
+  const start = performance.now();
+  const from = 0;
+  function step(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    // ease-out cubic
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.round(from + (target - from) * eased);
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function initCountUp() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const val = parseInt(el.textContent, 10) || 0;
+        if (val > 0) animateCountUp(el, val);
+        observer.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.stat-num').forEach(el => observer.observe(el));
+}
+
+// ─── FILTER SLIDING PILL ─────────────────────────────────────────────────────
+function initFilterPills() {
+  document.querySelectorAll('.filter-bar').forEach(bar => {
+    const pill = document.createElement('div');
+    pill.className = 'filter-pill';
+    bar.style.position = 'relative';
+    bar.insertBefore(pill, bar.firstChild);
+
+    function updatePill() {
+      const active = bar.querySelector('.filter-btn.active');
+      if (!active) { pill.style.opacity = '0'; return; }
+      pill.style.opacity = '1';
+      pill.style.left = active.offsetLeft + 'px';
+      pill.style.width = active.offsetWidth + 'px';
+      pill.style.top = active.offsetTop + 'px';
+      pill.style.height = active.offsetHeight + 'px';
+    }
+
+    // Update pill when buttons are clicked
+    bar.addEventListener('click', () => {
+      requestAnimationFrame(updatePill);
+    });
+
+    // Initial position
+    requestAnimationFrame(updatePill);
+  });
+}
+
+// ─── CONFETTI ────────────────────────────────────────────────────────────────
+function fireConfetti() {
+  let canvas = document.getElementById('confetti-canvas');
+  if (!canvas) {
+    canvas = document.createElement('canvas');
+    canvas.id = 'confetti-canvas';
+    document.body.appendChild(canvas);
+  }
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ['#2DB757', '#5EC847', '#B8E63A', '#FFD700', '#FF6B6B', '#4ECDC4', '#fff'];
+  const pieces = [];
+
+  for (let i = 0; i < 80; i++) {
+    pieces.push({
+      x: canvas.width / 2 + (Math.random() - 0.5) * 200,
+      y: canvas.height / 2,
+      vx: (Math.random() - 0.5) * 16,
+      vy: -(Math.random() * 12 + 4),
+      w: Math.random() * 10 + 4,
+      h: Math.random() * 6 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rotation: Math.random() * 360,
+      rotSpeed: (Math.random() - 0.5) * 12,
+      gravity: 0.25 + Math.random() * 0.15,
+      opacity: 1
+    });
+  }
+
+  const startTime = performance.now();
+  function draw(now) {
+    const elapsed = now - startTime;
+    if (elapsed > 2500) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      return;
+    }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    pieces.forEach(p => {
+      p.vy += p.gravity;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vx *= 0.98;
+      p.rotation += p.rotSpeed;
+      if (elapsed > 1800) p.opacity = Math.max(0, 1 - (elapsed - 1800) / 700);
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rotation * Math.PI / 180);
+      ctx.globalAlpha = p.opacity;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+}
+
+// ─── PLAYER CARD FLIP REVEAL ─────────────────────────────────────────────────
+function showCardFlipReveal(cardData) {
+  const roles = cardData.roles || (cardData.role ? [cardData.role] : []);
+  const primaryRole = roles[0] || 'Build';
+  const color = ROLE_COLORS[primaryRole] || '#2DB757';
+  const abilities = [cardData.abilities.coding, cardData.abilities.design, cardData.abilities.research, cardData.abilities.comm, cardData.abilities.domain];
+
+  // Create overlay
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);z-index:700;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.3s;';
+  overlay.innerHTML = `
+    <div class="card-flip-container">
+      <div class="card-flip-inner" id="flip-inner">
+        <div class="card-flip-front">?</div>
+        <div class="card-flip-back" style="padding:14px 12px;text-align:center;">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:${color};margin-bottom:8px;">${escapeHtml(primaryRole)}</div>
+          <div style="font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;margin-bottom:2px;">${escapeHtml(cardData.name)}</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">${escapeHtml(cardData.degree)}</div>
+          <div style="font-size:11px;font-style:italic;color:var(--text);margin-bottom:10px;border-left:2px solid var(--border);padding-left:6px;text-align:left;">"${escapeHtml(cardData.superpower)}"</div>
+          <svg width="120" height="120" viewBox="0 0 120 120" style="display:block;margin:0 auto 8px;" id="flip-radar"></svg>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  // Draw mini radar on the flip card
+  requestAnimationFrame(() => {
+    overlay.style.opacity = '1';
+    const svgEl = document.getElementById('flip-radar');
+    if (svgEl) {
+      const cx = 60, cy = 60, maxR = 44;
+      const n = 5;
+      const angleStep = (2 * Math.PI) / n;
+      const startAngle = -Math.PI / 2;
+      let svg = '';
+      [0.5, 1.0].forEach(pct => {
+        const pts = Array.from({ length: n }, (_, i) => {
+          const a = startAngle + i * angleStep;
+          return `${cx + maxR * pct * Math.cos(a)},${cy + maxR * pct * Math.sin(a)}`;
+        }).join(' ');
+        svg += '<polygon points="' + pts + '" fill="none" stroke="#e0e0e5" stroke-width="0.8"/>';
+      });
+      const dataPts = abilities.map((v, i) => {
+        const a = startAngle + i * angleStep;
+        const r = (v / 10) * maxR;
+        return `${cx + r * Math.cos(a)},${cy + r * Math.sin(a)}`;
+      }).join(' ');
+      svg += '<polygon points="' + dataPts + '" fill="' + color + '" fill-opacity="0.25" stroke="' + color + '" stroke-width="1.5"/>';
+      svgEl.innerHTML = svg;
+    }
+
+    // Flip after short delay
+    setTimeout(() => {
+      document.getElementById('flip-inner').classList.add('flipped');
+    }, 400);
+  });
+
+  // Close on click
+  overlay.addEventListener('click', () => {
+    overlay.style.opacity = '0';
+    setTimeout(() => overlay.remove(), 300);
+  });
+
+  // Auto close after 3s
+  setTimeout(() => {
+    if (overlay.parentNode) {
+      overlay.style.opacity = '0';
+      setTimeout(() => { if (overlay.parentNode) overlay.remove(); }, 300);
+    }
+  }, 3000);
+}
+
+// ─── REACT BITS: SCROLL REVEAL ───────────────────────────────────────────────
+function initScrollReveal() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '-40px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+
 // ─── INIT ────────────────────────────────────────────────────────────────────
 checkAdminAccess();
 renderStats();
 updatePcRadar();
+initSpotlightCards();
+initClickSpark();
+initScrollReveal();
+initCountUp();
+initFilterPills();
 </script>
 </body>
 </html>
