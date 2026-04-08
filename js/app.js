@@ -95,8 +95,8 @@ function initFilterPills() {
 
 // Global functions for HTML onclick handlers
 window.__showTab = showTab;
-window.__openProjectDetail = null; // set by board.js
-window.__openPcModal = null;       // set by player-card.js
+// __openProjectDetail and __openPcModal are set inside their respective modules
+// (board.js and player-card.js) — don't reset them here or they get nulled after module load
 
 async function init() {
   // Auth UI event listeners
