@@ -71,20 +71,22 @@ export async function initMyCard() {
 
   // Skill tags input
   const skillInput = document.getElementById('mc-skill-input');
+  function _addSkillFromInput() {
+    if (!skillInput) return;
+    const tag = skillInput.value.trim();
+    if (tag && _skillTags.length < 8 && !_skillTags.includes(tag)) {
+      _skillTags = [..._skillTags, tag];
+      skillInput.value = '';
+      _renderSkillTags();
+      renderCardPreview();
+    }
+  }
   if (skillInput) {
     skillInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        const tag = skillInput.value.trim();
-        if (tag && _skillTags.length < 8 && !_skillTags.includes(tag)) {
-          _skillTags = [..._skillTags, tag];
-          skillInput.value = '';
-          _renderSkillTags();
-          renderCardPreview();
-        }
-      }
+      if (e.key === 'Enter') { e.preventDefault(); _addSkillFromInput(); }
     });
   }
+  document.getElementById('mc-skill-add-btn')?.addEventListener('click', _addSkillFromInput);
 
   // Showcase add button
   document.getElementById('mc-add-showcase')?.addEventListener('click', () => {

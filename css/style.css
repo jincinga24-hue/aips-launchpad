@@ -3583,13 +3583,36 @@ main {
   padding: 8px 10px;
   background: var(--card);
 }
-.mc-skill-tags-wrap input {
+.mc-skill-input-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex: 1;
+  min-width: 150px;
+}
+.mc-skill-input-row input {
   border: none;
   outline: none;
   font-size: 14px;
   flex: 1;
-  min-width: 100px;
+  min-width: 80px;
   background: transparent;
+}
+.mc-skill-add-btn {
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--green);
+  background: none;
+  border: 1px solid var(--green);
+  border-radius: 980px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+.mc-skill-add-btn:hover {
+  background: var(--green);
+  color: #fff;
 }
 .mc-skill-tags-list {
   display: flex;
