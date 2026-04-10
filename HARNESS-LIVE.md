@@ -19,3 +19,29 @@ Waiting for first cycle...
 14:38:59 | Cycle 1 | write | FEATURES.json
 14:39:01 | Cycle 0 | Reading | FEATURES.json
 14:39:10 | Cycle 0 | Writing | FEATURES.json
+14:40:06 | Cycle 1 | Reading | index.html
+14:40:09 | Cycle 1 | Reading | css/style.css
+14:40:09 | Cycle 1 | Reading | js/app.js
+14:40:12 | Cycle 1 | Reading | js/board.js
+14:40:12 | Cycle 1 | Reading | FEATURES.json
+14:40:15 | Cycle 1 | Reading | css/style.css
+14:40:21 | Cycle 1 | Editing | index.html
+14:40:30 | Cycle 1 | Editing | index.html
+14:40:40 | Cycle 1 | Editing | index.html
+14:41:00 | Cycle 1 | Editing | css/style.css
+14:41:07 | Cycle 1 | Editing | css/style.css
+14:41:15 | Cycle 1 | Editing | css/style.css
+14:41:23 | Cycle 1 | Reading | css/style.css
+14:41:26 | Cycle 1 | Reading | css/style.css
+14:41:29 | Cycle 1 | Editing | css/style.css
+14:41:46 | Cycle 1 | Editing | js/board.js
+14:41:49 | Cycle 1 | Editing | js/app.js
+14:41:53 | Cycle 1 | Editing | js/app.js
+14:41:55 | Cycle 1 | Editing | js/app.js
+14:42:00 | Cycle 1 | Editing | js/app.js
+14:42:03 | Cycle 1 | Editing | js/app.js
+14:42:12 | Cycle 1 | Editing | FEATURES.json
+14:42:19 | Cycle 2 | home-01: announcement banner | index.html, css/style.css, js/app.js
+14:42:19 | Cycle 2 | home-02: featured project spotlight | js/board.js, index.html, css/style.css
+14:42:19 | Cycle 2 | home-03: metrics with icons + 4th stat | index.html, css/style.css, js/board.js
+14:42:19 | Cycle 2 | home-04: how it works polished | index.html, css/style.css

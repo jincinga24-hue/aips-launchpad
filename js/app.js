@@ -1,6 +1,6 @@
 // js/app.js — Router, nav, init
 import { initAuth, getUser, getProfile, isAdmin, isLoggedIn, signOut, signInWithGoogle, signInWithEmail, signUpWithEmail } from './auth.js';
-import { renderBoard, initBoard, renderStats } from './board.js';
+import { renderBoard, initBoard, renderStats, renderFeaturedProject } from './board.js';
 import { renderAdmin, initAdmin } from './admin.js';
 import { initSubmit } from './submit.js';
 import { initMySubmissions, loadMySubmissions } from './my-submissions.js';
@@ -39,7 +39,7 @@ export function showTab(tab) {
 
   // Render dynamic content
   if (tab === 'board') renderBoard();
-  if (tab === 'home') { renderStats(); requestAnimationFrame(initCountUp); }
+  if (tab === 'home') { renderStats(); renderFeaturedProject(); requestAnimationFrame(initCountUp); }
   if (tab === 'admin') renderAdmin();
   if (tab === 'my-submissions') loadMySubmissions();
 
@@ -102,6 +102,22 @@ function initFilterPills() {
     requestAnimationFrame(updatePill);
     bar.classList.add('pill-active');
     bar._updatePill = updatePill;
+  });
+}
+
+function initAnnouncementBanner() {
+  const banner = document.getElementById('announcement-banner');
+  const closeBtn = document.getElementById('announcement-close');
+  if (!banner || !closeBtn) return;
+
+  if (sessionStorage.getItem('aips-banner-dismissed') === '1') {
+    banner.classList.add('dismissed');
+    return;
+  }
+
+  closeBtn.addEventListener('click', () => {
+    banner.classList.add('dismissed');
+    sessionStorage.setItem('aips-banner-dismissed', '1');
   });
 }
 
@@ -183,6 +199,7 @@ async function init() {
     if (user && currentTab === 'auth') showTab('home');
   });
 
+  initAnnouncementBanner();
   initSubmit();
   initBoard();
   initAdmin();
@@ -195,6 +212,7 @@ async function init() {
 
   showTab('home');
   renderStats();
+  renderFeaturedProject();
 }
 
 // Modules are deferred — DOM is already ready when this runs

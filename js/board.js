@@ -95,28 +95,82 @@ export async function renderBoard() {
 }
 
 export async function renderStats() {
-  const { count: projectCount } = await supabase
-    .from('projects')
-    .select('*', { count: 'exact', head: true })
-    .eq('status', 'approved');
-
-  const { count: cardCount } = await supabase
-    .from('player_cards')
-    .select('*', { count: 'exact', head: true });
+  const [
+    { count: projectCount },
+    { count: cardCount },
+    { count: pendingCount },
+    { count: totalCount },
+  ] = await Promise.all([
+    supabase.from('projects').select('*', { count: 'exact', head: true }).eq('status', 'approved'),
+    supabase.from('player_cards').select('*', { count: 'exact', head: true }),
+    supabase.from('projects').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+    supabase.from('projects').select('*', { count: 'exact', head: true }),
+  ]);
 
   const statProjects = document.getElementById('stat-projects');
   const statContributors = document.getElementById('stat-contributors');
   const statPending = document.getElementById('stat-pending');
+  const statIdeas = document.getElementById('stat-ideas');
 
   if (statProjects) statProjects.textContent = projectCount || 0;
   if (statContributors) statContributors.textContent = cardCount || 0;
-  if (statPending) {
-    const { count: pendingCount } = await supabase
-      .from('projects')
-      .select('*', { count: 'exact', head: true })
-      .eq('status', 'pending');
-    statPending.textContent = pendingCount || 0;
+  if (statPending) statPending.textContent = pendingCount || 0;
+  if (statIdeas) statIdeas.textContent = totalCount || 0;
+}
+
+export async function renderFeaturedProject() {
+  const container = document.getElementById('featured-project');
+  if (!container) return;
+
+  const { data: projects, error } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('status', 'approved')
+    .order('total_score', { ascending: false, nullsFirst: false })
+    .order('created_at', { ascending: false })
+    .limit(1);
+
+  if (error || !projects || projects.length === 0) {
+    container.innerHTML = '';
+    return;
   }
+
+  const p = projects[0];
+  const problemExcerpt = p.problem.length > 180 ? p.problem.slice(0, 180) + '…' : p.problem;
+  const trackLabel = p.track === 'mvp' ? 'MVP' : 'Idea';
+
+  container.innerHTML = `
+    <div class="featured-label">Featured Project</div>
+    <div class="featured-card">
+      <div class="featured-card-accent"></div>
+      <div class="featured-card-body">
+        <div class="featured-left">
+          <div class="featured-name">${escapeHtml(p.name)}</div>
+          <div class="featured-problem">${escapeHtml(problemExcerpt)}</div>
+          <div class="featured-meta">
+            <span class="stage-tag ${p.track}">${trackLabel}</span>
+            ${(p.roles_needed || []).map(r => `<span class="role-tag">${r}</span>`).join('')}
+          </div>
+        </div>
+        <div class="featured-right">
+          ${p.total_score !== null ? `
+            <div>
+              <div class="featured-score">${p.total_score}<span style="font-size:20px;color:var(--muted)">/100</span></div>
+              <div class="featured-score-label">Committee Score</div>
+            </div>
+          ` : ''}
+          <button class="featured-view-btn" data-featured-id="${escapeHtml(p.id)}">
+            View Project →
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  container.querySelector('[data-featured-id]')?.addEventListener('click', (e) => {
+    const id = e.currentTarget.dataset.featuredId;
+    openProjectDetail(id);
+  });
 }
 
 async function openProjectDetail(projectId) {

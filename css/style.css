@@ -107,6 +107,194 @@
     .page { display: none; pointer-events: none; }
     .page.active { display: block; pointer-events: auto; }
 
+    /* ─── ANNOUNCEMENT BANNER (home-01) ──────────────────────────── */
+    .announcement-banner {
+      background: var(--text);
+      color: #fff;
+      padding: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, opacity 0.3s ease;
+      max-height: 80px;
+    }
+
+    .announcement-banner.dismissed {
+      max-height: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .announcement-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 20px;
+      position: relative;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .announcement-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      flex-shrink: 0;
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.3); }
+    }
+
+    .announcement-text {
+      font-size: 13px;
+      color: rgba(255,255,255,0.9);
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .announcement-text strong { color: #fff; }
+
+    .announcement-close {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+      cursor: pointer;
+      padding: 4px 8px;
+      line-height: 1;
+      border-radius: 4px;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .announcement-close:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+    /* ─── FEATURED PROJECT (home-02) ─────────────────────────────── */
+    .featured-project {
+      margin-top: 48px;
+    }
+
+    .featured-project:empty { display: none; }
+
+    .featured-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .featured-card-accent {
+      height: 4px;
+      background: linear-gradient(90deg, var(--green) 0%, #7ed9a3 100%);
+    }
+
+    .featured-card-body {
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: start;
+    }
+
+    @media (max-width: 600px) {
+      .featured-card-body { grid-template-columns: 1fr; }
+    }
+
+    .featured-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .featured-label::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 2px;
+      background: var(--green);
+    }
+
+    .featured-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+      line-height: 1.1;
+    }
+
+    .featured-problem {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+      max-width: 560px;
+    }
+
+    .featured-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .featured-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 16px;
+    }
+
+    .featured-score {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+      text-align: right;
+    }
+
+    .featured-score-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-align: right;
+      margin-top: 2px;
+    }
+
+    .featured-view-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      background: var(--text);
+      color: #fff;
+      border: none;
+      border-radius: 980px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .featured-view-btn:hover { opacity: 0.82; }
+    .featured-view-btn:active { transform: scale(0.97); }
+
     /* ─── HOME ─────────────────────────────────────────────────────── */
     .hero {
       text-align: center;
@@ -194,9 +382,15 @@
       box-shadow: var(--shadow);
     }
 
+    .stat-card .stat-icon {
+      font-size: 24px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
     .stat-card .stat-num {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 40px;
+      font-size: 48px;
       font-weight: 700;
       color: var(--text);
       line-height: 1;
@@ -205,9 +399,17 @@
     .stat-card .stat-num span { color: var(--green); }
 
     .stat-card .stat-label {
-      font-size: 13px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-top: 8px;
+    }
+
+    .stat-card .stat-desc {
+      font-size: 12px;
       color: var(--muted);
-      margin-top: 6px;
+      margin-top: 4px;
+      line-height: 1.4;
     }
 
     /* How it works */
@@ -229,14 +431,6 @@
       margin-top: 16px;
     }
 
-    .step-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 28px 24px;
-      box-shadow: var(--shadow);
-    }
-
     .step-num {
       width: 32px;
       height: 32px;
@@ -252,8 +446,38 @@
       margin-bottom: 16px;
     }
 
-    .step-card h4 { font-size: 16px; margin-bottom: 6px; }
-    .step-card p { font-size: 13px; color: var(--muted); }
+    .step-num-large {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--green);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .step-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .step-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .step-card:hover {
+      border-color: var(--green);
+      box-shadow: 0 4px 20px rgba(45,183,87,0.12);
+    }
+
+    .step-card h4 { font-size: 18px; margin-bottom: 8px; }
+    .step-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
 
     /* ─── SUBMIT ─────────────────────────────────────────────────── */
     .form-card {

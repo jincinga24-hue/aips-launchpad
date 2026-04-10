@@ -1,9 +1,9 @@
 {
   "features": [
-    {"id": "home-01", "parent": "Home Page Redesign", "name": "Announcement banner at top (dismissible)", "status": "FAIL"},
-    {"id": "home-02", "parent": "Home Page Redesign", "name": "Featured Project spotlight hero card", "status": "FAIL"},
-    {"id": "home-03", "parent": "Home Page Redesign", "name": "Metrics section with personality (icons, labels, count-up)", "status": "FAIL"},
-    {"id": "home-04", "parent": "Home Page Redesign", "name": "How it works section polished", "status": "FAIL"},
+    {"id": "home-01", "parent": "Home Page Redesign", "name": "Announcement banner at top (dismissible)", "status": "PASS"},
+    {"id": "home-02", "parent": "Home Page Redesign", "name": "Featured Project spotlight hero card", "status": "PASS"},
+    {"id": "home-03", "parent": "Home Page Redesign", "name": "Metrics section with personality (icons, labels, count-up)", "status": "PASS"},
+    {"id": "home-04", "parent": "Home Page Redesign", "name": "How it works section polished", "status": "PASS"},
     {"id": "home-05", "parent": "Home Page Redesign", "name": "Dark footer with AIPS links (Instagram, email, guidelines)", "status": "PASS"},
     {"id": "home-06", "parent": "Home Page Redesign", "name": "Overall home page feels editorial and professional", "status": "FAIL"},
     {"id": "dash-01", "parent": "Dashboard Redesign", "name": "Two-column layout (projects left, activity right)", "status": "FAIL"},
