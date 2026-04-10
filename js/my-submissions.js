@@ -127,6 +127,10 @@ function renderActivityFeed(events) {
       icon = ICONS.refresh;
       typeClass = 'type-revision';
       text = `Committee returned <strong>${escapeHtml(ev.projectName)}</strong> for revision`;
+    } else if (ev.type === 'endorsement') {
+      icon = ICONS.star;
+      typeClass = 'type-endorsement';
+      text = `<strong>${escapeHtml(ev.fromName)}</strong> endorsed you: "${escapeHtml(ev.message?.length > 50 ? ev.message.slice(0, 50) + '...' : ev.message || '')}"`;
     } else {
       icon = ICONS.clipboard;
       typeClass = 'type-pending';
@@ -272,6 +276,24 @@ export async function loadMySubmissions() {
         created_at: p.created_at,
       });
     }
+  });
+
+  // Endorsements received on user's player cards
+  const { data: endorsements } = await supabase
+    .from('endorsements')
+    .select('*, from_user:profiles!endorsements_from_user_id_fkey(display_name)')
+    .eq('to_user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(10);
+
+  (endorsements || []).forEach(e => {
+    const fromName = e.from_user?.display_name || 'Someone';
+    events.push({
+      type: 'endorsement',
+      fromName,
+      message: e.message,
+      created_at: e.created_at,
+    });
   });
 
   // Sort by created_at desc, take 20
