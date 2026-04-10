@@ -27,6 +27,16 @@ export function showTab(tab) {
   if (page) page.classList.add('active');
   if (tabBtn) tabBtn.classList.add('active');
 
+  // Re-sync sliding filter pills when switching pages
+  if (page) {
+    page.querySelectorAll('.filter-bar._updatePill').forEach(bar => requestAnimationFrame(bar._updatePill));
+    setTimeout(() => {
+      page.querySelectorAll('.filter-bar').forEach(bar => {
+        if (typeof bar._updatePill === 'function') requestAnimationFrame(bar._updatePill);
+      });
+    }, 50);
+  }
+
   // Render dynamic content
   if (tab === 'board') renderBoard();
   if (tab === 'home') { renderStats(); requestAnimationFrame(initCountUp); }
@@ -90,6 +100,8 @@ function initFilterPills() {
 
     bar.addEventListener('click', () => requestAnimationFrame(updatePill));
     requestAnimationFrame(updatePill);
+    bar.classList.add('pill-active');
+    bar._updatePill = updatePill;
   });
 }
 
