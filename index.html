@@ -298,15 +298,30 @@
   <!-- MY SUBMISSIONS PAGE -->
   <div id="page-my-submissions" class="page">
     <div class="page-head">
-      <h1>My Submissions</h1>
-      <p>Check the status of your submitted projects</p>
+      <h1>Dashboard</h1>
+      <p>Your submitted projects and recent activity</p>
     </div>
 
-    <div id="my-submissions-list"></div>
-    <div id="my-submissions-empty" class="empty-state">
-      <div class="empty-icon">📭</div>
-      <h3>No submissions found</h3>
-      <p>No projects were found for that email address. Double-check and try again.</p>
+    <div class="dash-layout">
+      <!-- Left column: Projects -->
+      <div class="dash-col-projects">
+        <h2 class="dash-col-title">Your Projects</h2>
+        <div id="my-submissions-list"></div>
+        <div id="my-submissions-empty" class="empty-state dash-empty">
+          <div class="empty-icon">📭</div>
+          <h3>No projects yet</h3>
+          <p>Submit your first project idea to get started.</p>
+          <button class="btn-primary" onclick="document.querySelector('[data-page=submit]')?.click()">Submit a Project</button>
+        </div>
+      </div>
+
+      <!-- Right column: Activity feed -->
+      <div class="dash-col-activity">
+        <h2 class="dash-col-title">Activity</h2>
+        <div id="dash-activity-feed">
+          <div class="activity-loading">Loading activity...</div>
+        </div>
+      </div>
     </div>
   </div>
 

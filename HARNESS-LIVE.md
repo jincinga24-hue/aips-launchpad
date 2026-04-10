@@ -45,3 +45,12 @@ Waiting for first cycle...
 14:42:19 | Cycle 2 | home-02: featured project spotlight | js/board.js, index.html, css/style.css
 14:42:19 | Cycle 2 | home-03: metrics with icons + 4th stat | index.html, css/style.css, js/board.js
 14:42:19 | Cycle 2 | home-04: how it works polished | index.html, css/style.css
+14:43:08 | Cycle 2 | Reading | js/my-submissions.js
+14:43:12 | Cycle 2 | Reading | index.html
+14:43:21 | Cycle 2 | Reading | css/style.css
+14:43:30 | Cycle 2 | Editing | index.html
+14:43:52 | Cycle 2 | Editing | css/style.css
+14:44:34 | Cycle 2 | Writing | js/my-submissions.js
+14:44:36 | Cycle 2 | Reading | FEATURES.json
+14:44:46 | Cycle 2 | Writing | FEATURES.json
+14:44:49 | Cycle 3 | dashboard redesign — two-column layout, activity feed, project cards | js/my-submissions.js, index.html, css/style.css
