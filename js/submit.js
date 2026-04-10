@@ -37,6 +37,29 @@ export function initSubmit() {
   });
 }
 
+const FORM_LABELS = {
+  idea: {
+    problem: 'Problem Statement',
+    problemHint: 'Aim for 2-4 sentences. Specificity wins.',
+    solution: 'Your Proposed Solution',
+    solutionHint: '',
+    target: 'Target User',
+    targetHint: 'Who specifically? The more precise, the better.',
+    scope: 'MVP Scope',
+    scopeHint: 'Think: one core feature, working end-to-end.',
+  },
+  mvp: {
+    problem: 'What problem does your product solve?',
+    problemHint: 'Describe the problem your MVP addresses. Include any evidence of demand.',
+    solution: 'What does your MVP do?',
+    solutionHint: 'Describe what your prototype currently does, not what you plan to build.',
+    target: 'Who is using it?',
+    targetHint: 'Do you have real users? How many? Who are they?',
+    scope: "What's next?",
+    scopeHint: 'What features or improvements do you need help building next?',
+  },
+};
+
 export function setTrack(track) {
   currentTrack = track;
   document.getElementById('btn-track-idea')?.classList.toggle('active', track === 'idea');
@@ -46,12 +69,23 @@ export function setTrack(track) {
     if (track === 'mvp') mvpFields.classList.add('visible');
     else mvpFields.classList.remove('visible');
   }
-  // Toggle form-card class so header swaps via CSS
   const formCard = document.querySelector('.form-card');
   if (formCard) {
     if (track === 'mvp') formCard.classList.add('submit-track-mvp');
     else formCard.classList.remove('submit-track-mvp');
   }
+
+  // Update labels and hints based on track
+  const labels = FORM_LABELS[track] || FORM_LABELS.idea;
+  const set = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+  set('label-problem', labels.problem + ' <span>*</span>');
+  set('hint-problem', labels.problemHint);
+  set('label-solution', labels.solution + ' <span>*</span>');
+  set('hint-solution', labels.solutionHint);
+  set('label-target', labels.target + ' <span>*</span>');
+  set('hint-target', labels.targetHint);
+  set('label-scope', labels.scope + ' <span>*</span>');
+  set('hint-scope', labels.scopeHint);
 }
 
 function getSelectedRoles() {
