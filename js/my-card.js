@@ -159,7 +159,7 @@ export async function saveMyCard() {
   const github     = document.getElementById('mc-github')?.value.trim() || '';
   const linkedin   = document.getElementById('mc-linkedin')?.value.trim() || '';
   const instagram  = document.getElementById('mc-instagram')?.value.trim() || '';
-  const avatarUrl  = _pendingAvatarUrl || document.getElementById('mc-avatar-url')?.value.trim() || '';
+  const avatarUrl  = _pendingAvatarUrl === null ? '' : (_pendingAvatarUrl || document.getElementById('mc-avatar-url')?.value.trim() || '');
   const yearLevel  = document.getElementById('mc-year-level')?.value || '';
   const availability = document.querySelector('input[name="mc-availability"]:checked')?.value || '';
 
@@ -233,7 +233,7 @@ export function renderCardPreview() {
   const github     = document.getElementById('mc-github')?.value.trim() || '';
   const linkedin   = document.getElementById('mc-linkedin')?.value.trim() || '';
   const instagram  = document.getElementById('mc-instagram')?.value.trim() || '';
-  const avatarUrl  = _pendingAvatarUrl || document.getElementById('mc-avatar-url')?.value.trim() || '';
+  const avatarUrl  = _pendingAvatarUrl === null ? '' : (_pendingAvatarUrl || document.getElementById('mc-avatar-url')?.value.trim() || '');
   const yearLevel  = document.getElementById('mc-year-level')?.value || '';
   const availability = document.querySelector('input[name="mc-availability"]:checked')?.value || '';
   const roles      = _selectedRoles;
@@ -611,8 +611,10 @@ async function _uploadAvatarFile(file) {
     .from('avatars')
     .getPublicUrl(path);
 
-  _pendingAvatarUrl = publicUrl;
-  _showAvatarPreview(publicUrl);
+  // Add cache-buster so browser doesn't show old cached avatar
+  const cacheBusted = publicUrl + '?t=' + Date.now();
+  _pendingAvatarUrl = cacheBusted;
+  _showAvatarPreview(cacheBusted);
   renderCardPreview();
 }
 
@@ -636,8 +638,9 @@ function _clearAvatar() {
   const zone = document.getElementById('avatar-upload');
   const removeBtn = document.getElementById('avatar-remove-btn');
   const urlInput = document.getElementById('mc-avatar-url');
+  const fileInput = document.getElementById('avatar-file');
 
-  _pendingAvatarUrl = '';
+  _pendingAvatarUrl = null; // null = explicitly cleared (different from '' which means "no change")
   if (preview) {
     preview.style.backgroundImage = '';
     preview.classList.remove('avatar-has-image');
@@ -646,6 +649,7 @@ function _clearAvatar() {
   if (zone) zone.classList.remove('avatar-upload-filled');
   if (removeBtn) removeBtn.style.display = 'none';
   if (urlInput) urlInput.value = '';
+  if (fileInput) fileInput.value = '';
   renderCardPreview();
 }
 
