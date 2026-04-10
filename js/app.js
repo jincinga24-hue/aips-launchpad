@@ -48,7 +48,13 @@ export function showTab(tab) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+let _authResolved = false;
+let _loginTimer = null;
+let currentUser = null;
+
 function updateNav(user, profile) {
+  currentUser = user;
+  _authResolved = true;
   const navUser = document.getElementById('nav-user');
   const adminTab = document.getElementById('admin-tab-btn');
 
@@ -62,8 +68,16 @@ function updateNav(user, profile) {
       await signOut();
     });
   } else {
-    navUser.innerHTML = `<a href="#" class="nav-tab" onclick="window.__showTab('auth'); return false;">Log in</a>`;
-    navUser.style.display = 'flex';
+    // Delay showing "Log in" briefly — auth might still be loading
+    if (!_loginTimer) {
+      _loginTimer = setTimeout(() => {
+        if (!currentUser) {
+          navUser.innerHTML = `<a href="#" class="nav-tab" onclick="window.__showTab('auth'); return false;">Log in</a>`;
+          navUser.style.display = 'flex';
+        }
+        _loginTimer = null;
+      }, 800);
+    }
   }
 
   if (profile?.role === 'admin') {
