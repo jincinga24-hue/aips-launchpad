@@ -5,6 +5,8 @@ import { renderTradingCard, openPcModal } from './player-card.js';
 import { isLoggedIn, getUser } from './auth.js';
 import { getMyCard } from './my-card.js';
 
+// ─── Endorsement helpers ────────────────────────────────────────────────────
+
 let currentStageFilter = 'all';
 let currentRoleFilter = 'all';
 let currentCategoryFilter = 'all';
@@ -379,7 +381,11 @@ async function openProjectDetail(projectId) {
         <div class="player-cards-section">
           <h3>Team Applicants <span class="player-cards-count">${cards.length}</span></h3>
           <div class="player-cards-grid">
-            ${(cards || []).map(card => renderTradingCard(card, false)).join('')}
+            ${(cards || []).map(card => {
+              const user = getUser();
+              const isOwner = user && project.user_id === user.id;
+              return renderTradingCard(card, false, { showEndorseBtn: isOwner, projectId: project.id });
+            }).join('')}
           </div>
         </div>
       ` : ''}
@@ -413,6 +419,16 @@ async function openProjectDetail(projectId) {
   modalContent.querySelector('[data-open-pc]')?.addEventListener('click', (e) => {
     const id = e.currentTarget.dataset.openPc;
     openPcModal(id);
+  });
+
+  // Endorse buttons
+  modalContent.querySelectorAll('.tc-endorse-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const toUserId = btn.dataset.endorseUser;
+      const projId = btn.dataset.endorseProject;
+      _showEndorseForm(btn, toUserId, projId);
+    });
   });
 
   document.getElementById('project-modal').classList.add('open');
@@ -475,6 +491,56 @@ function _showToast(msg, type = 'success') {
     toast.classList.remove('aips-toast-visible');
     setTimeout(() => toast.remove(), 400);
   }, 3500);
+}
+
+function _showEndorseForm(btn, toUserId, projectId) {
+  // Replace button with inline form
+  const wrapper = document.createElement('div');
+  wrapper.className = 'tc-endorse-form';
+  wrapper.innerHTML = `
+    <input type="text" class="tc-endorse-input" placeholder="Write a short endorsement…" maxlength="200" />
+    <button class="tc-endorse-submit">Send</button>
+    <button class="tc-endorse-cancel">Cancel</button>
+  `;
+  btn.replaceWith(wrapper);
+
+  const input = wrapper.querySelector('.tc-endorse-input');
+  input.focus();
+
+  wrapper.querySelector('.tc-endorse-cancel').addEventListener('click', () => {
+    const newBtn = document.createElement('button');
+    newBtn.className = 'tc-endorse-btn';
+    newBtn.dataset.endorseUser = toUserId;
+    newBtn.dataset.endorseProject = projectId;
+    newBtn.textContent = 'Endorse';
+    wrapper.replaceWith(newBtn);
+    newBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      _showEndorseForm(newBtn, toUserId, projectId);
+    });
+  });
+
+  wrapper.querySelector('.tc-endorse-submit').addEventListener('click', async () => {
+    const message = input.value.trim();
+    if (!message) return;
+    const user = getUser();
+    if (!user) return;
+
+    const { error } = await supabase.from('endorsements').insert({
+      from_user_id: user.id,
+      to_user_id: toUserId,
+      project_id: projectId,
+      message,
+    });
+
+    if (error) {
+      _showToast('Could not endorse: ' + error.message, 'error');
+      return;
+    }
+
+    _showToast('Endorsement sent!', 'success');
+    wrapper.innerHTML = '<span style="font-size:12px;color:var(--muted);font-style:italic">Endorsed!</span>';
+  });
 }
 
 function closeProjectModal() {

@@ -20,6 +20,13 @@ export const ICONS = {
   folder: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>',
   calendar: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
   trophy: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 21 12 17 16 21"/><line x1="12" y1="17" x2="12" y2="11"/><path d="M6 3H3v7a6 6 0 006 6 6 6 0 006-6V3h-3"/><line x1="6" y1="3" x2="18" y2="3"/></svg>',
+  instagram: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>',
+};
+
+export const AVAILABILITY_OPTIONS = {
+  looking: { label: 'Looking for projects', color: '#2DB757' },
+  open:    { label: 'Open to chat',         color: '#007AFF' },
+  busy:    { label: 'Busy',                 color: '#86868b' },
 };
 
 export const CATEGORIES = ['FinTech', 'EdTech', 'Health', 'Social Impact', 'AI/ML', 'Sustainability', 'Productivity', 'Entertainment', 'Other'];

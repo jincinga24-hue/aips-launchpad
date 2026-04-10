@@ -411,6 +411,51 @@
         </div>
 
         <div class="form-group">
+          <label class="form-label">Avatar URL <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <input type="url" id="mc-avatar" placeholder="https://example.com/photo.jpg" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Year Level <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <select id="mc-year-level">
+            <option value="">Select year level…</option>
+            <option value="1st Year">1st Year</option>
+            <option value="2nd Year">2nd Year</option>
+            <option value="3rd Year">3rd Year</option>
+            <option value="4th Year">4th Year</option>
+            <option value="Masters">Masters</option>
+            <option value="PhD">PhD</option>
+            <option value="Alumni">Alumni</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Availability</label>
+          <div class="mc-availability-pills">
+            <label class="mc-avail-pill">
+              <input type="radio" name="mc-availability" value="looking" />
+              <span class="mc-avail-dot" style="background:#2DB757"></span> Looking for projects
+            </label>
+            <label class="mc-avail-pill">
+              <input type="radio" name="mc-availability" value="open" />
+              <span class="mc-avail-dot" style="background:#007AFF"></span> Open to chat
+            </label>
+            <label class="mc-avail-pill">
+              <input type="radio" name="mc-availability" value="busy" />
+              <span class="mc-avail-dot" style="background:#86868b"></span> Busy
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Skill Tags <span style="color:var(--muted);font-weight:400">(type + Enter, max 8)</span></label>
+          <div class="mc-skill-tags-wrap">
+            <div id="mc-skill-tags-list" class="mc-skill-tags-list"></div>
+            <input type="text" id="mc-skill-input" placeholder="e.g. React, Figma, Python…" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="form-group">
           <label class="form-label">Portfolio URL <span style="color:var(--muted);font-weight:400">(optional)</span></label>
           <input type="url" id="mc-portfolio" placeholder="https://yoursite.com" />
         </div>
@@ -426,8 +471,14 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Past Projects <span style="color:var(--muted);font-weight:400">(optional)</span></label>
-          <textarea id="mc-past-projects" rows="3" placeholder="Describe what you've built before — side projects, hackathon wins, research, etc."></textarea>
+          <label class="form-label">Instagram URL <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <input type="url" id="mc-instagram" placeholder="https://instagram.com/yourhandle" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Past Projects <span style="color:var(--muted);font-weight:400">(up to 3)</span></label>
+          <div id="mc-showcase-rows"></div>
+          <button type="button" class="btn btn-secondary mc-add-showcase-btn" id="mc-add-showcase">+ Add Project</button>
         </div>
 
         <div class="form-group">
@@ -480,6 +531,11 @@
         <h2 class="mc-section-title">Live Preview</h2>
         <p class="mc-preview-hint">This is exactly how your card will appear when you join a project.</p>
         <div id="mc-preview-container"></div>
+
+        <div id="mc-endorsements-section" style="display:none; margin-top:28px;">
+          <h2 class="mc-section-title">Endorsements Received</h2>
+          <div id="mc-endorsements-list" class="mc-endorsements-list"></div>
+        </div>
       </div>
     </div>
   </div>
