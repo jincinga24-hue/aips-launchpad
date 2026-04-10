@@ -175,3 +175,8 @@ Waiting for first cycle...
 20:10:55 | Cycle 3 | Reading | css/style.css
 20:11:20 | Cycle 3 | Editing | css/style.css
 20:11:31 | Cycle 8 | feat: personal player card profile | js/my-card.js
+20:18:38 | Cycle 3 | Reading | /tmp/aips-live-now.png
+20:19:19 | Cycle 3 | Reading | css/style.css
+20:19:30 | Cycle 3 | Editing | css/style.css
+20:19:49 | Cycle 3 | Reading | css/style.css
+20:19:59 | Cycle 3 | Editing | css/style.css
