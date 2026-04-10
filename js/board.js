@@ -391,10 +391,15 @@ async function openProjectDetail(projectId) {
         </div>
         ${isLoggedIn()
           ? (() => {
+              const user = getUser();
+              const alreadyJoined = user && (cards || []).some(c => c.user_id === user.id);
+              if (alreadyJoined) {
+                return `<button class="btn btn-secondary" data-leave-team="${escapeHtml(project.id)}">Leave Team</button>`;
+              }
               const savedCard = getMyCard();
               return savedCard
-                ? `<button class="btn btn-primary" data-join-with-card="${escapeHtml(project.id)}">Join with Your Card ⚡</button>`
-                : `<button class="btn btn-primary" data-go-mycard>Create Your Card First →</button>`;
+                ? `<button class="btn btn-primary" data-join-with-card="${escapeHtml(project.id)}">Join with Your Card</button>`
+                : `<button class="btn btn-primary" data-go-mycard>Create Your Card First</button>`;
             })()
           : `<div class="login-prompt">Log in to join this team</div>`
         }
@@ -439,6 +444,12 @@ async function openProjectDetail(projectId) {
   modalContent.querySelector('[data-go-mycard]')?.addEventListener('click', () => {
     closeProjectModal();
     window.__showTab?.('mycard');
+  });
+
+  // Leave team
+  modalContent.querySelector('[data-leave-team]')?.addEventListener('click', async (e) => {
+    const projId = e.currentTarget.dataset.leaveTeam;
+    await _leaveTeam(projId, e.currentTarget);
   });
 
   // Fallback: open pc-modal (legacy)
@@ -511,6 +522,33 @@ async function _joinWithSavedCard(projectId, btnEl) {
   });
   // Re-open to show fresh card list after animation
   setTimeout(() => openProjectDetail(projectId), 3500);
+}
+
+async function _leaveTeam(projectId, btnEl) {
+  const user = getUser();
+  if (!user) return;
+
+  const orig = btnEl.textContent;
+  btnEl.disabled = true;
+  btnEl.textContent = 'Leaving...';
+
+  const { error } = await supabase
+    .from('player_cards')
+    .delete()
+    .eq('project_id', projectId)
+    .eq('user_id', user.id);
+
+  btnEl.disabled = false;
+
+  if (error) {
+    _showToast('Could not leave: ' + error.message, 'error');
+    btnEl.textContent = orig;
+    return;
+  }
+
+  _showToast('You have left the team.', 'info');
+  // Refresh the modal to show updated state
+  setTimeout(() => openProjectDetail(projectId), 400);
 }
 
 function _showToast(msg, type = 'success') {
