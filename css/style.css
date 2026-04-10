@@ -2944,6 +2944,10 @@ main {
   inset: 0;
   z-index: 10000;
   pointer-events: none;
+  animation: splashFallback 0.5s ease 4s forwards;
+}
+@keyframes splashFallback {
+  to { opacity: 0; visibility: hidden; z-index: -1; }
 }
 
 .splash-left,
