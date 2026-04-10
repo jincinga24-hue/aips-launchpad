@@ -54,3 +54,26 @@ Waiting for first cycle...
 14:44:36 | Cycle 2 | Reading | FEATURES.json
 14:44:46 | Cycle 2 | Writing | FEATURES.json
 14:44:49 | Cycle 3 | dashboard redesign — two-column layout, activity feed, project cards | js/my-submissions.js, index.html, css/style.css
+14:45:36 | Cycle 3 | Reading | js/effects.js
+14:45:36 | Cycle 3 | Reading | js/submit.js
+14:45:42 | Cycle 3 | Reading | js/admin.js
+14:45:42 | Cycle 3 | Reading | js/player-card.js
+14:45:43 | Cycle 3 | Reading | js/app.js
+14:45:50 | Cycle 3 | Reading | css/style.css
+14:45:54 | Cycle 3 | Reading | css/style.css
+14:45:54 | Cycle 3 | Reading | index.html
+14:45:58 | Cycle 3 | Reading | css/style.css
+14:46:06 | Cycle 3 | Reading | css/style.css
+14:46:13 | Cycle 3 | Reading | css/style.css
+14:46:17 | Cycle 3 | Reading | css/style.css
+14:46:17 | Cycle 3 | Reading | css/style.css
+14:46:27 | Cycle 3 | Reading | css/style.css
+14:46:38 | Cycle 3 | Reading | css/style.css
+14:47:12 | Cycle 3 | Editing | css/style.css
+14:47:15 | Cycle 3 | Reading | index.html
+14:47:20 | Cycle 3 | Editing | index.html
+14:47:25 | Cycle 3 | Editing | index.html
+14:47:40 | Cycle 3 | Editing | css/style.css
+14:47:47 | Cycle 3 | Editing | FEATURES.json
+14:47:51 | Cycle 3 | Editing | FEATURES.json
+14:47:54 | Cycle 4 | visual effects verified + responsive CSS added + editorial polish | css/style.css, js/effects.js, js/submit.js, js/admin.js, js/player-card.js, index.html

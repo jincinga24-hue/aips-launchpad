@@ -2042,3 +2042,239 @@
     padding: 40px 20px 32px;
   }
 }
+
+/* ─── COMPREHENSIVE RESPONSIVE (fix-06) ──────────────────────────────── */
+
+/* Tablet (≤768px) */
+@media (max-width: 768px) {
+  /* Stats grid: 2 columns on tablet */
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Board grid: single column */
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Modal: reduce padding */
+  .modal {
+    padding: 24px 20px;
+  }
+
+  .pc-modal {
+    padding: 24px 20px;
+  }
+
+  /* Section spacing */
+  .hero {
+    padding: 56px 20px 48px;
+  }
+
+  /* Steps grid: single column on tablet */
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile (≤480px) */
+@media (max-width: 480px) {
+  main {
+    padding: 16px 12px 60px;
+  }
+
+  /* Hero: tighter */
+  .hero {
+    padding: 40px 16px 32px;
+  }
+
+  .hero p {
+    font-size: 15px;
+  }
+
+  /* Hero CTAs: stack */
+  .hero-ctas {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .star-border-container {
+    width: 100%;
+    max-width: 260px;
+  }
+
+  .star-inner {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Stats: single column on mobile */
+  .stats-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 40px;
+  }
+
+  .stat-card {
+    padding: 16px 12px;
+  }
+
+  .stat-card .stat-num {
+    font-size: 36px;
+  }
+
+  /* Section titles */
+  .section-title {
+    font-size: 22px;
+  }
+
+  /* Steps: full width */
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Board grid */
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Modal: full-width, less padding */
+  .modal-backdrop {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .modal {
+    border-radius: 16px 16px 0 0;
+    max-height: 92vh;
+    padding: 20px 16px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .pc-modal {
+    border-radius: 16px 16px 0 0;
+    max-height: 92vh;
+    padding: 20px 16px;
+  }
+
+  /* Dashboard: always single column */
+  .dash-layout {
+    grid-template-columns: 1fr;
+  }
+
+  /* Form card */
+  .form-card {
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+
+  /* Nav user: hide name, show logout only */
+  .nav-user-name {
+    display: none;
+  }
+
+  /* Featured card: stack */
+  .featured-card-body {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 20px 16px;
+  }
+
+  .featured-right {
+    align-items: flex-start;
+  }
+
+  /* Trading cards: single column */
+  .trading-cards-row {
+    grid-template-columns: 1fr;
+  }
+
+  /* Admin scoring: make sliders full width */
+  .scoring-row {
+    flex-wrap: wrap;
+  }
+
+  .score-slider {
+    width: 100%;
+  }
+}
+
+/* ─── EDITORIAL POLISH (home-06) ──────────────────────────────────────── */
+
+/* ── How It Works section ── */
+.how-it-works-section {
+  margin-top: 80px;
+}
+
+/* ── Funding section ── */
+.funding-section {
+  margin-top: 80px;
+  text-align: center;
+  padding: 60px 24px 0;
+}
+
+/* Generous section spacing on home page */
+#page-home .stats-row {
+  margin-top: 72px;
+}
+
+/* Section dividers — subtle */
+.home-section-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 72px 0 0;
+  opacity: 0.6;
+}
+
+/* Section title hierarchy */
+.section-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.section-sub {
+  font-size: 16px;
+  color: var(--muted);
+  margin-bottom: 36px;
+  line-height: 1.5;
+}
+
+/* Step cards */
+.step-card h4 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.step-card p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* Featured project: breathing room */
+.featured-project {
+  margin-top: 48px;
+}
+
+/* Body copy readability */
+#page-home p {
+  line-height: 1.65;
+}
+
+@media (max-width: 480px) {
+  .how-it-works-section {
+    margin-top: 56px;
+  }
+
+  .funding-section {
+    margin-top: 56px;
+    padding: 40px 16px 0;
+  }
+}

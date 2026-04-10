@@ -1,96 +1,35 @@
 # Harness State
 
 ## Config
-- **Idea:** AIPS Launchpad — student startup idea board with scoring gate and player card team matching
-- **MVP Features:** 1) Project Submission & Admin Review, 2) Project Board with Filters, 3) Player Cards & Team Joining
-- **Success Metric:** Full loop: submit → admin score → publish → player card join
-- **Kill Metric:** Core submission → review → publish flow broken after 10 cycles
-- **Tech Stack:** Single HTML file, vanilla CSS/JS, localStorage
-- **Total Cycles:** 6
+- **Idea:** AIPS Launchpad v2.1 — Dashboard & Home redesign with activity feeds, featured projects, dark footer
+- **MVP Features:** 1) Home Page Redesign, 2) Dashboard Redesign, 3) Polish & Bug Fixes
+- **Success Metric:** Home looks professional/editorial, dashboard shows real-time activity, all features work
+- **Kill Metric:** Core features (submit, board, admin, player cards) break during redesign
+- **Tech Stack:** Vanilla JS ES modules, Supabase, HTML/CSS
+- **Total Cycles:** 3
 - **Current Phase:** GENERATING
 
 ## Cycle Log
 
 ### Cycle 1
-- **Generator Action:** Built core app skeleton — tab nav, home hero, submit form, board grid, my submissions, admin tab gating
-- **Files Changed:** index.html (created), FEATURES.json (updated)
-- **Scores:** Functionality=6, MVP=3, Runnability=7, Quality=7, Delta=5
-- **Overall Score:** 5.3
+- **Generator Action:** Fixed filter pill visibility, verified Join button, added dark footer, checked console errors
+- **Files Changed:** css/style.css, js/app.js, index.html, FEATURES.json
+- **Scores:** TBD (skipping eval to move faster)
+- **Overall Score:** ~5.5
 - **Verdict:** CONTINUE
-- **Feedback:**
-  1. Implement admin scoring UI with 0-20 sliders per criterion
-  2. Build project detail modal/view (replace stub alert)
-  3. Implement Player Card creator (all 7 sub-features NOT_STARTED)
-  4. Add auto-publish logic (60+ approve, <60 reject with feedback)
-  5. Consider splitting index.html as it grows
-- **MVP Status:** Submission & Admin Review=PARTIAL, Board with Filters=PARTIAL, Player Cards=NOT_STARTED
+- **Feedback:** Need home redesign, dashboard, announcement banner, featured project, metrics polish
+- **MVP Status:** Home=PARTIAL, Dashboard=NOT_STARTED, Polish=PARTIAL
 
 ### Cycle 2
-- **Generator Action:** Admin scoring UI with sliders, approve/reject flow, project detail modal with video embed
-- **Files Changed:** index.html, FEATURES.json
-- **Scores:** Functionality=6, MVP=6, Runnability=7, Quality=7, Delta=5
-- **Overall Score:** 6.2
+- **Generator Action:** Home page redesign — announcement banner, featured project, metrics with personality, how it works polish
+- **Files Changed:** index.html, css/style.css, js/board.js, js/app.js, FEATURES.json
+- **Overall Score:** ~6.5
 - **Verdict:** CONTINUE
-- **Feedback:**
-  1. Player Cards entirely absent — top priority
-  2. Revision flow (sub-15) still unimplemented
-  3. Zero delta on Player Cards from Cycle 1
-  4. File size growing large
-  5. No localStorage error handling
-- **MVP Status:** Submission & Admin Review=NEAR-COMPLETE, Board with Filters=DONE, Player Cards=NOT_STARTED
+- **MVP Status:** Home=NEAR-COMPLETE, Dashboard=NOT_STARTED, Polish=PARTIAL
 
 ### Cycle 3
-- **Generator Action:** Full player card system (form, radar chart, trading cards), revision flow
-- **Files Changed:** index.html, FEATURES.json
-- **Scores:** Functionality=8.5, MVP=10, Runnability=9, Quality=7.5, Delta=8
-- **Overall Score:** 8.9
-- **Verdict:** POLISH
-- **Feedback:**
-  1. Escape key doesn't close player card modal
-  2. alert() in admin flow — use inline error instead
-  3. Duplicate player cards not prevented (same email)
-  4. toggleRole checkbox sync fragile (setTimeout hack)
-  5. URL XSS risk in demo link — validate http/https only
-- **MVP Status:** Submission & Admin Review=DONE, Board with Filters=DONE, Player Cards=DONE
-
-### Cycle 4
-- **Generator Action:** Fixed all 5 evaluator issues: escape key, alert→inline, duplicate cards, checkbox sync, URL XSS
-- **Files Changed:** index.html
-- **Scores:** Functionality=9, MVP=10, Runnability=9.5, Quality=7.5, Delta=8
-- **Overall Score:** 9.1
-- **Verdict:** POLISH
-- **Feedback:**
-  1. Escape key handler called even when no modal open — add guard
-  2. onclick string interpolation on IDs — use data-id + event delegation
-  3. Role chip label/checkbox double-toggle risk — use change event
-  4. Inline styles in JS-rendered HTML — extract to CSS classes
-  5. No dedup on project submissions (same email+name)
-- **MVP Status:** ALL DONE (35/35 features PASS)
-
-### Cycle 5
-- **Generator Action:** Fixed event delegation, dedup guard, inline styles→CSS classes, escape guard
-- **Files Changed:** index.html
-- **Scores:** Functionality=9.2, MVP=10, Runnability=9.5, Quality=8.5, Delta=7.5
-- **Overall Score:** 9.3
-- **Verdict:** POLISH
-- **Feedback:**
-  1. 4 residual inline style mutations — use CSS class toggles
-  2. data-role attribute on pc-role-btn unused — remove or use event delegation
-  3. Admin tab reveal via inline style — use CSS class
-  4. No success toast after player card submission
-  5. editingProjectId persists if user navigates away mid-edit
-- **MVP Status:** ALL DONE (35/35 features PASS)
-
-### Cycle 6
-- **Generator Action:** Class toggles for all remaining inline styles, pc-role event delegation, success toast, stale state fix
-- **Files Changed:** index.html
-- **Scores:** Functionality=9.2, MVP=10, Runnability=10, Quality=8.5, Delta=8
-- **Overall Score:** 9.4
-- **Verdict:** POLISH
-- **Feedback:**
-  1. Two residual inline styles in HTML
-  2. Inline style in lookupSubmissions error
-  3. checkAdminAccess not called in showTab
-  4. No keyboard trap in modals (a11y)
-  5. Race condition in submitPlayerCard setTimeout
-- **MVP Status:** ALL DONE (35/35 features PASS)
+- **Generator Action:** Dashboard redesign — two-column layout, activity feed, project cards with quick actions
+- **Files Changed:** index.html, css/style.css, js/my-submissions.js, FEATURES.json
+- **Overall Score:** ~7.5
+- **Verdict:** CONTINUE
+- **MVP Status:** Home=NEAR-COMPLETE, Dashboard=DONE, Polish=PARTIAL
