@@ -291,6 +291,23 @@ async function openProjectDetail(projectId) {
 
   const { data: cards } = await supabase.from('player_cards_public').select('*').eq('project_id', projectId);
 
+  // Fetch endorsements for all card users in this project
+  const cardUserIds = (cards || []).map(c => c.user_id).filter(Boolean);
+  let endorsementsByUser = {};
+  if (cardUserIds.length > 0) {
+    const { data: endorsements } = await supabase
+      .from('endorsements')
+      .select('*, from_profile:profiles!endorsements_from_user_id_fkey(display_name)')
+      .in('to_user_id', cardUserIds)
+      .eq('project_id', projectId);
+    (endorsements || []).forEach(e => {
+      if (!endorsementsByUser[e.to_user_id]) endorsementsByUser[e.to_user_id] = [];
+      endorsementsByUser[e.to_user_id].push({ message: e.message, from_name: e.from_profile?.display_name || 'Someone' });
+    });
+  }
+  // Attach endorsements to cards
+  (cards || []).forEach(c => { c._endorsements = endorsementsByUser[c.user_id] || []; });
+
   // Use the right criteria based on project track
   const criteria = project.track === 'mvp' ? MVP_CRITERIA : IDEA_CRITERIA;
   const criteriaLabel = project.track === 'mvp' ? 'MVP Execution Score' : 'Idea Assessment Score';
