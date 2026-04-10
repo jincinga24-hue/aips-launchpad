@@ -68,16 +68,8 @@ function updateNav(user, profile) {
       await signOut();
     });
   } else {
-    // Delay showing "Log in" briefly — auth might still be loading
-    if (!_loginTimer) {
-      _loginTimer = setTimeout(() => {
-        if (!currentUser) {
-          navUser.innerHTML = `<a href="#" class="nav-tab" onclick="window.__showTab('auth'); return false;">Log in</a>`;
-          navUser.style.display = 'flex';
-        }
-        _loginTimer = null;
-      }, 800);
-    }
+    navUser.innerHTML = `<a href="#" class="nav-tab" onclick="window.__showTab('auth'); return false;">Log in</a>`;
+    navUser.style.display = 'flex';
   }
 
   if (profile?.role === 'admin') {
