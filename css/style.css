@@ -4048,3 +4048,37 @@ main {
 }
 
 /* track-specific labels handled by JS now */
+
+/* ─── TRADING CARD ENDORSEMENTS ─────────────────────────── */
+.tc-endorsements {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.tc-endorsements-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #FF9500;
+  margin-bottom: 6px;
+}
+.tc-endorsements-header svg {
+  color: #FF9500;
+}
+.tc-endorse-quote {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--text);
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+.tc-endorse-from {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--muted);
+  font-size: 11px;
+}

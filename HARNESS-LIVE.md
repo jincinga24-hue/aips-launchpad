@@ -316,3 +316,5 @@ Waiting for first cycle...
 22:23:20 | Cycle 3 | Editing | js/my-card.js
 22:23:54 | Cycle 3 | Reading | js/board.js
 22:24:06 | Cycle 3 | Editing | js/board.js
+22:26:02 | Cycle 3 | Reading | js/player-card.js
+22:26:17 | Cycle 3 | Editing | js/player-card.js

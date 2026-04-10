@@ -217,7 +217,13 @@ export function renderTradingCard(card, showEmail, options = {}) {
 
   // Endorsements on card
   const endorseQuotes = Array.isArray(card._endorsements) && card._endorsements.length > 0
-    ? `<div class="tc-endorsements">${card._endorsements.slice(0, 1).map(e => `<div class="tc-endorse-quote"><em>"${escapeHtml(e.message.length > 60 ? e.message.slice(0, 60) + '…' : e.message)}"</em></div>`).join('')}</div>`
+    ? `<div class="tc-endorsements">
+        <div class="tc-endorsements-header">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><path d="M4 22H2V11h2"/></svg>
+          <span>Endorsements</span>
+        </div>
+        ${card._endorsements.slice(0, 2).map(e => `<div class="tc-endorse-quote">"${escapeHtml(e.message.length > 60 ? e.message.slice(0, 60) + '…' : e.message)}" <span class="tc-endorse-from">— ${escapeHtml(e.from_name || 'Someone')}</span></div>`).join('')}
+      </div>`
     : '';
 
   // Endorse button (for teammates)
