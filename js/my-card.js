@@ -482,7 +482,7 @@ function _renderShowcaseRows() {
 async function _loadEndorsements(userId) {
   const { data, error } = await supabase
     .from('endorsements')
-    .select('*, from_profile:player_profiles!endorsements_from_user_id_fkey(name)')
+    .select('*, from_profile:profiles!endorsements_from_user_id_fkey(display_name)')
     .eq('to_user_id', userId)
     .order('created_at', { ascending: false })
     .limit(10);
@@ -494,7 +494,7 @@ async function _loadEndorsements(userId) {
 
   _endorsements = (data || []).map(e => ({
     ...e,
-    from_name: e.from_profile?.name || 'Someone',
+    from_name: e.from_profile?.display_name || 'Someone',
   }));
 
   _renderEndorsementsSection();

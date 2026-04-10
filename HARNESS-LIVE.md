@@ -310,3 +310,7 @@ Waiting for first cycle...
 22:16:31 | Cycle 3 | Reading | index.html
 22:16:55 | Cycle 3 | Editing | index.html
 22:19:21 | Cycle 3 | Writing | /tmp/pw-debug/final-check.mjs
+22:22:51 | Cycle 3 | Reading | index.html
+22:23:01 | Cycle 3 | Reading | js/my-card.js
+22:23:11 | Cycle 3 | Editing | js/my-card.js
+22:23:20 | Cycle 3 | Editing | js/my-card.js
