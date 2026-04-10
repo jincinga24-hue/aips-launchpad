@@ -53,7 +53,7 @@ export function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
-export const CRITERIA = [
+export const IDEA_CRITERIA = [
   { key: 'problemClarity', label: 'Problem Clarity' },
   { key: 'solutionFeasibility', label: 'Solution Feasibility' },
   { key: 'targetUser', label: 'Target User' },
@@ -61,14 +61,16 @@ export const CRITERIA = [
   { key: 'teamNeeds', label: 'Team Needs' },
 ];
 
-export const ADVANCED_CRITERIA = [
+export const MVP_CRITERIA = [
   { key: 'marketDemand', label: 'Market Demand' },
   { key: 'differentiation', label: 'Differentiation' },
-  { key: 'technicalFeasibility', label: 'Technical Feasibility' },
-  { key: 'businessModel', label: 'Business Model' },
+  { key: 'technicalFeasibility', label: 'Technical Execution' },
   { key: 'teamReadiness', label: 'Team Readiness' },
   { key: 'presentationQuality', label: 'Presentation Quality' },
 ];
+
+// Backward compat — old code uses CRITERIA
+export const CRITERIA = IDEA_CRITERIA;
 
 export const ROLE_COLORS = {
   Build: '#007AFF',

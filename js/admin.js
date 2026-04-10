@@ -1,11 +1,10 @@
 // js/admin.js — Admin panel
 import { supabase } from './supabase.js';
-import { escapeHtml, CRITERIA, ADVANCED_CRITERIA, ICONS } from './utils.js';
+import { escapeHtml, IDEA_CRITERIA, MVP_CRITERIA, ICONS } from './utils.js';
 import { isAdmin } from './auth.js';
 import { fireConfetti } from './effects.js';
 
 export function initAdmin() {
-  // Admin tab switching
   document.querySelector('.admin-tabs')?.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-admin-tab]');
     if (!btn) return;
@@ -40,6 +39,11 @@ export async function renderAdmin() {
   empty?.classList.remove('visible');
   list.innerHTML = pending.map(p => {
     const id = p.id;
+    // Use different criteria based on track
+    const criteria = p.track === 'mvp' ? MVP_CRITERIA : IDEA_CRITERIA;
+    const criteriaLabel = p.track === 'mvp' ? 'MVP Execution Criteria' : 'Idea Assessment Criteria';
+    const initialTotal = criteria.length * 10; // default slider value = 10
+
     return `
       <div class="admin-item" id="admin-item-${escapeHtml(id)}">
         <div class="admin-item-header">
@@ -51,12 +55,14 @@ export async function renderAdmin() {
         <div class="admin-item-field"><strong>Problem:</strong> ${escapeHtml(p.problem)}</div>
         <div class="admin-item-field"><strong>Solution:</strong> ${escapeHtml(p.solution)}</div>
         <div class="admin-item-field-sm"><strong>Target User:</strong> ${escapeHtml(p.target_user)}</div>
-        <div class="admin-item-field"><strong>MVP Scope:</strong> ${escapeHtml(p.mvp_scope)}</div>
+        <div class="admin-item-field"><strong>${p.track === 'mvp' ? "What's Next" : 'MVP Scope'}:</strong> ${escapeHtml(p.mvp_scope)}</div>
         ${p.current_team ? `<div class="admin-item-field-sm"><strong>Current Team:</strong> ${escapeHtml(p.current_team)}</div>` : ''}
+        ${p.demo_link ? `<div class="admin-item-field-sm"><strong>Demo:</strong> <a href="${escapeHtml(p.demo_link)}" target="_blank" rel="noopener">${escapeHtml(p.demo_link)}</a></div>` : ''}
+        ${p.video_link ? `<div class="admin-item-field-sm"><strong>Video:</strong> <a href="${escapeHtml(p.video_link)}" target="_blank" rel="noopener">${escapeHtml(p.video_link)}</a></div>` : ''}
 
         <div class="scoring-section">
-          <h4>Score Each Criterion (0-20)</h4>
-          ${CRITERIA.map(c => `
+          <h4>${criteriaLabel} (0-20 each)</h4>
+          ${criteria.map(c => `
             <div class="scoring-row">
               <label>${c.label}</label>
               <input type="range" min="0" max="20" value="10" class="score-slider" data-id="${escapeHtml(id)}" data-key="${c.key}"
@@ -64,23 +70,7 @@ export async function renderAdmin() {
               <span class="score-val">10</span>
             </div>
           `).join('')}
-          <div class="score-total">Total Score: <span id="total-${escapeHtml(id)}" class="score-total-num">50</span>/100</div>
-        </div>
-
-        <div class="advanced-scoring-section">
-          <button type="button" class="advanced-toggle" data-adv-toggle="${escapeHtml(id)}">Show Advanced Assessment &#9660;</button>
-          <div class="advanced-scoring-body" id="adv-body-${escapeHtml(id)}" style="display:none;">
-            <h4 class="advanced-scoring-title">Advanced Assessment (0-10 each)</h4>
-            ${ADVANCED_CRITERIA.map(c => `
-              <div class="scoring-row advanced-scoring-row">
-                <label>${c.label}</label>
-                <input type="range" min="0" max="10" value="5" class="score-slider adv-slider" data-id="${escapeHtml(id)}" data-key="${c.key}"
-                  oninput="this.nextElementSibling.textContent = this.value; window.__updateAdvancedTotal('${escapeHtml(id)}')" />
-                <span class="score-val">5</span>
-              </div>
-            `).join('')}
-            <div class="score-total advanced-score-total">Advanced Score: <span id="adv-total-${escapeHtml(id)}" class="score-total-num">30</span>/60</div>
-          </div>
+          <div class="score-total">Total Score: <span id="total-${escapeHtml(id)}" class="score-total-num">${initialTotal}</span>/100</div>
         </div>
 
         <div class="form-group">
@@ -98,20 +88,6 @@ export async function renderAdmin() {
   }).join('');
 
   pending.forEach(p => window.__updateTotal(p.id));
-
-  // Advanced toggle buttons
-  document.querySelectorAll('[data-adv-toggle]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = btn.dataset.advToggle;
-      const body = document.getElementById('adv-body-' + id);
-      if (!body) return;
-      const isHidden = body.style.display === 'none';
-      body.style.display = isHidden ? '' : 'none';
-      btn.innerHTML = isHidden
-        ? 'Hide Advanced Assessment &#9650;'
-        : 'Show Advanced Assessment &#9660;';
-    });
-  });
 }
 
 async function renderApprovedAdmin() {
@@ -190,27 +166,13 @@ window.__updateTotal = function(id) {
   if (approveBtn) approveBtn.disabled = total < 60;
 };
 
-window.__updateAdvancedTotal = function(id) {
-  const sliders = document.querySelectorAll(`.adv-slider[data-id="${id}"]`);
-  let total = 0;
-  sliders.forEach(s => total += parseInt(s.value, 10));
-  const el = document.getElementById('adv-total-' + id);
-  if (el) el.textContent = total;
-};
-
 window.__adminDecision = async function(id, decision) {
-  const sliders = document.querySelectorAll(`.score-slider[data-id="${id}"]:not(.adv-slider)`);
+  const sliders = document.querySelectorAll(`.score-slider[data-id="${id}"]`);
   const scores = {};
   let total = 0;
   sliders.forEach(s => {
     scores[s.dataset.key] = parseInt(s.value, 10);
     total += parseInt(s.value, 10);
-  });
-
-  // Collect advanced scores (optional — only if section was expanded)
-  const advSliders = document.querySelectorAll(`.adv-slider[data-id="${id}"]`);
-  advSliders.forEach(s => {
-    scores[s.dataset.key] = parseInt(s.value, 10);
   });
 
   const feedback = document.getElementById('feedback-' + id)?.value.trim() || '';
