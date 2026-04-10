@@ -10,6 +10,8 @@ export function isAdmin() { return currentProfile?.role === 'admin'; }
 export function isLoggedIn() { return currentUser !== null; }
 
 export async function initAuth(onAuthChange) {
+  // onAuthStateChange fires immediately with current session — no need for separate getSession()
+  // This avoids the "lock was stolen" race condition
   supabase.auth.onAuthStateChange(async (event, session) => {
     currentUser = session?.user || null;
     if (currentUser) {
@@ -24,18 +26,6 @@ export async function initAuth(onAuthChange) {
     }
     onAuthChange(currentUser, currentProfile);
   });
-
-  const { data: { session } } = await supabase.auth.getSession();
-  currentUser = session?.user || null;
-  if (currentUser) {
-    const { data } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', currentUser.id)
-      .single();
-    currentProfile = data;
-  }
-  onAuthChange(currentUser, currentProfile);
 }
 
 export async function signInWithGoogle() {
