@@ -96,6 +96,19 @@ export async function initMyCard() {
   // Avatar upload
   _initAvatarUpload();
 
+  // Avatar remove button
+  document.getElementById('avatar-remove-btn')?.addEventListener('click', _clearAvatar);
+
+  // Avatar URL paste — live preview on input
+  document.getElementById('mc-avatar-url')?.addEventListener('input', (e) => {
+    const url = e.target.value.trim();
+    if (url && /^https?:\/\/.+/i.test(url)) {
+      _pendingAvatarUrl = url;
+      _showAvatarPreview(url);
+      renderCardPreview();
+    }
+  });
+
   // Save button
   document.getElementById('mc-save-btn')?.addEventListener('click', saveMyCard);
 
@@ -607,12 +620,33 @@ function _showAvatarPreview(src) {
   const preview = document.getElementById('avatar-preview-lg');
   const initials = document.getElementById('avatar-initials-lg');
   const zone = document.getElementById('avatar-upload');
+  const removeBtn = document.getElementById('avatar-remove-btn');
   if (!preview) return;
 
   preview.style.backgroundImage = `url(${src})`;
   preview.classList.add('avatar-has-image');
   if (initials) initials.style.display = 'none';
   if (zone) zone.classList.add('avatar-upload-filled');
+  if (removeBtn) removeBtn.style.display = 'inline-block';
+}
+
+function _clearAvatar() {
+  const preview = document.getElementById('avatar-preview-lg');
+  const initials = document.getElementById('avatar-initials-lg');
+  const zone = document.getElementById('avatar-upload');
+  const removeBtn = document.getElementById('avatar-remove-btn');
+  const urlInput = document.getElementById('mc-avatar-url');
+
+  _pendingAvatarUrl = '';
+  if (preview) {
+    preview.style.backgroundImage = '';
+    preview.classList.remove('avatar-has-image');
+  }
+  if (initials) initials.style.display = '';
+  if (zone) zone.classList.remove('avatar-upload-filled');
+  if (removeBtn) removeBtn.style.display = 'none';
+  if (urlInput) urlInput.value = '';
+  renderCardPreview();
 }
 
 // ─── SVG icon constants ───────────────────────────────────────────────────────

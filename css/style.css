@@ -3440,6 +3440,22 @@ main {
   font-size: 12px !important;
   color: #86868b !important;
 }
+.avatar-remove-btn {
+  display: none;
+  margin-top: 6px;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: #FF3B30;
+  background: none;
+  border: 1px solid #FF3B30;
+  border-radius: 980px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.avatar-remove-btn:hover {
+  background: #FF3B30;
+  color: #fff;
+}
 
 /* ─── AVATAR ──────────────────────────────────────────────── */
 .mc-preview-avatar {
