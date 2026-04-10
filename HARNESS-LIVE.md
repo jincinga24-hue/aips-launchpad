@@ -238,3 +238,5 @@ Waiting for first cycle...
 20:57:21 | Cycle 3 | Reading | js/my-card.js
 20:57:33 | Cycle 3 | Editing | js/my-card.js
 20:57:43 | Cycle 3 | Editing | js/my-card.js
+20:59:54 | Cycle 3 | Editing | index.html
+21:00:06 | Cycle 3 | Editing | index.html
