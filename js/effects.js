@@ -231,14 +231,29 @@ export function initClickSpark() {
 
 // ─── SCROLL REVEAL ───────────────────────────────────────────────────────────
 export function initScrollReveal() {
+  const els = document.querySelectorAll('.reveal');
+  // If IntersectionObserver not supported, show all immediately
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(el => el.classList.add('visible'));
+    return;
+  }
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.1, rootMargin: '-40px' });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  }, { threshold: 0.05, rootMargin: '0px' });
+  els.forEach(el => {
+    // If element is already in viewport, reveal immediately
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      el.classList.add('visible');
+    } else {
+      observer.observe(el);
+    }
+  });
 }
 
 // ─── COUNT-UP ────────────────────────────────────────────────────────────────
