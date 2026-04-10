@@ -314,7 +314,7 @@ async function openProjectDetail(projectId) {
       ${buildCategoryPill(project.category)}
       ${project.endorsed ? `<span class="endorsed-badge">${ICONS.star} AIPS Endorsed</span>` : ''}
     </div>
-    <div class="modal-title">${escapeHtml(project.name)}</div>
+    <h2 class="modal-title">${escapeHtml(project.name)}</h2>
     ${project.total_score !== null ? `
       <div class="modal-score-bar">
         <span>Score: ${project.total_score}/100</span>
