@@ -4046,3 +4046,11 @@ main {
   gap: 4px;
   align-items: center;
 }
+
+/* ─── TRACK-SPECIFIC FORM LABELS ────────────────────────── */
+.mvp-label, .mvp-hint { display: none; }
+.idea-label, .idea-hint { display: block; }
+.form-card.submit-track-mvp .mvp-label,
+.form-card.submit-track-mvp .mvp-hint { display: block; }
+.form-card.submit-track-mvp .idea-label,
+.form-card.submit-track-mvp .idea-hint { display: none; }

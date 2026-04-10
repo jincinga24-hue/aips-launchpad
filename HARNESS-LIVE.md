@@ -270,3 +270,6 @@ Waiting for first cycle...
 21:09:25 | Cycle 3 | Reading | index.html
 21:09:36 | Cycle 3 | Editing | index.html
 21:11:36 | Cycle 3 | Writing | /tmp/pw-debug/full-debug.mjs
+21:20:15 | Cycle 3 | Reading | index.html
+21:21:11 | Cycle 3 | Reading | index.html
+21:21:35 | Cycle 3 | Editing | index.html
