@@ -383,8 +383,10 @@ async function openProjectDetail(projectId) {
           <div class="player-cards-grid">
             ${(cards || []).map(card => {
               const user = getUser();
+              const isTeamMember = user && (cards || []).some(c => c.user_id === user.id);
               const isOwner = user && project.user_id === user.id;
-              return renderTradingCard(card, false, { showEndorseBtn: isOwner, projectId: project.id });
+              const canEndorse = (isOwner || isTeamMember) && card.user_id !== user?.id;
+              return renderTradingCard(card, false, { showEndorseBtn: canEndorse, projectId: project.id });
             }).join('')}
           </div>
         </div>
