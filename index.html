@@ -33,6 +33,7 @@
         <button class="nav-tab" id="tab-launch">Launch</button>
         <button class="nav-tab" id="tab-projects">Projects</button>
         <button class="nav-tab" id="tab-dashboard">Dashboard</button>
+        <button class="nav-tab auth-only" id="tab-mycard" style="display:none;">My Card</button>
         <button class="nav-tab" id="admin-tab-btn">Admin</button>
       </div>
     </div>
@@ -360,6 +361,125 @@
         <div id="dash-activity-feed">
           <div class="activity-loading">Loading activity...</div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MY CARD PAGE -->
+  <div id="page-mycard" class="page">
+    <div class="page-head">
+      <h1>My Player Card</h1>
+      <p>Build your card once — join any team in one click.</p>
+    </div>
+
+    <div id="mc-alert" class="alert"></div>
+
+    <div class="mc-layout">
+      <!-- Left: Form editor -->
+      <div class="mc-form-col">
+        <h2 class="mc-section-title">Edit Your Card</h2>
+
+        <div class="form-group">
+          <label class="form-label">Name <span>*</span></label>
+          <input type="text" id="mc-name" placeholder="e.g. Alex Chen" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Degree + Year <span>*</span></label>
+          <input type="text" id="mc-degree" placeholder="e.g. BSc CS, Year 2" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Your Roles <span>*</span></label>
+          <div class="pc-role-grid" id="mc-role-grid">
+            <button class="mc-role-btn" data-role="Build">Build</button>
+            <button class="mc-role-btn" data-role="Design">Design</button>
+            <button class="mc-role-btn" data-role="Research">Research</button>
+            <button class="mc-role-btn" data-role="Grow">Grow</button>
+            <button class="mc-role-btn" data-role="Advise">Advise</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Superpower Tagline <span>*</span></label>
+          <input type="text" id="mc-superpower" placeholder="e.g. I turn messy ideas into working prototypes" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Bio <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <textarea id="mc-bio" rows="3" placeholder="2–3 sentences about yourself, what you're studying, what drives you..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Portfolio URL <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <input type="url" id="mc-portfolio" placeholder="https://yoursite.com" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">GitHub URL <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <input type="url" id="mc-github" placeholder="https://github.com/yourhandle" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">LinkedIn URL <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <input type="url" id="mc-linkedin" placeholder="https://linkedin.com/in/yourhandle" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Past Projects <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <textarea id="mc-past-projects" rows="3" placeholder="Describe what you've built before — side projects, hackathon wins, research, etc."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Self-Rate Your Abilities (1–10)</label>
+          <div class="ability-row">
+            <span class="ability-label">Coding</span>
+            <input type="range" class="ability-slider" id="mc-ab-coding" min="1" max="10" value="5" />
+            <span class="ability-val" id="mc-abv-coding">5</span>
+          </div>
+          <div class="ability-row">
+            <span class="ability-label">Design</span>
+            <input type="range" class="ability-slider" id="mc-ab-design" min="1" max="10" value="5" />
+            <span class="ability-val" id="mc-abv-design">5</span>
+          </div>
+          <div class="ability-row">
+            <span class="ability-label">Research</span>
+            <input type="range" class="ability-slider" id="mc-ab-research" min="1" max="10" value="5" />
+            <span class="ability-val" id="mc-abv-research">5</span>
+          </div>
+          <div class="ability-row">
+            <span class="ability-label">Communication</span>
+            <input type="range" class="ability-slider" id="mc-ab-comm" min="1" max="10" value="5" />
+            <span class="ability-val" id="mc-abv-comm">5</span>
+          </div>
+          <div class="ability-row">
+            <span class="ability-label">Domain Knowledge</span>
+            <input type="range" class="ability-slider" id="mc-ab-domain" min="1" max="10" value="5" />
+            <span class="ability-val" id="mc-abv-domain">5</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Card Theme</label>
+          <div id="mc-theme-picker" class="mc-theme-picker">
+            <button class="mc-theme-circle mc-theme-selected" data-theme="green"  style="background:#2DB757" title="Green"></button>
+            <button class="mc-theme-circle" data-theme="blue"   style="background:#007AFF" title="Blue"></button>
+            <button class="mc-theme-circle" data-theme="purple" style="background:#5856D6" title="Purple"></button>
+            <button class="mc-theme-circle" data-theme="orange" style="background:#FF9500" title="Orange"></button>
+            <button class="mc-theme-circle" data-theme="red"    style="background:#FF2D55" title="Red"></button>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" id="mc-save-btn">Save Card</button>
+        </div>
+      </div>
+
+      <!-- Right: Live preview -->
+      <div class="mc-preview-col">
+        <h2 class="mc-section-title">Live Preview</h2>
+        <p class="mc-preview-hint">This is exactly how your card will appear when you join a project.</p>
+        <div id="mc-preview-container"></div>
       </div>
     </div>
   </div>

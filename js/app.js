@@ -5,6 +5,7 @@ import { renderAdmin, initAdmin } from './admin.js';
 import { initSubmit } from './submit.js';
 import { initMySubmissions, loadMySubmissions } from './my-submissions.js';
 import { initPlayerCard } from './player-card.js';
+import { initMyCard, loadMyCard } from './my-card.js';
 import { initSpotlightCards, initClickSpark, initScrollReveal, initCountUp, initIntroSplash } from './effects.js';
 
 let currentTab = 'home';
@@ -42,6 +43,7 @@ export function showTab(tab) {
   if (tab === 'home') { renderStats(); renderFeaturedProject(); requestAnimationFrame(initCountUp); }
   if (tab === 'admin') renderAdmin();
   if (tab === 'my-submissions') loadMySubmissions();
+  if (tab === 'mycard') loadMyCard();
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -68,6 +70,11 @@ function updateNav(user, profile) {
     adminTab?.classList.add('visible');
   } else {
     adminTab?.classList.remove('visible');
+  }
+
+  const myCardTab = document.getElementById('tab-mycard');
+  if (myCardTab) {
+    myCardTab.style.display = user ? '' : 'none';
   }
 }
 
@@ -171,6 +178,7 @@ async function init() {
       'tab-launch': 'submit',
       'tab-projects': 'board',
       'tab-dashboard': 'my-submissions',
+      'tab-mycard': 'mycard',
       'admin-tab-btn': 'admin',
     };
     const tab = tabMap[btn.id];
@@ -205,6 +213,7 @@ async function init() {
   initAdmin();
   initMySubmissions();
   initPlayerCard();
+  initMyCard();
   initIntroSplash();
   initSpotlightCards();
   initClickSpark();

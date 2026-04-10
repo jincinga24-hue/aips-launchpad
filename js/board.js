@@ -2,7 +2,8 @@
 import { supabase } from './supabase.js';
 import { escapeHtml, ROLE_COLORS, CRITERIA, CATEGORIES, CATEGORY_COLORS, ICONS } from './utils.js';
 import { renderTradingCard, openPcModal } from './player-card.js';
-import { isLoggedIn } from './auth.js';
+import { isLoggedIn, getUser } from './auth.js';
+import { getMyCard } from './my-card.js';
 
 let currentStageFilter = 'all';
 let currentRoleFilter = 'all';
@@ -364,7 +365,12 @@ async function openProjectDetail(projectId) {
           ${(project.roles_needed || []).map(r => `<span class="role-tag">${r}</span>`).join('')}
         </div>
         ${isLoggedIn()
-          ? `<button class="btn btn-primary" data-open-pc="${escapeHtml(project.id)}">Join This Team</button>`
+          ? (() => {
+              const savedCard = getMyCard();
+              return savedCard
+                ? `<button class="btn btn-primary" data-join-with-card="${escapeHtml(project.id)}">Join with Your Card ⚡</button>`
+                : `<button class="btn btn-primary" data-go-mycard>Create Your Card First →</button>`;
+            })()
           : `<div class="login-prompt">Log in to join this team</div>`
         }
       </div>
@@ -391,6 +397,19 @@ async function openProjectDetail(projectId) {
   const modalContent = document.getElementById('modal-content');
   modalContent.innerHTML = content;
 
+  // One-click join with saved card
+  modalContent.querySelector('[data-join-with-card]')?.addEventListener('click', async (e) => {
+    const projId = e.currentTarget.dataset.joinWithCard;
+    await _joinWithSavedCard(projId, e.currentTarget);
+  });
+
+  // Redirect to My Card page if no saved profile
+  modalContent.querySelector('[data-go-mycard]')?.addEventListener('click', () => {
+    closeProjectModal();
+    window.__showTab?.('mycard');
+  });
+
+  // Fallback: open pc-modal (legacy)
   modalContent.querySelector('[data-open-pc]')?.addEventListener('click', (e) => {
     const id = e.currentTarget.dataset.openPc;
     openPcModal(id);
@@ -401,6 +420,62 @@ async function openProjectDetail(projectId) {
 }
 
 window.__openProjectDetail = openProjectDetail;
+
+async function _joinWithSavedCard(projectId, btnEl) {
+  const user = getUser();
+  const profile = getMyCard();
+  if (!user || !profile) return;
+
+  const orig = btnEl.textContent;
+  btnEl.disabled = true;
+  btnEl.textContent = 'Joining…';
+
+  const payload = {
+    project_id: projectId,
+    user_id:    user.id,
+    name:       profile.name,
+    degree:     profile.degree,
+    roles:      profile.roles,
+    superpower: profile.superpower,
+    email:      user.email,
+    abilities:  profile.abilities,
+  };
+
+  const { error } = await supabase.from('player_cards').insert(payload);
+
+  btnEl.disabled = false;
+
+  if (error) {
+    if (error.code === '23505') {
+      _showToast('You have already joined this project.', 'info');
+    } else {
+      _showToast('Could not join: ' + error.message, 'error');
+    }
+    btnEl.textContent = orig;
+    return;
+  }
+
+  closeProjectModal();
+  _showToast('You\'re in! Card submitted successfully.', 'success');
+  // Re-open to show fresh card list
+  setTimeout(() => openProjectDetail(projectId), 400);
+}
+
+function _showToast(msg, type = 'success') {
+  const existing = document.getElementById('aips-toast');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.id = 'aips-toast';
+  toast.className = `aips-toast aips-toast-${type}`;
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add('aips-toast-visible'));
+  setTimeout(() => {
+    toast.classList.remove('aips-toast-visible');
+    setTimeout(() => toast.remove(), 400);
+  }, 3500);
+}
 
 function closeProjectModal() {
   const modal = document.getElementById('project-modal');

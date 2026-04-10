@@ -3070,3 +3070,213 @@ main {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* ─── MY CARD PAGE ───────────────────────────────────────────────────────── */
+.mc-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  max-width: 1080px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.mc-form-col {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  box-shadow: var(--shadow);
+}
+
+.mc-preview-col {
+  position: sticky;
+  top: 80px;
+}
+
+.mc-section-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--text);
+}
+
+.mc-preview-hint {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+/* Role buttons (My Card editor) */
+.mc-role-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.mc-role-btn:hover { border-color: var(--text); color: var(--text); }
+
+/* Theme picker */
+.mc-theme-picker {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.mc-theme-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+
+.mc-theme-circle:hover { transform: scale(1.15); }
+.mc-theme-circle.mc-theme-selected {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px currentColor;
+  transform: scale(1.1);
+}
+
+/* Live preview card */
+.mc-preview-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 24px;
+  box-shadow: var(--shadow);
+  transition: border-color 0.3s;
+}
+
+.mc-preview-roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.preview-role-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.03em;
+}
+
+.mc-preview-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.mc-preview-degree {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.mc-preview-superpower {
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.mc-preview-bio {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.mc-preview-radar {
+  display: block;
+  margin: 12px auto;
+}
+
+.mc-preview-links {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  align-items: center;
+}
+
+.preview-link-icon,
+.tc-link-icon {
+  color: var(--muted);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+.preview-link-icon:hover, .tc-link-icon:hover { color: var(--green); }
+
+/* Richer trading card fields */
+.tc-bio {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+  margin: 6px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tc-links {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  align-items: center;
+}
+
+/* Toast notification */
+.aips-toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--text);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 40px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 10000;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+.aips-toast-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.aips-toast-success { background: #1d1d1f; }
+.aips-toast-error   { background: #e53e3e; }
+.aips-toast-info    { background: #5856D6; }
+
+/* My Card page responsive */
+@media (max-width: 768px) {
+  .mc-layout {
+    grid-template-columns: 1fr;
+  }
+  .mc-preview-col {
+    position: static;
+  }
+}

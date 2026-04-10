@@ -3,6 +3,7 @@ import { supabase } from './supabase.js';
 import { getUser } from './auth.js';
 import { escapeHtml, ROLE_COLORS, ABILITIES, renderRadarSvg, renderMiniRadar } from './utils.js';
 import { fireConfetti, showCardFlipReveal } from './effects.js';
+import { getMyCard } from './my-card.js';
 
 let currentPcProjectId = null;
 let selectedPcRoles = [];
@@ -62,6 +63,14 @@ function updatePcRadar() {
 }
 
 export function openPcModal(projectId) {
+  // Prefer one-click join if user already has a saved profile
+  const saved = getMyCard();
+  if (saved) {
+    // Delegate to board's join flow via global
+    const joinBtn = document.querySelector(`[data-join-with-card="${projectId}"]`);
+    if (joinBtn) { joinBtn.click(); return; }
+  }
+
   currentPcProjectId = projectId;
   selectedPcRoles = [];
   ['pc-name', 'pc-degree', 'pc-superpower', 'pc-email'].forEach(id => {
@@ -152,23 +161,39 @@ async function handleSubmitCard() {
 export function renderTradingCard(card, showEmail) {
   const roles = card.roles || [];
   const primaryRole = roles[0] || 'Build';
-  const color = ROLE_COLORS[primaryRole] || '#2DB757';
+  const themeColor = card.card_theme
+    ? ({ green:'#2DB757', blue:'#007AFF', purple:'#5856D6', orange:'#FF9500', red:'#FF2D55' }[card.card_theme] || '#2DB757')
+    : null;
+  const color = themeColor || ROLE_COLORS[primaryRole] || '#2DB757';
   const abilities = [
-    card.abilities.coding,
-    card.abilities.design,
-    card.abilities.research,
-    card.abilities.comm,
-    card.abilities.domain,
+    card.abilities?.coding  ?? 5,
+    card.abilities?.design  ?? 5,
+    card.abilities?.research ?? 5,
+    card.abilities?.comm    ?? 5,
+    card.abilities?.domain  ?? 5,
   ];
   const miniRadar = renderMiniRadar(abilities, color);
   const roleBadges = roles.map(r => `<span class="tc-role-badge role-${escapeHtml(r)}">${escapeHtml(r)}</span>`).join(' ');
+
+  const SVG_LINK = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>`;
+  const SVG_GITHUB = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>`;
+  const SVG_LINKEDIN = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`;
+
+  const links = [
+    card.portfolio_url && `<a href="${escapeHtml(card.portfolio_url)}" target="_blank" rel="noopener" class="tc-link-icon" title="Portfolio">${SVG_LINK}</a>`,
+    card.github_url    && `<a href="${escapeHtml(card.github_url)}"    target="_blank" rel="noopener" class="tc-link-icon" title="GitHub">${SVG_GITHUB}</a>`,
+    card.linkedin_url  && `<a href="${escapeHtml(card.linkedin_url)}"  target="_blank" rel="noopener" class="tc-link-icon" title="LinkedIn">${SVG_LINKEDIN}</a>`,
+  ].filter(Boolean).join('');
+
   return `
-    <div class="trading-card role-${escapeHtml(primaryRole)}">
+    <div class="trading-card role-${escapeHtml(primaryRole)}" style="${themeColor ? `border-top:3px solid ${themeColor}` : ''}">
       <div class="tc-roles">${roleBadges}</div>
       <div class="tc-name">${escapeHtml(card.name)}</div>
       <div class="tc-degree">${escapeHtml(card.degree)}</div>
       <div class="tc-superpower">"${escapeHtml(card.superpower)}"</div>
+      ${card.bio ? `<div class="tc-bio">${escapeHtml(card.bio.length > 100 ? card.bio.slice(0, 100) + '…' : card.bio)}</div>` : ''}
       ${miniRadar}
+      ${links ? `<div class="tc-links">${links}</div>` : ''}
       ${showEmail ? `<div class="tc-email">${escapeHtml(card.email)}</div>` : ''}
     </div>
   `;
