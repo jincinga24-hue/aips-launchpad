@@ -1,4 +1,5 @@
 // js/effects.js — Visual effect functions (confetti, card flip, spotlight, scroll reveal, count-up, click spark, intro splash)
+import { escapeHtml, ROLE_COLORS } from './utils.js';
 
 // ─── INTRO SPLASH ─────────────────────────────────────────────────────────────
 export function initIntroSplash() {
@@ -33,7 +34,6 @@ function triggerHeroReveal() {
     el.classList.add('animate-in');
   });
 }
-import { escapeHtml, ROLE_COLORS } from './utils.js';
 
 // ─── CONFETTI ────────────────────────────────────────────────────────────────
 export function fireConfetti() {
