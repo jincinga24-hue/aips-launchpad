@@ -5,7 +5,7 @@ import { renderAdmin, initAdmin } from './admin.js';
 import { initSubmit } from './submit.js';
 import { initMySubmissions, loadMySubmissions } from './my-submissions.js';
 import { initPlayerCard } from './player-card.js';
-import { initSpotlightCards, initClickSpark, initScrollReveal, initCountUp } from './effects.js';
+import { initSpotlightCards, initClickSpark, initScrollReveal, initCountUp, initIntroSplash } from './effects.js';
 
 let currentTab = 'home';
 let isSignUp = false;
@@ -205,6 +205,7 @@ async function init() {
   initAdmin();
   initMySubmissions();
   initPlayerCard();
+  initIntroSplash();
   initSpotlightCards();
   initClickSpark();
   initScrollReveal();

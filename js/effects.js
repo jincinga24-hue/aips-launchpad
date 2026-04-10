@@ -1,4 +1,38 @@
-// js/effects.js — Visual effect functions (confetti, card flip, spotlight, scroll reveal, count-up, click spark)
+// js/effects.js — Visual effect functions (confetti, card flip, spotlight, scroll reveal, count-up, click spark, intro splash)
+
+// ─── INTRO SPLASH ─────────────────────────────────────────────────────────────
+export function initIntroSplash() {
+  const splash = document.getElementById('intro-splash');
+  if (!splash) return;
+
+  // Only show once per session
+  if (sessionStorage.getItem('aips-splash-shown')) {
+    splash.style.display = 'none';
+    triggerHeroReveal();
+    return;
+  }
+
+  sessionStorage.setItem('aips-splash-shown', '1');
+
+  // After ~2s, split the panels away
+  setTimeout(() => {
+    splash.classList.add('split');
+
+    // After split animation completes, remove splash and reveal hero text
+    setTimeout(() => {
+      splash.style.display = 'none';
+      triggerHeroReveal();
+    }, 650);
+  }, 2000);
+}
+
+function triggerHeroReveal() {
+  const reveals = document.querySelectorAll('.hero-reveal');
+  reveals.forEach(el => {
+    // Use the element's existing transition-delay from inline style
+    el.classList.add('animate-in');
+  });
+}
 import { escapeHtml, ROLE_COLORS } from './utils.js';
 
 // ─── CONFETTI ────────────────────────────────────────────────────────────────
