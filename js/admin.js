@@ -1,6 +1,6 @@
 // js/admin.js — Admin panel
 import { supabase } from './supabase.js';
-import { escapeHtml, CRITERIA, ICONS } from './utils.js';
+import { escapeHtml, CRITERIA, ADVANCED_CRITERIA, ICONS } from './utils.js';
 import { isAdmin } from './auth.js';
 import { fireConfetti } from './effects.js';
 
@@ -67,6 +67,22 @@ export async function renderAdmin() {
           <div class="score-total">Total Score: <span id="total-${escapeHtml(id)}" class="score-total-num">50</span>/100</div>
         </div>
 
+        <div class="advanced-scoring-section">
+          <button type="button" class="advanced-toggle" data-adv-toggle="${escapeHtml(id)}">Show Advanced Assessment &#9660;</button>
+          <div class="advanced-scoring-body" id="adv-body-${escapeHtml(id)}" style="display:none;">
+            <h4 class="advanced-scoring-title">Advanced Assessment (0-10 each)</h4>
+            ${ADVANCED_CRITERIA.map(c => `
+              <div class="scoring-row advanced-scoring-row">
+                <label>${c.label}</label>
+                <input type="range" min="0" max="10" value="5" class="score-slider adv-slider" data-id="${escapeHtml(id)}" data-key="${c.key}"
+                  oninput="this.nextElementSibling.textContent = this.value; window.__updateAdvancedTotal('${escapeHtml(id)}')" />
+                <span class="score-val">5</span>
+              </div>
+            `).join('')}
+            <div class="score-total advanced-score-total">Advanced Score: <span id="adv-total-${escapeHtml(id)}" class="score-total-num">30</span>/60</div>
+          </div>
+        </div>
+
         <div class="form-group">
           <label class="feedback-label">Written Feedback</label>
           <textarea id="feedback-${escapeHtml(id)}" rows="2" placeholder="Provide feedback for the team..."></textarea>
@@ -82,6 +98,20 @@ export async function renderAdmin() {
   }).join('');
 
   pending.forEach(p => window.__updateTotal(p.id));
+
+  // Advanced toggle buttons
+  document.querySelectorAll('[data-adv-toggle]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.advToggle;
+      const body = document.getElementById('adv-body-' + id);
+      if (!body) return;
+      const isHidden = body.style.display === 'none';
+      body.style.display = isHidden ? '' : 'none';
+      btn.innerHTML = isHidden
+        ? 'Hide Advanced Assessment &#9650;'
+        : 'Show Advanced Assessment &#9660;';
+    });
+  });
 }
 
 async function renderApprovedAdmin() {
@@ -160,14 +190,29 @@ window.__updateTotal = function(id) {
   if (approveBtn) approveBtn.disabled = total < 60;
 };
 
+window.__updateAdvancedTotal = function(id) {
+  const sliders = document.querySelectorAll(`.adv-slider[data-id="${id}"]`);
+  let total = 0;
+  sliders.forEach(s => total += parseInt(s.value, 10));
+  const el = document.getElementById('adv-total-' + id);
+  if (el) el.textContent = total;
+};
+
 window.__adminDecision = async function(id, decision) {
-  const sliders = document.querySelectorAll(`.score-slider[data-id="${id}"]`);
+  const sliders = document.querySelectorAll(`.score-slider[data-id="${id}"]:not(.adv-slider)`);
   const scores = {};
   let total = 0;
   sliders.forEach(s => {
     scores[s.dataset.key] = parseInt(s.value, 10);
     total += parseInt(s.value, 10);
   });
+
+  // Collect advanced scores (optional — only if section was expanded)
+  const advSliders = document.querySelectorAll(`.adv-slider[data-id="${id}"]`);
+  advSliders.forEach(s => {
+    scores[s.dataset.key] = parseInt(s.value, 10);
+  });
+
   const feedback = document.getElementById('feedback-' + id)?.value.trim() || '';
   const errEl = document.getElementById('admin-error-' + id);
 

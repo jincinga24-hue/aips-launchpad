@@ -411,8 +411,18 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Avatar URL <span style="color:var(--muted);font-weight:400">(optional)</span></label>
-          <input type="url" id="mc-avatar" placeholder="https://example.com/photo.jpg" />
+          <label class="form-label">Avatar <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <div class="avatar-upload" id="avatar-upload">
+            <div class="avatar-preview-lg" id="avatar-preview-lg">
+              <span class="avatar-initials-lg" id="avatar-initials-lg"></span>
+            </div>
+            <div class="avatar-upload-info">
+              <p>Drop image here or <label for="avatar-file" class="avatar-browse">browse</label></p>
+              <p class="avatar-hint">JPG, PNG under 2MB</p>
+              <input type="text" id="mc-avatar-url" placeholder="or paste image URL" class="avatar-url-fallback" />
+            </div>
+            <input type="file" id="avatar-file" accept="image/jpeg,image/png,image/webp" hidden />
+          </div>
         </div>
 
         <div class="form-group">

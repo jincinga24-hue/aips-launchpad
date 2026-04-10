@@ -61,6 +61,15 @@ export const CRITERIA = [
   { key: 'teamNeeds', label: 'Team Needs' },
 ];
 
+export const ADVANCED_CRITERIA = [
+  { key: 'marketDemand', label: 'Market Demand' },
+  { key: 'differentiation', label: 'Differentiation' },
+  { key: 'technicalFeasibility', label: 'Technical Feasibility' },
+  { key: 'businessModel', label: 'Business Model' },
+  { key: 'teamReadiness', label: 'Team Readiness' },
+  { key: 'presentationQuality', label: 'Presentation Quality' },
+];
+
 export const ROLE_COLORS = {
   Build: '#007AFF',
   Design: '#FF2D55',

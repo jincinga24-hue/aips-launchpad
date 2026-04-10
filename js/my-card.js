@@ -13,6 +13,7 @@ export const CARD_THEMES = {
 
 // Module state (never mutated in-place — reassigned)
 let _savedProfile = null;
+let _pendingAvatarUrl = null; // URL from storage upload (takes priority over mc-avatar input)
 let _selectedRoles = [];
 let _selectedTheme = 'green';
 let _skillTags = [];
@@ -58,7 +59,7 @@ export async function initMyCard() {
 
   // Live preview on any text/textarea/select input
   ['mc-name', 'mc-degree', 'mc-superpower', 'mc-bio', 'mc-portfolio',
-   'mc-github', 'mc-linkedin', 'mc-instagram', 'mc-avatar', 'mc-year-level'].forEach(id => {
+   'mc-github', 'mc-linkedin', 'mc-instagram', 'mc-avatar-url', 'mc-year-level'].forEach(id => {
     document.getElementById(id)?.addEventListener('input', renderCardPreview);
     document.getElementById(id)?.addEventListener('change', renderCardPreview);
   });
@@ -91,6 +92,9 @@ export async function initMyCard() {
     _showcase = [..._showcase, { title: '', description: '', link: '' }];
     _renderShowcaseRows();
   });
+
+  // Avatar upload
+  _initAvatarUpload();
 
   // Save button
   document.getElementById('mc-save-btn')?.addEventListener('click', saveMyCard);
@@ -142,7 +146,7 @@ export async function saveMyCard() {
   const github     = document.getElementById('mc-github')?.value.trim() || '';
   const linkedin   = document.getElementById('mc-linkedin')?.value.trim() || '';
   const instagram  = document.getElementById('mc-instagram')?.value.trim() || '';
-  const avatarUrl  = document.getElementById('mc-avatar')?.value.trim() || '';
+  const avatarUrl  = _pendingAvatarUrl || document.getElementById('mc-avatar-url')?.value.trim() || '';
   const yearLevel  = document.getElementById('mc-year-level')?.value || '';
   const availability = document.querySelector('input[name="mc-availability"]:checked')?.value || '';
 
@@ -216,7 +220,7 @@ export function renderCardPreview() {
   const github     = document.getElementById('mc-github')?.value.trim() || '';
   const linkedin   = document.getElementById('mc-linkedin')?.value.trim() || '';
   const instagram  = document.getElementById('mc-instagram')?.value.trim() || '';
-  const avatarUrl  = document.getElementById('mc-avatar')?.value.trim() || '';
+  const avatarUrl  = _pendingAvatarUrl || document.getElementById('mc-avatar-url')?.value.trim() || '';
   const yearLevel  = document.getElementById('mc-year-level')?.value || '';
   const availability = document.querySelector('input[name="mc-availability"]:checked')?.value || '';
   const roles      = _selectedRoles;
@@ -345,7 +349,11 @@ function _populateForm(data) {
   set('mc-github',       data.github_url);
   set('mc-linkedin',     data.linkedin_url);
   set('mc-instagram',    data.instagram_url);
-  set('mc-avatar',       data.avatar_url);
+  set('mc-avatar-url',   data.avatar_url);
+  if (data.avatar_url) {
+    _pendingAvatarUrl = data.avatar_url;
+    _showAvatarPreview(data.avatar_url);
+  }
   set('mc-year-level',   data.year_level);
   set('mc-past-projects',data.past_projects);
 
@@ -520,6 +528,91 @@ function _buildInlineRadar(values, color) {
   }
   s += `<polygon points="${dp.trim()}" fill="${color}" fill-opacity="0.25" stroke="${color}" stroke-width="1.5"/>`;
   return `<svg width="100" height="100" viewBox="0 0 100 100" class="mini-radar-svg">${s}</svg>`;
+}
+
+// ─── Avatar upload helpers ────────────────────────────────────────────────────
+
+function _initAvatarUpload() {
+  const zone = document.getElementById('avatar-upload');
+  const fileInput = document.getElementById('avatar-file');
+  if (!zone || !fileInput) return;
+
+  fileInput.addEventListener('change', (e) => {
+    const file = e.target.files?.[0];
+    if (file) _handleAvatarFile(file);
+  });
+
+  zone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    zone.classList.add('avatar-drag-over');
+  });
+
+  zone.addEventListener('dragleave', () => {
+    zone.classList.remove('avatar-drag-over');
+  });
+
+  zone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    zone.classList.remove('avatar-drag-over');
+    const file = e.dataTransfer.files?.[0];
+    if (file) _handleAvatarFile(file);
+  });
+}
+
+function _handleAvatarFile(file) {
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+    _showMcAlert('error', 'Please upload a JPG, PNG, or WebP image.');
+    return;
+  }
+  if (file.size > 2 * 1024 * 1024) {
+    _showMcAlert('error', 'Image must be under 2MB.');
+    return;
+  }
+
+  // Instant preview via FileReader
+  const reader = new FileReader();
+  reader.onload = (e) => _showAvatarPreview(e.target.result);
+  reader.readAsDataURL(file);
+
+  // Upload to Supabase Storage in background
+  _uploadAvatarFile(file);
+}
+
+async function _uploadAvatarFile(file) {
+  const user = getUser();
+  if (!user) return;
+
+  const ext = file.name.split('.').pop().toLowerCase() || 'jpg';
+  const path = `${user.id}/avatar.${ext}`;
+
+  const { error } = await supabase.storage
+    .from('avatars')
+    .upload(path, file, { upsert: true, contentType: file.type });
+
+  if (error) {
+    _showMcAlert('error', 'Avatar upload failed: ' + error.message);
+    return;
+  }
+
+  const { data: { publicUrl } } = supabase.storage
+    .from('avatars')
+    .getPublicUrl(path);
+
+  _pendingAvatarUrl = publicUrl;
+  _showAvatarPreview(publicUrl);
+  renderCardPreview();
+}
+
+function _showAvatarPreview(src) {
+  const preview = document.getElementById('avatar-preview-lg');
+  const initials = document.getElementById('avatar-initials-lg');
+  const zone = document.getElementById('avatar-upload');
+  if (!preview) return;
+
+  preview.style.backgroundImage = `url(${src})`;
+  preview.classList.add('avatar-has-image');
+  if (initials) initials.style.display = 'none';
+  if (zone) zone.classList.add('avatar-upload-filled');
 }
 
 // ─── SVG icon constants ───────────────────────────────────────────────────────

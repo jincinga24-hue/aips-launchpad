@@ -1,6 +1,6 @@
 // js/board.js — Project board, filters, detail modal
 import { supabase } from './supabase.js';
-import { escapeHtml, ROLE_COLORS, CRITERIA, CATEGORIES, CATEGORY_COLORS, ICONS } from './utils.js';
+import { escapeHtml, ROLE_COLORS, CRITERIA, ADVANCED_CRITERIA, CATEGORIES, CATEGORY_COLORS, ICONS } from './utils.js';
 import { renderTradingCard, openPcModal } from './player-card.js';
 import { isLoggedIn, getUser } from './auth.js';
 import { getMyCard } from './my-card.js';
@@ -284,6 +284,28 @@ async function openProjectDetail(projectId) {
 
   const { data: cards } = await supabase.from('player_cards_public').select('*').eq('project_id', projectId);
 
+  const hasAdvancedScores = project.scores && ADVANCED_CRITERIA.some(c => project.scores[c.key] != null);
+  const advancedTotal = hasAdvancedScores
+    ? ADVANCED_CRITERIA.reduce((sum, c) => sum + (project.scores[c.key] || 0), 0)
+    : 0;
+
+  const advancedSection = hasAdvancedScores ? `
+    <div class="modal-advanced-section">
+      <button type="button" class="modal-advanced-toggle" id="modal-adv-toggle">Show Advanced Assessment &#9660;</button>
+      <div id="modal-adv-body" style="display:none;">
+        <div class="modal-advanced-grid">
+          ${ADVANCED_CRITERIA.map(c => `
+            <div class="modal-adv-criterion-card">
+              <div class="crit-label">${c.label}</div>
+              <div class="crit-score">${project.scores[c.key] || 0}<span class="score-breakdown-inline">/10</span></div>
+            </div>
+          `).join('')}
+        </div>
+        <div style="text-align:right;margin-top:8px;font-size:13px;color:#5856D6;font-weight:600;">Advanced: ${advancedTotal}/60</div>
+      </div>
+    </div>
+  ` : '';
+
   const scoreBreakdown = project.scores ? `
     <div class="modal-section">
       <div class="modal-section-label">Score Breakdown</div>
@@ -295,6 +317,7 @@ async function openProjectDetail(projectId) {
           </div>
         `).join('')}
       </div>
+      ${advancedSection}
     </div>
   ` : '';
 
@@ -432,6 +455,20 @@ async function openProjectDetail(projectId) {
       _showEndorseForm(btn, toUserId, projId);
     });
   });
+
+  // Advanced assessment toggle in modal
+  const advToggle = modalContent.querySelector('#modal-adv-toggle');
+  if (advToggle) {
+    advToggle.addEventListener('click', () => {
+      const body = document.getElementById('modal-adv-body');
+      if (!body) return;
+      const isHidden = body.style.display === 'none';
+      body.style.display = isHidden ? '' : 'none';
+      advToggle.innerHTML = isHidden
+        ? 'Hide Advanced Assessment &#9650;'
+        : 'Show Advanced Assessment &#9660;';
+    });
+  }
 
   document.getElementById('project-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
