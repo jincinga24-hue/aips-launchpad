@@ -1,6 +1,6 @@
 // js/board.js — Project board, filters, detail modal
 import { supabase } from './supabase.js';
-import { escapeHtml, ROLE_COLORS, CRITERIA, CATEGORIES, CATEGORY_COLORS } from './utils.js';
+import { escapeHtml, ROLE_COLORS, CRITERIA, CATEGORIES, CATEGORY_COLORS, ICONS } from './utils.js';
 import { renderTradingCard, openPcModal } from './player-card.js';
 import { isLoggedIn } from './auth.js';
 
@@ -163,7 +163,7 @@ export async function renderBoard() {
     const projectCards = cardsByProject[p.id] || [];
     const days = daysAgo(p.created_at);
     const endorsedBadge = p.endorsed
-      ? `<span class="endorsed-badge">⭐ AIPS Endorsed</span>`
+      ? `<span class="endorsed-badge">${ICONS.star} AIPS Endorsed</span>`
       : '';
 
     return `
@@ -186,7 +186,7 @@ export async function renderBoard() {
           ${(p.roles_needed || []).map(r => `<span class="role-tag">${r}</span>`).join('')}
         </div>
         <div class="card-meta-row">
-          ${applicantCount > 0 ? `<span class="applicant-count">👥 ${applicantCount} applicant${applicantCount !== 1 ? 's' : ''}</span>` : ''}
+          ${applicantCount > 0 ? `<span class="applicant-count">${ICONS.users} ${applicantCount} applicant${applicantCount !== 1 ? 's' : ''}</span>` : ''}
           <span class="urgency-label">Seeking for ${days}d</span>
         </div>
       </div>
@@ -312,7 +312,7 @@ async function openProjectDetail(projectId) {
     <div class="modal-track-tag">
       <span class="stage-tag ${project.track}">${project.track === 'mvp' ? 'MVP' : 'Idea'}</span>
       ${buildCategoryPill(project.category)}
-      ${project.endorsed ? `<span class="endorsed-badge">⭐ AIPS Endorsed</span>` : ''}
+      ${project.endorsed ? `<span class="endorsed-badge">${ICONS.star} AIPS Endorsed</span>` : ''}
     </div>
     <div class="modal-title">${escapeHtml(project.name)}</div>
     ${project.total_score !== null ? `
@@ -382,7 +382,7 @@ async function openProjectDetail(projectId) {
         <div class="modal-section" style="margin-top: 16px;">
           <div class="modal-section-label">Want to connect?</div>
           <p style="color: var(--muted); font-size: 13px; margin-bottom: 8px;">Submit a player card above, then reach out to the founder:</p>
-          <div style="background: var(--bg); padding: 12px 16px; border-radius: 10px; font-size: 14px; color: var(--text);">📱 ${escapeHtml(project.contact_method)}</div>
+          <div style="background: var(--bg); padding: 12px 16px; border-radius: 10px; font-size: 14px; color: var(--text); display:flex; align-items:center; gap:8px;">${ICONS.message} ${escapeHtml(project.contact_method)}</div>
         </div>
       ` : ''}
     </div>

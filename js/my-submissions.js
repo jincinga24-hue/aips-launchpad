@@ -1,7 +1,7 @@
 // js/my-submissions.js — Dashboard for project owners
 import { supabase } from './supabase.js';
 import { getUser } from './auth.js';
-import { escapeHtml } from './utils.js';
+import { escapeHtml, ICONS } from './utils.js';
 import { prefillAndEdit } from './submit.js';
 
 // ─── Relative time ────────────────────────────────────────────────────────────
@@ -36,7 +36,7 @@ function statusBadge(status) {
 function renderProjectCard(project, cards) {
   const applicantCount = cards.length;
   const scoreText = project.total_score !== null
-    ? `<span>🏆 ${project.total_score}/100</span>`
+    ? `<span style="display:inline-flex;align-items:center;gap:4px;">${ICONS.trophy} ${project.total_score}/100</span>`
     : '';
 
   let actions = '';
@@ -87,10 +87,10 @@ function renderProjectCard(project, cards) {
         ${statusBadge(project.status)}
       </div>
       <div class="dash-card-meta">
-        <span>📁 ${track}</span>
-        <span>📅 ${date}</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;">${ICONS.folder} ${track}</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;">${ICONS.calendar} ${date}</span>
         ${scoreText}
-        <span>👥 ${applicantCount} applicant${applicantCount === 1 ? '' : 's'}</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;">${ICONS.users} ${applicantCount} applicant${applicantCount === 1 ? '' : 's'}</span>
       </div>
       ${revisionBox}
       <div class="dash-card-actions">${actions}</div>
@@ -109,20 +109,20 @@ function renderActivityFeed(events) {
     let icon, text, typeClass;
 
     if (ev.type === 'apply') {
-      icon = '👤';
+      icon = ICONS.user;
       typeClass = 'type-apply';
       text = `<strong>${escapeHtml(ev.applicantName)}</strong> applied to join <strong>${escapeHtml(ev.projectName)}</strong> as ${escapeHtml(ev.role)}`;
     } else if (ev.type === 'approved') {
-      icon = '✅';
+      icon = ICONS.check;
       typeClass = 'type-approved';
       const score = ev.score !== null ? ` Score: ${ev.score}/100` : '';
       text = `Your project <strong>${escapeHtml(ev.projectName)}</strong> was approved!${score}`;
     } else if (ev.type === 'revision') {
-      icon = '🔁';
+      icon = ICONS.refresh;
       typeClass = 'type-revision';
       text = `Committee returned <strong>${escapeHtml(ev.projectName)}</strong> for revision`;
     } else {
-      icon = '📋';
+      icon = ICONS.clipboard;
       typeClass = 'type-pending';
       text = `You submitted <strong>${escapeHtml(ev.projectName)}</strong>`;
     }

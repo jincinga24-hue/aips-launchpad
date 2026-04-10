@@ -1,6 +1,6 @@
 // js/admin.js — Admin panel
 import { supabase } from './supabase.js';
-import { escapeHtml, CRITERIA } from './utils.js';
+import { escapeHtml, CRITERIA, ICONS } from './utils.js';
 import { isAdmin } from './auth.js';
 import { fireConfetti } from './effects.js';
 
@@ -113,7 +113,7 @@ async function renderApprovedAdmin() {
           <h3 class="admin-item-title">${escapeHtml(p.name)}</h3>
           <div style="display:flex;align-items:center;gap:8px;">
             <span class="stage-tag ${p.track}">${p.track === 'mvp' ? 'MVP' : 'Idea'}</span>
-            ${isEndorsed ? `<span class="endorsed-badge">⭐ AIPS Endorsed</span>` : ''}
+            ${isEndorsed ? `<span class="endorsed-badge">${ICONS.star} AIPS Endorsed</span>` : ''}
           </div>
         </div>
         <div class="admin-item-meta">${escapeHtml(p.contact_email)} · Score: ${p.total_score !== null ? p.total_score + '/100' : 'N/A'}</div>
@@ -121,7 +121,7 @@ async function renderApprovedAdmin() {
         <div class="admin-actions" style="margin-top:16px;">
           <button class="btn ${isEndorsed ? 'btn-secondary' : 'btn-primary'}"
             onclick="window.__toggleEndorse('${escapeHtml(id)}', ${isEndorsed})">
-            ${isEndorsed ? '✕ Remove Endorsement' : '⭐ Endorse Project'}
+            ${isEndorsed ? '✕ Remove Endorsement' : `${ICONS.star} Endorse Project`}
           </button>
         </div>
         <div class="approval-error-msg alert alert-error" id="endorse-error-${escapeHtml(id)}"></div>
