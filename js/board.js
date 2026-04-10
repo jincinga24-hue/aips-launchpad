@@ -427,7 +427,8 @@ async function openProjectDetail(projectId) {
               const isTeamMember = user && (cards || []).some(c => c.user_id === user.id);
               const isOwner = user && project.user_id === user.id;
               const canEndorse = (isOwner || isTeamMember) && card.user_id !== user?.id;
-              return renderTradingCard(card, false, { showEndorseBtn: canEndorse, projectId: project.id });
+              const canContact = (isOwner || isTeamMember) && card.user_id !== user?.id;
+              return renderTradingCard(card, false, { showEndorseBtn: canEndorse, showContactBtn: canContact, projectId: project.id });
             }).join('')}
           </div>
         </div>

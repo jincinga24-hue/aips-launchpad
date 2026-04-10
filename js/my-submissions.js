@@ -59,12 +59,18 @@ function renderProjectCard(project, cards) {
 
   let applicantsSection = '';
   if (cards.length > 0) {
-    const rows = cards.map(c => `
+    const rows = cards.map(c => {
+      const contactLinks = [];
+      if (c.email) contactLinks.push(`<a href="mailto:${escapeHtml(c.email)}" class="dash-contact-link" title="Email">Email</a>`);
+      if (c.instagram_url) contactLinks.push(`<a href="${escapeHtml(c.instagram_url)}" target="_blank" rel="noopener" class="dash-contact-link" title="Instagram">IG</a>`);
+      if (c.linkedin_url) contactLinks.push(`<a href="${escapeHtml(c.linkedin_url)}" target="_blank" rel="noopener" class="dash-contact-link" title="LinkedIn">LinkedIn</a>`);
+      return `
       <div class="dash-applicant-row">
         <strong>${escapeHtml(c.name || 'Unknown')}</strong>
-        <span class="dash-applicant-role">${escapeHtml(c.role || '')}</span>
-        <span class="dash-applicant-email">${escapeHtml(c.email || '')}</span>
-      </div>`).join('');
+        <span class="dash-applicant-role">${(c.roles || [c.role]).filter(Boolean).join(', ')}</span>
+        <span class="dash-applicant-contacts">${contactLinks.join(' ')}</span>
+      </div>`;
+    }).join('');
     applicantsSection = `
       <div class="dash-applicants-section" id="applicants-${escapeHtml(project.id)}" style="display:none">
         <h4>Applicants (${cards.length})</h4>

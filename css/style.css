@@ -3971,3 +3971,78 @@ main {
     grid-template-columns: 1fr;
   }
 }
+
+/* ─── TRADING CARD CONTACT BUTTON ───────────────────────── */
+.tc-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.tc-contact-wrap {
+  position: relative;
+}
+.tc-contact-btn {
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #007AFF;
+  background: rgba(0,122,255,0.08);
+  border: 1px solid rgba(0,122,255,0.2);
+  border-radius: 980px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.tc-contact-btn:hover {
+  background: rgba(0,122,255,0.15);
+}
+.tc-contact-popup {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  z-index: 10;
+  min-width: 120px;
+}
+.tc-contact-popup.tc-contact-open {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tc-contact-action {
+  display: block;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+.tc-contact-action:hover {
+  background: var(--bg);
+}
+.dash-contact-link {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #007AFF;
+  background: rgba(0,122,255,0.08);
+  border-radius: 980px;
+  text-decoration: none;
+  margin-left: 4px;
+}
+.dash-contact-link:hover {
+  background: rgba(0,122,255,0.15);
+}
+.dash-applicant-contacts {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}

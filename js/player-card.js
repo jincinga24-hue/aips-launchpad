@@ -220,9 +220,24 @@ export function renderTradingCard(card, showEmail, options = {}) {
     ? `<div class="tc-endorsements">${card._endorsements.slice(0, 1).map(e => `<div class="tc-endorse-quote"><em>"${escapeHtml(e.message.length > 60 ? e.message.slice(0, 60) + '…' : e.message)}"</em></div>`).join('')}</div>`
     : '';
 
-  // Endorse button (only for project owner)
+  // Endorse button (for teammates)
   const endorseBtn = showEndorseBtn && card.user_id
     ? `<button class="tc-endorse-btn" data-endorse-user="${escapeHtml(card.user_id)}" data-endorse-project="${escapeHtml(projectId || '')}">Endorse</button>`
+    : '';
+
+  // Contact button (visible to teammates — shows email + socials in a popup)
+  const { showContactBtn = false } = options;
+  const contactActions = [];
+  if (card.email) contactActions.push(`<a href="mailto:${escapeHtml(card.email)}" class="tc-contact-action">Email</a>`);
+  if (card.instagram_url) contactActions.push(`<a href="${escapeHtml(card.instagram_url)}" target="_blank" rel="noopener" class="tc-contact-action">Instagram</a>`);
+  if (card.linkedin_url) contactActions.push(`<a href="${escapeHtml(card.linkedin_url)}" target="_blank" rel="noopener" class="tc-contact-action">LinkedIn</a>`);
+  if (card.github_url) contactActions.push(`<a href="${escapeHtml(card.github_url)}" target="_blank" rel="noopener" class="tc-contact-action">GitHub</a>`);
+  if (card.portfolio_url) contactActions.push(`<a href="${escapeHtml(card.portfolio_url)}" target="_blank" rel="noopener" class="tc-contact-action">Portfolio</a>`);
+  const contactBtn = showContactBtn && contactActions.length > 0
+    ? `<div class="tc-contact-wrap">
+        <button class="tc-contact-btn" onclick="this.nextElementSibling.classList.toggle('tc-contact-open')">Contact</button>
+        <div class="tc-contact-popup">${contactActions.join('')}</div>
+       </div>`
     : '';
 
   return `
@@ -244,7 +259,10 @@ export function renderTradingCard(card, showEmail, options = {}) {
       ${endorseQuotes}
       ${links ? `<div class="tc-links">${links}</div>` : ''}
       ${showEmail ? `<div class="tc-email">${escapeHtml(card.email)}</div>` : ''}
-      ${endorseBtn}
+      <div class="tc-actions">
+        ${contactBtn}
+        ${endorseBtn}
+      </div>
     </div>
   `;
 }

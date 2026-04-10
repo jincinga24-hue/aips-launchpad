@@ -269,3 +269,4 @@ Waiting for first cycle...
 21:07:39 | Cycle 3 | Editing | js/board.js
 21:09:25 | Cycle 3 | Reading | index.html
 21:09:36 | Cycle 3 | Editing | index.html
+21:11:36 | Cycle 3 | Writing | /tmp/pw-debug/full-debug.mjs
