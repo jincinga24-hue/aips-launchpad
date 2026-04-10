@@ -2421,3 +2421,519 @@
     padding: 40px 16px 0;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BLESS.NETWORK PREMIUM AESTHETIC — Override Layer
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Design tokens update ── */
+:root {
+  --bg: #fafafa;
+  --card: #ffffff;
+  --border: #e8e8e8;
+  --text: #111111;
+  --muted: #888888;
+  --green: #2DB757;
+  --green-light: #edf7f1;
+  --radius: 18px;
+  --shadow: 0 1px 2px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04);
+  --serif: 'DM Serif Display', serif;
+}
+
+/* ── Serif typography for hero + section titles ── */
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(48px, 7vw, 80px);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
+
+.featured-name {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 400;
+}
+
+.stat-card .stat-num {
+  font-family: var(--serif);
+  font-size: 52px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+/* ── Hero section: more breathing room, soft gradient ── */
+.hero {
+  padding: 120px 24px 80px;
+  background: linear-gradient(160deg, #f5f9ff 0%, #fafafa 55%, #f5fdf7 100%);
+  border-radius: 0 0 32px 32px;
+  margin: 0 0 0;
+  text-align: center;
+}
+
+.hero p {
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 500px;
+  margin: 0 auto 40px;
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+/* Hero CTAs: dark pill primary, outlined secondary */
+.star-inner-primary {
+  background: #111111;
+  color: #fff;
+}
+
+.star-inner-secondary {
+  background: #ffffff;
+  color: #111111;
+  border: 1px solid var(--border);
+}
+
+/* ── Nav redesign: logo left, centered pill, right CTA ── */
+nav {
+  background: rgba(250,250,250,0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-inner {
+  max-width: 1140px;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.nav-logo {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+/* Center pill wrapper */
+.nav-pill-wrap {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.nav-tabs {
+  border: 1px solid #e0e0e0;
+  border-radius: 980px;
+  padding: 4px;
+  background: rgba(255,255,255,0.8);
+  display: inline-flex;
+  gap: 2px;
+  flex: none;
+  overflow: visible;
+}
+
+.nav-tab {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 7px 16px;
+  border-radius: 980px;
+  border: none;
+  background: none;
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.nav-tab:hover { color: var(--text); background: rgba(0,0,0,0.04); }
+.nav-tab.active { color: #fff; background: #111111; font-weight: 700; }
+
+/* Nav user: dark pill button style */
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  margin-left: 0;
+  flex-shrink: 0;
+}
+
+.nav-user-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.btn-logout {
+  background: #111111;
+  border: none;
+  padding: 7px 16px;
+  border-radius: 980px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  transition: opacity 0.15s;
+}
+
+.btn-logout:hover { opacity: 0.8; background: #111; }
+
+/* Nav login link styled as dark pill */
+.nav-user .nav-tab {
+  background: #111111;
+  color: #fff;
+  padding: 7px 18px;
+}
+
+.nav-user .nav-tab:hover { background: #333; color: #fff; }
+
+/* ── Stats row: more spacing, no heavy shadow ── */
+.stats-row {
+  gap: 20px;
+  margin-top: 80px;
+}
+
+.stat-card {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: none;
+  padding: 32px 24px;
+}
+
+.stat-card .stat-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  margin-top: 10px;
+}
+
+.stat-card .stat-icon {
+  color: var(--green);
+}
+
+/* ── How It Works: vertical timeline ── */
+.how-it-works-section {
+  margin-top: 100px;
+  padding: 100px 0 0;
+}
+
+.steps-timeline {
+  position: relative;
+  max-width: 640px;
+  margin: 48px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.timeline-track {
+  position: absolute;
+  left: 24px;
+  top: 40px;
+  bottom: 40px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--green), #e0e0e0);
+}
+
+.timeline-step {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  padding: 32px 0;
+  position: relative;
+}
+
+.timeline-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 0 6px rgba(45,183,87,0.12);
+}
+
+.timeline-content {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  flex: 1;
+  box-shadow: none;
+  transition: border-color 0.2s;
+}
+
+.timeline-content:hover {
+  border-color: var(--green);
+}
+
+.timeline-content .step-icon {
+  color: var(--green);
+  margin-bottom: 12px;
+}
+
+.timeline-content h4 {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.timeline-content p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+/* ── Featured project: left accent line ── */
+.featured-card {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: none;
+  border-left: 3px solid var(--green);
+  overflow: hidden;
+}
+
+.featured-card-accent {
+  display: none;
+}
+
+.featured-card-body {
+  padding: 40px;
+}
+
+/* ── Funding section ── */
+.funding-section {
+  margin-top: 100px;
+  padding: 80px 24px 0;
+}
+
+.funding-section h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+}
+
+/* ── Footer: dark rounded card style ── */
+.site-footer {
+  background: transparent;
+  margin-top: 100px;
+  padding: 0 24px 40px;
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 48px 40px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 48px;
+  background: #111111;
+  border-radius: 24px;
+  color: #f5f5f7;
+}
+
+.footer-bottom {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 0 0;
+  border-top: none;
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+}
+
+/* ── Project cards: more whitespace, subtle borders ── */
+.project-card {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 28px;
+  box-shadow: none;
+  transition: border-color 0.2s, transform 0.15s;
+}
+
+.project-card:hover {
+  border-color: #b0b0b0;
+  box-shadow: none;
+  transform: translateY(-1px);
+}
+
+.card-title {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* ── Board search: cleaner ── */
+.board-search-input {
+  border: 1px solid var(--border);
+  border-radius: 980px;
+  background: #fff;
+  transition: border-color 0.15s;
+}
+
+.board-search-input:focus {
+  border-color: #aaa;
+  box-shadow: none;
+}
+
+/* ── Filter pills: refined ── */
+.filter-btn {
+  border: 1px solid var(--border);
+  border-radius: 980px;
+  font-size: 13px;
+  padding: 6px 14px;
+  background: #fff;
+  font-weight: 500;
+}
+
+.filter-btn.active {
+  background: #111111;
+  color: #fff;
+  border-color: #111111;
+}
+
+/* ── General card radius ── */
+.form-card,
+.lookup-card,
+.step-card,
+.admin-item,
+.submission-item,
+.dash-project-card {
+  border-radius: var(--radius);
+  box-shadow: none;
+  border: 1px solid var(--border);
+}
+
+/* ── Btn primary: dark pill ── */
+.btn-primary {
+  background: #111111;
+  color: #fff;
+  border-radius: 980px;
+}
+
+.btn-primary:hover { opacity: 0.82; background: #111; }
+
+/* ── Btn secondary: outlined pill ── */
+.btn-secondary {
+  background: #fff;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 980px;
+}
+
+/* ── Main container ── */
+main {
+  max-width: 1100px;
+  padding: 0 24px 120px;
+}
+
+/* ── Page head section ── */
+.page-head {
+  margin-bottom: 40px;
+  padding-top: 48px;
+}
+
+.page-head h1 {
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+/* ── Announcement banner ── */
+.announcement-banner {
+  margin-bottom: 0;
+}
+
+/* ── Responsive adjustments ── */
+@media (max-width: 768px) {
+  .nav-pill-wrap {
+    flex: 1;
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-pill-wrap::-webkit-scrollbar { display: none; }
+
+  .nav-tabs {
+    border: none;
+    background: none;
+    padding: 0;
+    gap: 0;
+  }
+
+  .nav-tab {
+    font-size: 13px;
+    padding: 7px 10px;
+    border-radius: 8px;
+  }
+
+  .nav-tab.active {
+    background: rgba(0,0,0,0.08);
+    color: var(--text);
+  }
+
+  .nav-inner {
+    justify-content: space-between;
+  }
+
+  .hero {
+    padding: 80px 20px 60px;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .timeline-track { display: none; }
+  .timeline-step { flex-direction: column; gap: 16px; }
+  .timeline-circle { width: 40px; height: 40px; font-size: 13px; }
+
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 36px 28px 28px;
+    border-radius: 16px;
+  }
+
+  .site-footer {
+    padding: 0 16px 32px;
+  }
+
+  .how-it-works-section {
+    padding-top: 64px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 60px 16px 48px;
+  }
+
+  .stats-row {
+    margin-top: 56px;
+  }
+
+  .how-it-works-section {
+    margin-top: 64px;
+    padding-top: 40px;
+  }
+}

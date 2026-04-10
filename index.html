@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AIPS Launchpad</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -16,11 +16,13 @@
     <a href="#" class="nav-logo">
       <i class="chevron">›</i> AIPS Launchpad
     </a>
-    <div class="nav-tabs">
-      <button class="nav-tab" id="tab-launch">Launch</button>
-      <button class="nav-tab" id="tab-projects">Projects</button>
-      <button class="nav-tab" id="tab-dashboard">Dashboard</button>
-      <button class="nav-tab" id="admin-tab-btn">Admin</button>
+    <div class="nav-pill-wrap">
+      <div class="nav-tabs">
+        <button class="nav-tab" id="tab-launch">Launch</button>
+        <button class="nav-tab" id="tab-projects">Projects</button>
+        <button class="nav-tab" id="tab-dashboard">Dashboard</button>
+        <button class="nav-tab" id="admin-tab-btn">Admin</button>
+      </div>
     </div>
     <div id="nav-user" class="nav-user" style="display:none;"></div>
   </div>
@@ -117,24 +119,31 @@
     <div class="how-it-works-section reveal">
       <h2 class="section-title">How it works</h2>
       <p class="section-sub">Three steps from idea to team</p>
-      <div class="steps-grid">
-        <div class="step-card spotlight-card reveal" style="transition-delay: 0.1s;">
-          <div class="step-num-large">01</div>
-          <div class="step-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 014 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></div>
-          <h4>Submit</h4>
-          <p>Fill in your idea or MVP details. Tell us the problem, solution, and who you need on the team.</p>
+      <div class="steps-timeline">
+        <div class="timeline-track"></div>
+        <div class="timeline-step reveal" style="transition-delay: 0.1s;">
+          <div class="timeline-circle">01</div>
+          <div class="timeline-content">
+            <div class="step-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 014 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></div>
+            <h4>Submit</h4>
+            <p>Fill in your idea or MVP details. Tell us the problem, solution, and who you need on the team.</p>
+          </div>
         </div>
-        <div class="step-card spotlight-card reveal" style="transition-delay: 0.2s;">
-          <div class="step-num-large">02</div>
-          <div class="step-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
-          <h4>Get Reviewed</h4>
-          <p>Our committee scores submissions on 5 criteria. Score 60+ and you're on the public board.</p>
+        <div class="timeline-step reveal" style="transition-delay: 0.2s;">
+          <div class="timeline-circle">02</div>
+          <div class="timeline-content">
+            <div class="step-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+            <h4>Get Reviewed</h4>
+            <p>Our committee scores submissions on 5 criteria. Score 60+ and you're on the public board.</p>
+          </div>
         </div>
-        <div class="step-card spotlight-card reveal" style="transition-delay: 0.3s;">
-          <div class="step-num-large">03</div>
-          <div class="step-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.42 4.58a5.4 5.4 0 00-7.65 0l-.77.78-.77-.78a5.4 5.4 0 00-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg></div>
-          <h4>Build Your Team</h4>
-          <p>Interested students create player cards — showing their skills and role — and join your project.</p>
+        <div class="timeline-step reveal" style="transition-delay: 0.3s;">
+          <div class="timeline-circle">03</div>
+          <div class="timeline-content">
+            <div class="step-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.42 4.58a5.4 5.4 0 00-7.65 0l-.77.78-.77-.78a5.4 5.4 0 00-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg></div>
+            <h4>Build Your Team</h4>
+            <p>Interested students create player cards — showing their skills and role — and join your project.</p>
+          </div>
         </div>
       </div>
     </div>
