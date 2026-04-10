@@ -1,24 +1,16 @@
 {
   "features": [
-    {"id": "home-01", "parent": "Home Page Redesign", "name": "Announcement banner at top (dismissible)", "status": "PASS"},
-    {"id": "home-02", "parent": "Home Page Redesign", "name": "Featured Project spotlight hero card", "status": "PASS"},
-    {"id": "home-03", "parent": "Home Page Redesign", "name": "Metrics section with personality (icons, labels, count-up)", "status": "PASS"},
-    {"id": "home-04", "parent": "Home Page Redesign", "name": "How it works section polished", "status": "PASS"},
-    {"id": "home-05", "parent": "Home Page Redesign", "name": "Dark footer with AIPS links (Instagram, email, guidelines)", "status": "PASS"},
-    {"id": "home-06", "parent": "Home Page Redesign", "name": "Overall home page feels editorial and professional", "status": "PASS"},
-    {"id": "dash-01", "parent": "Dashboard Redesign", "name": "Two-column layout (projects left, activity right)", "status": "PASS"},
-    {"id": "dash-02", "parent": "Dashboard Redesign", "name": "Activity feed with timestamps", "status": "PASS"},
-    {"id": "dash-03", "parent": "Dashboard Redesign", "name": "Activity feed shows new player card applications", "status": "PASS"},
-    {"id": "dash-04", "parent": "Dashboard Redesign", "name": "Activity feed shows status changes (approved/revision)", "status": "PASS"},
-    {"id": "dash-05", "parent": "Dashboard Redesign", "name": "Project cards show status badge + score + applicant count", "status": "PASS"},
-    {"id": "dash-06", "parent": "Dashboard Redesign", "name": "Quick actions on project cards (view, edit, applicants)", "status": "PASS"},
-    {"id": "dash-07", "parent": "Dashboard Redesign", "name": "Dashboard auto-loads on login (no email lookup)", "status": "PASS"},
-    {"id": "fix-01", "parent": "Polish & Bug Fixes", "name": "Join This Team button works", "status": "PASS"},
-    {"id": "fix-02", "parent": "Polish & Bug Fixes", "name": "Filter pills visible (All/All Roles not white on white)", "status": "PASS"},
-    {"id": "fix-03", "parent": "Polish & Bug Fixes", "name": "Confetti fires on submit and approve", "status": "PASS"},
-    {"id": "fix-04", "parent": "Polish & Bug Fixes", "name": "Card flip reveal after player card submission", "status": "PASS"},
-    {"id": "fix-05", "parent": "Polish & Bug Fixes", "name": "Spotlight hover effect on cards", "status": "PASS"},
-    {"id": "fix-06", "parent": "Polish & Bug Fixes", "name": "Responsive layout (mobile + tablet)", "status": "PASS"},
-    {"id": "fix-07", "parent": "Polish & Bug Fixes", "name": "No JS console errors on any page", "status": "PASS"}
+    {"id": "ks-01", "parent": "Kickstarter Features", "name": "Team completeness progress bar on project cards", "status": "PASS"},
+    {"id": "ks-02", "parent": "Kickstarter Features", "name": "Category tags on projects (FinTech, EdTech, Health, etc.)", "status": "PASS"},
+    {"id": "ks-03", "parent": "Kickstarter Features", "name": "Category selector in submit form", "status": "PASS"},
+    {"id": "ks-04", "parent": "Kickstarter Features", "name": "Category filter pills on board page", "status": "PASS"},
+    {"id": "ks-05", "parent": "Kickstarter Features", "name": "Urgency indicator (seeking teammates since X days)", "status": "PASS"},
+    {"id": "ks-06", "parent": "Kickstarter Features", "name": "Applicant count prominent on cards", "status": "PASS"},
+    {"id": "ks-07", "parent": "Kickstarter Features", "name": "Committee Endorsed badge on selected projects", "status": "PASS"},
+    {"id": "ks-08", "parent": "Kickstarter Features", "name": "Search bar on board page", "status": "PASS"},
+    {"id": "ks-09", "parent": "Kickstarter Features", "name": "Project card shows category tag", "status": "PASS"},
+    {"id": "ks-10", "parent": "Kickstarter Features", "name": "Admin can toggle endorsed badge", "status": "PASS"},
+    {"id": "ks-11", "parent": "Kickstarter Features", "name": "Progress bar shows X/Y roles filled", "status": "PASS"},
+    {"id": "ks-12", "parent": "Kickstarter Features", "name": "Board filters include categories", "status": "PASS"}
   ]
 }

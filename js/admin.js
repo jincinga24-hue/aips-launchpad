@@ -5,7 +5,17 @@ import { isAdmin } from './auth.js';
 import { fireConfetti } from './effects.js';
 
 export function initAdmin() {
-  // Nothing to init — renderAdmin is called on tab switch
+  // Admin tab switching
+  document.querySelector('.admin-tabs')?.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-admin-tab]');
+    if (!btn) return;
+    const tab = btn.dataset.adminTab;
+    document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('admin-tab-pending').style.display = tab === 'pending' ? '' : 'none';
+    document.getElementById('admin-tab-approved').style.display = tab === 'approved' ? '' : 'none';
+    if (tab === 'approved') renderApprovedAdmin();
+  });
 }
 
 export async function renderAdmin() {
@@ -71,9 +81,71 @@ export async function renderAdmin() {
     `;
   }).join('');
 
-  // Update totals and button states after render
   pending.forEach(p => window.__updateTotal(p.id));
 }
+
+async function renderApprovedAdmin() {
+  if (!isAdmin()) return;
+
+  const list = document.getElementById('admin-approved-list');
+  const empty = document.getElementById('admin-approved-empty');
+  if (!list) return;
+
+  const { data: approved } = await supabase
+    .from('projects')
+    .select('*')
+    .eq('status', 'approved')
+    .order('created_at', { ascending: false });
+
+  if (!approved || approved.length === 0) {
+    list.innerHTML = '';
+    empty?.classList.add('visible');
+    return;
+  }
+
+  empty?.classList.remove('visible');
+  list.innerHTML = approved.map(p => {
+    const id = p.id;
+    const isEndorsed = !!p.endorsed;
+    return `
+      <div class="admin-item" id="admin-approved-item-${escapeHtml(id)}">
+        <div class="admin-item-header">
+          <h3 class="admin-item-title">${escapeHtml(p.name)}</h3>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="stage-tag ${p.track}">${p.track === 'mvp' ? 'MVP' : 'Idea'}</span>
+            ${isEndorsed ? `<span class="endorsed-badge">⭐ AIPS Endorsed</span>` : ''}
+          </div>
+        </div>
+        <div class="admin-item-meta">${escapeHtml(p.contact_email)} · Score: ${p.total_score !== null ? p.total_score + '/100' : 'N/A'}</div>
+        <div class="admin-item-field"><strong>Problem:</strong> ${escapeHtml((p.problem || '').slice(0, 200))}</div>
+        <div class="admin-actions" style="margin-top:16px;">
+          <button class="btn ${isEndorsed ? 'btn-secondary' : 'btn-primary'}"
+            onclick="window.__toggleEndorse('${escapeHtml(id)}', ${isEndorsed})">
+            ${isEndorsed ? '✕ Remove Endorsement' : '⭐ Endorse Project'}
+          </button>
+        </div>
+        <div class="approval-error-msg alert alert-error" id="endorse-error-${escapeHtml(id)}"></div>
+      </div>
+    `;
+  }).join('');
+}
+
+window.__toggleEndorse = async function(id, currentlyEndorsed) {
+  const newVal = !currentlyEndorsed;
+  const { error } = await supabase
+    .from('projects')
+    .update({ endorsed: newVal })
+    .eq('id', id);
+
+  const errEl = document.getElementById('endorse-error-' + id);
+  if (error) {
+    if (errEl) { errEl.textContent = error.message; errEl.classList.add('visible'); }
+    return;
+  }
+
+  if (newVal) fireConfetti();
+  renderApprovedAdmin();
+};
 
 window.__updateTotal = function(id) {
   const sliders = document.querySelectorAll(`.score-slider[data-id="${id}"]`);

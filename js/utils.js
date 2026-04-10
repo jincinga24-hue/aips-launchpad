@@ -1,5 +1,19 @@
 // js/utils.js — Shared utilities
 
+export const CATEGORIES = ['FinTech', 'EdTech', 'Health', 'Social Impact', 'AI/ML', 'Sustainability', 'Productivity', 'Entertainment', 'Other'];
+
+export const CATEGORY_COLORS = {
+  'FinTech':        { bg: '#e8f0fe', color: '#1a56db' },
+  'EdTech':         { bg: '#fce8ff', color: '#9333ea' },
+  'Health':         { bg: '#ffe8e8', color: '#e53e3e' },
+  'Social Impact':  { bg: '#fff3e0', color: '#dd6b20' },
+  'AI/ML':          { bg: '#e6fffa', color: '#047481' },
+  'Sustainability': { bg: '#e8f7ed', color: '#276749' },
+  'Productivity':   { bg: '#ebe8fe', color: '#5850ec' },
+  'Entertainment':  { bg: '#fff0f5', color: '#d53f8c' },
+  'Other':          { bg: '#f5f5f7', color: '#86868b' },
+};
+
 export function escapeHtml(str) {
   if (!str) return '';
   return String(str)

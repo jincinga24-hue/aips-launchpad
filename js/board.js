@@ -1,14 +1,28 @@
 // js/board.js — Project board, filters, detail modal
 import { supabase } from './supabase.js';
-import { escapeHtml, ROLE_COLORS, CRITERIA } from './utils.js';
+import { escapeHtml, ROLE_COLORS, CRITERIA, CATEGORIES, CATEGORY_COLORS } from './utils.js';
 import { renderTradingCard, openPcModal } from './player-card.js';
 import { isLoggedIn } from './auth.js';
 
 let currentStageFilter = 'all';
 let currentRoleFilter = 'all';
+let currentCategoryFilter = 'all';
+let searchQuery = '';
 
 export function initBoard() {
-  // Filter buttons — event delegation, using data-filter attribute
+  // Populate category filter pills
+  const categoryBar = document.getElementById('category-filters');
+  if (categoryBar) {
+    CATEGORIES.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.dataset.filter = cat;
+      btn.textContent = cat;
+      categoryBar.appendChild(btn);
+    });
+  }
+
+  // Stage filter
   document.getElementById('stage-filters')?.addEventListener('click', (e) => {
     const btn = e.target.closest('button');
     if (!btn) return;
@@ -18,12 +32,29 @@ export function initBoard() {
     renderBoard();
   });
 
+  // Role filter
   document.getElementById('role-filters')?.addEventListener('click', (e) => {
     const btn = e.target.closest('button');
     if (!btn) return;
     currentRoleFilter = btn.dataset.filter || 'all';
     document.querySelectorAll('#role-filters button').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+    renderBoard();
+  });
+
+  // Category filter
+  document.getElementById('category-filters')?.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    currentCategoryFilter = btn.dataset.filter || 'all';
+    document.querySelectorAll('#category-filters button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderBoard();
+  });
+
+  // Search bar
+  document.getElementById('board-search')?.addEventListener('input', (e) => {
+    searchQuery = e.target.value.trim().toLowerCase();
     renderBoard();
   });
 
@@ -35,7 +66,7 @@ export function initBoard() {
   // Escape key closes modals
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      if (document.getElementById('pc-modal')?.classList.contains('open')) return; // player-card.js handles this
+      if (document.getElementById('pc-modal')?.classList.contains('open')) return;
       closeProjectModal();
     }
   });
@@ -47,16 +78,46 @@ export function initBoard() {
   });
 }
 
+function daysAgo(dateStr) {
+  const now = new Date();
+  const created = new Date(dateStr);
+  return Math.floor((now - created) / (1000 * 60 * 60 * 24));
+}
+
+function buildCategoryPill(category) {
+  if (!category) return '';
+  const colors = CATEGORY_COLORS[category] || CATEGORY_COLORS['Other'];
+  return `<span class="category-pill" style="background:${colors.bg};color:${colors.color}">${escapeHtml(category)}</span>`;
+}
+
+function buildProgressBar(rolesNeeded, playerCards) {
+  const needed = (rolesNeeded || []);
+  const total = needed.length;
+  if (total === 0) return '';
+
+  const filledRoles = new Set((playerCards || []).map(c => c.role));
+  const filled = needed.filter(r => filledRoles.has(r)).length;
+  const pct = Math.round((filled / total) * 100);
+
+  return `
+    <div class="roles-progress">
+      <div class="roles-progress-bar-wrap">
+        <div class="roles-progress-bar" style="width:${pct}%"></div>
+      </div>
+      <span class="roles-progress-label">${filled}/${total} roles filled</span>
+    </div>
+  `;
+}
+
 export async function renderBoard() {
   const grid = document.getElementById('board-grid');
   const empty = document.getElementById('board-empty');
   if (!grid) return;
 
-  const { data: projects, error } = await supabase
-    .from('projects')
-    .select('*')
-    .eq('status', 'approved')
-    .order('created_at', { ascending: false });
+  const [{ data: projects, error }, { data: allCards }] = await Promise.all([
+    supabase.from('projects').select('*').eq('status', 'approved').order('created_at', { ascending: false }),
+    supabase.from('player_cards').select('project_id, role'),
+  ]);
 
   if (error || !projects) {
     grid.innerHTML = '';
@@ -64,12 +125,30 @@ export async function renderBoard() {
     return;
   }
 
+  // Build card counts and filled roles map
+  const cardCountMap = {};
+  const cardsByProject = {};
+  (allCards || []).forEach(c => {
+    cardCountMap[c.project_id] = (cardCountMap[c.project_id] || 0) + 1;
+    if (!cardsByProject[c.project_id]) cardsByProject[c.project_id] = [];
+    cardsByProject[c.project_id].push(c);
+  });
+
   let filtered = projects;
   if (currentStageFilter !== 'all') {
     filtered = filtered.filter(p => p.track === currentStageFilter);
   }
   if (currentRoleFilter !== 'all') {
     filtered = filtered.filter(p => (p.roles_needed || []).includes(currentRoleFilter));
+  }
+  if (currentCategoryFilter !== 'all') {
+    filtered = filtered.filter(p => p.category === currentCategoryFilter);
+  }
+  if (searchQuery) {
+    filtered = filtered.filter(p =>
+      (p.name || '').toLowerCase().includes(searchQuery) ||
+      (p.problem || '').toLowerCase().includes(searchQuery)
+    );
   }
 
   if (filtered.length === 0) {
@@ -79,19 +158,41 @@ export async function renderBoard() {
   }
 
   empty?.classList.remove('visible');
-  grid.innerHTML = filtered.map(p => `
+  grid.innerHTML = filtered.map(p => {
+    const applicantCount = cardCountMap[p.id] || 0;
+    const projectCards = cardsByProject[p.id] || [];
+    const days = daysAgo(p.created_at);
+    const endorsedBadge = p.endorsed
+      ? `<span class="endorsed-badge">⭐ AIPS Endorsed</span>`
+      : '';
+
+    return `
     <div class="project-card spotlight-card" data-project-id="${escapeHtml(p.id)}">
       <div class="card-header">
-        <span class="stage-tag ${p.track}">${p.track === 'mvp' ? 'MVP' : 'Idea'}</span>
-        ${p.total_score !== null ? `<span class="score-badge">${p.total_score}/100</span>` : ''}
+        <div class="card-header-left">
+          <span class="stage-tag ${p.track}">${p.track === 'mvp' ? 'MVP' : 'Idea'}</span>
+          ${buildCategoryPill(p.category)}
+        </div>
+        <div class="card-header-right">
+          ${p.total_score !== null ? `<span class="score-badge">${p.total_score}/100</span>` : ''}
+          ${endorsedBadge}
+        </div>
       </div>
       <div class="card-title">${escapeHtml(p.name)}</div>
       <div class="card-pitch">${escapeHtml(p.problem.slice(0, 120))}${p.problem.length > 120 ? '…' : ''}</div>
-      <div class="roles-needed">
-        ${(p.roles_needed || []).map(r => `<span class="role-tag">${r}</span>`).join('')}
+      ${buildProgressBar(p.roles_needed, projectCards)}
+      <div class="card-footer">
+        <div class="roles-needed">
+          ${(p.roles_needed || []).map(r => `<span class="role-tag">${r}</span>`).join('')}
+        </div>
+        <div class="card-meta-row">
+          ${applicantCount > 0 ? `<span class="applicant-count">👥 ${applicantCount} applicant${applicantCount !== 1 ? 's' : ''}</span>` : ''}
+          <span class="urgency-label">Seeking for ${days}d</span>
+        </div>
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 export async function renderStats() {
@@ -149,6 +250,7 @@ export async function renderFeaturedProject() {
           <div class="featured-problem">${escapeHtml(problemExcerpt)}</div>
           <div class="featured-meta">
             <span class="stage-tag ${p.track}">${trackLabel}</span>
+            ${buildCategoryPill(p.category)}
             ${(p.roles_needed || []).map(r => `<span class="role-tag">${r}</span>`).join('')}
           </div>
         </div>
@@ -177,7 +279,6 @@ async function openProjectDetail(projectId) {
   const { data: project } = await supabase.from('projects').select('*').eq('id', projectId).single();
   if (!project) return;
 
-  // Get player cards (public view — no emails)
   const { data: cards } = await supabase.from('player_cards_public').select('*').eq('project_id', projectId);
 
   const scoreBreakdown = project.scores ? `
@@ -210,6 +311,8 @@ async function openProjectDetail(projectId) {
   const content = `
     <div class="modal-track-tag">
       <span class="stage-tag ${project.track}">${project.track === 'mvp' ? 'MVP' : 'Idea'}</span>
+      ${buildCategoryPill(project.category)}
+      ${project.endorsed ? `<span class="endorsed-badge">⭐ AIPS Endorsed</span>` : ''}
     </div>
     <div class="modal-title">${escapeHtml(project.name)}</div>
     ${project.total_score !== null ? `
@@ -288,7 +391,6 @@ async function openProjectDetail(projectId) {
   const modalContent = document.getElementById('modal-content');
   modalContent.innerHTML = content;
 
-  // Wire up "Join This Team" button via event delegation (avoids inline onclick)
   modalContent.querySelector('[data-open-pc]')?.addEventListener('click', (e) => {
     const id = e.currentTarget.dataset.openPc;
     openPcModal(id);
@@ -308,7 +410,6 @@ function closeProjectModal() {
   }
 }
 
-// Close button in modal HTML uses data attribute — wire it up
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelector('.modal-close')?.addEventListener('click', closeProjectModal);
 });

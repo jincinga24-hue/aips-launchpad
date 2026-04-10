@@ -618,12 +618,49 @@
     .alert-error { background: #fff2f1; color: #c0392b; border: 1px solid #ffbcba; }
 
     /* ─── BOARD ─────────────────────────────────────────────────── */
+
+    /* Search bar */
+    .board-search-row {
+      margin-bottom: 16px;
+    }
+
+    .board-search-wrap {
+      position: relative;
+      max-width: 100%;
+    }
+
+    .board-search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .board-search-input {
+      width: 100%;
+      padding: 11px 16px 11px 40px;
+      border: 1px solid var(--border);
+      border-radius: 980px;
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--card);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .board-search-input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(45,183,87,0.12);
+    }
+
     .board-header {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
       margin-bottom: 28px;
     }
 
@@ -665,7 +702,9 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
 
-    .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+    .card-header-left { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .card-header-right { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 
     .stage-tag {
       font-size: 11px;
@@ -687,9 +726,113 @@
     }
 
     .card-title { font-size: 18px; margin-bottom: 6px; }
-    .card-pitch { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.4; }
+    .card-pitch { font-size: 13px; color: var(--muted); margin-bottom: 12px; line-height: 1.4; }
 
-    .roles-needed { display: flex; gap: 6px; flex-wrap: wrap; }
+    /* Category pill */
+    .category-pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 980px;
+      letter-spacing: 0.02em;
+    }
+
+    /* Endorsed badge */
+    .endorsed-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 4px;
+      background: #fef9c3;
+      color: #92400e;
+      border: 1px solid #fde68a;
+      letter-spacing: 0.03em;
+    }
+
+    /* Progress bar */
+    .roles-progress {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .roles-progress-bar-wrap {
+      flex: 1;
+      height: 5px;
+      background: var(--border);
+      border-radius: 980px;
+      overflow: hidden;
+    }
+
+    .roles-progress-bar {
+      height: 100%;
+      background: var(--green);
+      border-radius: 980px;
+      transition: width 0.3s ease;
+    }
+
+    .roles-progress-label {
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* Card footer */
+    .card-footer {
+      margin-top: 4px;
+    }
+
+    .roles-needed { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+
+    .card-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .applicant-count {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .urgency-label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Admin tabs */
+    .admin-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0;
+    }
+
+    .admin-tab-btn {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 10px 18px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .admin-tab-btn.active {
+      color: var(--text);
+      border-bottom-color: var(--green);
+      font-weight: 600;
+    }
 
     .role-tag {
       font-size: 11px;

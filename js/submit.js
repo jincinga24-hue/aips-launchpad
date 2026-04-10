@@ -2,6 +2,7 @@
 import { supabase } from './supabase.js';
 import { getUser } from './auth.js';
 import { fireConfetti } from './effects.js';
+import { CATEGORIES } from './utils.js';
 
 let currentTrack = 'idea';
 let editingProjectId = null;
@@ -11,6 +12,17 @@ export function initSubmit() {
   if (!form) return;
 
   form.addEventListener('submit', handleSubmit);
+
+  // Populate category dropdown
+  const categorySelect = document.getElementById('f-category');
+  if (categorySelect) {
+    CATEGORIES.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat;
+      opt.textContent = cat;
+      categorySelect.appendChild(opt);
+    });
+  }
 
   // Track toggle
   document.getElementById('btn-track-idea')?.addEventListener('click', () => setTrack('idea'));
@@ -55,6 +67,7 @@ async function handleSubmit(e) {
   const solution = document.getElementById('f-solution').value.trim();
   const targetUser = document.getElementById('f-target').value.trim();
   const mvpScope = document.getElementById('f-scope').value.trim();
+  const category = document.getElementById('f-category').value;
   const roles = getSelectedRoles();
   const email = document.getElementById('f-email').value.trim();
   const contactMethod = document.getElementById('f-contact-method').value.trim();
@@ -62,7 +75,7 @@ async function handleSubmit(e) {
   const videoLink = document.getElementById('f-video')?.value.trim() || null;
   const currentTeam = document.getElementById('f-team')?.value.trim() || null;
 
-  if (!name || !problem || !solution || !targetUser || !mvpScope || roles.length === 0 || !email) {
+  if (!name || !problem || !solution || !targetUser || !mvpScope || !category || roles.length === 0 || !email) {
     errorAlert.textContent = 'Please fill in all required fields and select at least one role.';
     errorAlert.classList.add('visible');
     return;
@@ -93,6 +106,7 @@ async function handleSubmit(e) {
     solution,
     target_user: targetUser,
     mvp_scope: mvpScope,
+    category,
     roles_needed: roles,
     contact_email: email,
     contact_method: contactMethod || null,
@@ -139,6 +153,7 @@ export function prefillAndEdit(projectId, project) {
   document.getElementById('f-scope').value = project.mvp_scope || '';
   document.getElementById('f-email').value = project.contact_email || '';
   document.getElementById('f-contact-method').value = project.contact_method || '';
+  if (document.getElementById('f-category')) document.getElementById('f-category').value = project.category || '';
   if (document.getElementById('f-demo')) document.getElementById('f-demo').value = project.demo_link || '';
   if (document.getElementById('f-video')) document.getElementById('f-video').value = project.video_link || '';
   if (document.getElementById('f-team')) document.getElementById('f-team').value = project.current_team || '';
