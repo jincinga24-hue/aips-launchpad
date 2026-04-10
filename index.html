@@ -86,15 +86,32 @@
       <h1 class="hero-reveal" style="transition-delay:0.5s">Launch Your <span>Startup Idea</span><br><span class="hero-reveal" style="transition-delay:0.7s;display:inline;">Find Your Team</span></h1>
       <p class="hero-reveal" style="transition-delay:1.1s">Submit your idea or MVP for committee review. Get scored, get published, find collaborators.</p>
       <div class="hero-ctas hero-reveal" style="transition-delay:1.3s">
-        <div class="star-border-container" data-tab="submit">
-          <div class="border-gradient-bottom"></div>
-          <div class="border-gradient-top"></div>
-          <span class="star-inner star-inner-primary">Submit an Idea</span>
-        </div>
         <div class="star-border-container" data-tab="board">
           <div class="border-gradient-bottom"></div>
           <div class="border-gradient-top"></div>
           <span class="star-inner star-inner-secondary">Browse Projects</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TWO-PATH CARDS -->
+    <div class="paths-section reveal">
+      <div class="paths-grid">
+        <div class="path-card path-idea" id="path-idea-card">
+          <div class="path-card-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
+          </div>
+          <h3>Launch an Idea</h3>
+          <p>Have a concept but need a team to build it? Submit your idea for review and find collaborators.</p>
+          <button class="path-card-btn" id="path-btn-idea">Submit Idea →</button>
+        </div>
+        <div class="path-card path-mvp" id="path-mvp-card">
+          <div class="path-card-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 3 0 3 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-3 0-3"/></svg>
+          </div>
+          <h3>Grow Your MVP</h3>
+          <p>Already have a working prototype? Showcase your MVP, find teammates to scale, and get endorsed by the committee.</p>
+          <button class="path-card-btn" id="path-btn-mvp">Submit MVP →</button>
         </div>
       </div>
     </div>
@@ -138,8 +155,8 @@
           <div class="timeline-circle">01</div>
           <div class="timeline-content">
             <div class="step-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 014 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></div>
-            <h4>Submit</h4>
-            <p>Fill in your idea or MVP details. Tell us the problem, solution, and who you need on the team.</p>
+            <h4>Submit your idea or showcase your MVP</h4>
+            <p>Whether you have a concept or a working prototype, fill in the details, describe the problem you're solving, and tell us who you need on the team.</p>
           </div>
         </div>
         <div class="timeline-step reveal" style="transition-delay: 0.2s;">
@@ -147,7 +164,7 @@
           <div class="timeline-content">
             <div class="step-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
             <h4>Get Reviewed</h4>
-            <p>Our committee scores submissions on 5 criteria. Score 60+ and you're on the public board.</p>
+            <p>Our committee scores on 5 criteria. Ideas are scored on potential and clarity. MVPs are also evaluated on execution and traction. Score 60+ and you're on the public board.</p>
           </div>
         </div>
         <div class="timeline-step reveal" style="transition-delay: 0.3s;">
@@ -155,7 +172,7 @@
           <div class="timeline-content">
             <div class="step-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.42 4.58a5.4 5.4 0 00-7.65 0l-.77.78-.77-.78a5.4 5.4 0 00-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"/></svg></div>
             <h4>Build Your Team</h4>
-            <p>Interested students create player cards — showing their skills and role — and join your project.</p>
+            <p>Idea founders find builders to bring their concept to life. MVP founders find growth teammates — designers, marketers, and engineers — to scale what's already working.</p>
           </div>
         </div>
       </div>
@@ -177,8 +194,6 @@
   <!-- SUBMIT PAGE -->
   <div id="page-submit" class="page">
     <div class="form-card">
-      <h2>Submit a Project</h2>
-      <p>Share your startup idea or MVP with the AIPS community for committee review.</p>
 
       <div id="submit-alert-success" class="alert alert-success">
         Your submission has been received! Track your status in <strong>My Submissions</strong> using your email.
@@ -186,8 +201,27 @@
       <div id="submit-alert-error" class="alert alert-error"></div>
 
       <div class="track-toggle">
-        <button class="track-btn active" id="btn-track-idea"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>Idea</button>
-        <button class="track-btn" id="btn-track-mvp"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 3 0 3 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-3 0-3"/></svg>MVP</button>
+        <button class="track-btn track-idea active" id="btn-track-idea">
+          <div class="track-btn-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
+          </div>
+          Launch an Idea
+        </button>
+        <button class="track-btn track-mvp" id="btn-track-mvp">
+          <div class="track-btn-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 3 0 3 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-3 0-3"/></svg>
+          </div>
+          Grow Your MVP
+        </button>
+      </div>
+
+      <div class="submit-form-header" id="submit-form-header-idea">
+        <h2>Launch Your Idea</h2>
+        <p>Describe your concept. We'll help you find a team to build it.</p>
+      </div>
+      <div class="submit-form-header" id="submit-form-header-mvp">
+        <h2>Grow Your MVP</h2>
+        <p>Showcase what you've built. Find teammates to take it further.</p>
       </div>
 
       <form id="submit-form" novalidate>
@@ -270,6 +304,10 @@
         <!-- MVP-only fields -->
         <div class="mvp-only-fields" id="mvp-fields">
           <hr class="form-divider" />
+          <div style="margin-bottom:20px;">
+            <div style="font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#2DB757;margin-bottom:4px;">About Your Prototype</div>
+            <div style="font-size:13px;color:var(--muted);">These fields are required for MVP submissions to showcase your working build.</div>
+          </div>
           <div class="form-group float-group">
             <input type="url" id="f-demo" placeholder=" " />
             <label class="float-label">Demo Link</label>

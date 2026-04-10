@@ -2,7 +2,7 @@
 import { initAuth, getUser, getProfile, isAdmin, isLoggedIn, signOut, signInWithGoogle, signInWithEmail, signUpWithEmail } from './auth.js';
 import { renderBoard, initBoard, renderStats, renderFeaturedProject } from './board.js';
 import { renderAdmin, initAdmin } from './admin.js';
-import { initSubmit } from './submit.js';
+import { initSubmit, setTrack } from './submit.js';
 import { initMySubmissions, loadMySubmissions } from './my-submissions.js';
 import { initPlayerCard } from './player-card.js';
 import { initMyCard, loadMyCard } from './my-card.js';
@@ -196,6 +196,26 @@ async function init() {
     const container = e.target.closest('[data-tab]');
     if (!container) return;
     showTab(container.dataset.tab);
+  });
+
+  // Two-path cards on home page
+  document.getElementById('path-btn-idea')?.addEventListener('click', () => {
+    showTab('submit');
+    setTrack('idea');
+  });
+  document.getElementById('path-btn-mvp')?.addEventListener('click', () => {
+    showTab('submit');
+    setTrack('mvp');
+  });
+  document.getElementById('path-idea-card')?.addEventListener('click', (e) => {
+    if (e.target.closest('#path-btn-idea')) return; // button handled above
+    showTab('submit');
+    setTrack('idea');
+  });
+  document.getElementById('path-mvp-card')?.addEventListener('click', (e) => {
+    if (e.target.closest('#path-btn-mvp')) return;
+    showTab('submit');
+    setTrack('mvp');
   });
 
   await initAuth((user, profile) => {

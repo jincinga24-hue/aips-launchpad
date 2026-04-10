@@ -492,33 +492,63 @@
     .form-card h2 { font-size: 28px; margin-bottom: 6px; }
     .form-card > p { color: var(--muted); margin-bottom: 32px; }
 
-    /* Track toggle */
+    /* Track toggle — large visual selectors */
     .track-toggle {
-      display: inline-flex;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 3px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
       margin-bottom: 32px;
     }
 
     .track-btn {
-      padding: 8px 24px;
-      border-radius: 6px;
-      border: none;
-      background: none;
-      font-size: 14px;
-      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 18px 16px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      background: var(--card);
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Rajdhani', sans-serif;
       color: var(--muted);
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all 0.18s;
+      letter-spacing: 0.01em;
     }
 
-    .track-btn.active {
-      background: var(--card);
-      color: var(--text);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    .track-btn .track-btn-icon {
+      font-size: 22px;
+      line-height: 1;
     }
+
+    .track-btn:hover {
+      border-color: #aaa;
+      color: var(--text);
+    }
+
+    .track-btn.active.track-idea {
+      border-color: #007AFF;
+      background: #f0f6ff;
+      color: #007AFF;
+    }
+
+    .track-btn.active.track-mvp {
+      border-color: #2DB757;
+      background: var(--green-light);
+      color: #2DB757;
+    }
+
+    /* Submit form header per track */
+    .submit-form-header { margin-bottom: 28px; }
+    .submit-form-header h2 { font-size: 28px; margin-bottom: 4px; }
+    .submit-form-header p { color: var(--muted); font-size: 14px; }
+
+    #submit-form-header-idea { display: block; }
+    #submit-form-header-mvp  { display: none; }
+    .submit-track-mvp #submit-form-header-idea { display: none; }
+    .submit-track-mvp #submit-form-header-mvp  { display: block; }
 
     /* Form fields */
     .form-group { margin-bottom: 24px; }
@@ -715,8 +745,160 @@
       letter-spacing: 0.05em;
     }
 
-    .stage-tag.idea { background: #e8f4fd; color: #1a78c2; }
-    .stage-tag.mvp { background: var(--green-light); color: var(--green); }
+    .stage-tag.idea { background: #e8f4fd; color: #1a78c2; font-size: 12px; padding: 4px 10px; }
+    .stage-tag.mvp { background: var(--green-light); color: var(--green); font-size: 12px; padding: 4px 10px; }
+
+    /* Board card track accents */
+    .project-card.track-idea {
+      border-left: 3px solid #007AFF;
+    }
+    .project-card.track-mvp {
+      border-left: 3px solid #2DB757;
+    }
+    .card-demo-indicator {
+      font-size: 11px;
+      font-weight: 600;
+      color: #2DB757;
+      background: var(--green-light);
+      border-radius: 5px;
+      padding: 2px 7px;
+      margin-left: 4px;
+    }
+    .card-video-indicator {
+      font-size: 11px;
+      font-weight: 600;
+      color: #5856D6;
+      background: #f0eeff;
+      border-radius: 5px;
+      padding: 2px 7px;
+      margin-left: 4px;
+    }
+
+    /* Two-path cards on home */
+    .paths-section {
+      max-width: 1080px;
+      margin: 0 auto 60px;
+      padding: 0 20px;
+    }
+    .paths-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 600px) {
+      .paths-grid { grid-template-columns: 1fr; }
+    }
+    .path-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    }
+    .path-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+    }
+    .path-card.path-idea {
+      border-top: 3px solid #007AFF;
+    }
+    .path-card.path-mvp {
+      border-top: 3px solid #2DB757;
+    }
+    .path-card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .path-card.path-idea .path-card-icon {
+      background: #e8f4fd;
+      color: #007AFF;
+    }
+    .path-card.path-mvp .path-card-icon {
+      background: var(--green-light);
+      color: #2DB757;
+    }
+    .path-card h3 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .path-card p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      flex: 1;
+    }
+    .path-card-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 8px;
+      padding: 10px 18px;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      width: fit-content;
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 0.01em;
+    }
+    .path-card-btn:hover { opacity: 0.85; }
+    .path-card.path-idea .path-card-btn {
+      background: #007AFF;
+      color: #fff;
+    }
+    .path-card.path-mvp .path-card-btn {
+      background: #2DB757;
+      color: #fff;
+    }
+
+    /* MVP prototype section in modal */
+    .modal-prototype-section {
+      background: var(--green-light);
+      border: 1px solid rgba(45,183,87,0.25);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .modal-prototype-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #2DB757;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .modal-prototype-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .modal-proto-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #2DB757;
+      background: #fff;
+      border: 1px solid rgba(45,183,87,0.3);
+      border-radius: 8px;
+      padding: 8px 14px;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .modal-proto-link:hover { background: #f5fdf7; }
 
     .score-badge {
       font-family: 'Rajdhani', sans-serif;

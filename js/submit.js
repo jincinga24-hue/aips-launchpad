@@ -37,7 +37,7 @@ export function initSubmit() {
   });
 }
 
-function setTrack(track) {
+export function setTrack(track) {
   currentTrack = track;
   document.getElementById('btn-track-idea')?.classList.toggle('active', track === 'idea');
   document.getElementById('btn-track-mvp')?.classList.toggle('active', track === 'mvp');
@@ -45,6 +45,12 @@ function setTrack(track) {
   if (mvpFields) {
     if (track === 'mvp') mvpFields.classList.add('visible');
     else mvpFields.classList.remove('visible');
+  }
+  // Toggle form-card class so header swaps via CSS
+  const formCard = document.querySelector('.form-card');
+  if (formCard) {
+    if (track === 'mvp') formCard.classList.add('submit-track-mvp');
+    else formCard.classList.remove('submit-track-mvp');
   }
 }
 

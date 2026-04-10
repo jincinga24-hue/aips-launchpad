@@ -169,12 +169,18 @@ export async function renderBoard() {
       ? `<span class="endorsed-badge">${ICONS.star} AIPS Endorsed</span>`
       : '';
 
+    const demoIndicator = (p.track === 'mvp' && p.demo_link)
+      ? `<span class="card-demo-indicator">Demo ↗</span>` : '';
+    const videoIndicator = (p.track === 'mvp' && p.video_link)
+      ? `<span class="card-video-indicator">▶ Video</span>` : '';
+
     return `
-    <div class="project-card spotlight-card" data-project-id="${escapeHtml(p.id)}">
+    <div class="project-card spotlight-card track-${p.track}" data-project-id="${escapeHtml(p.id)}">
       <div class="card-header">
         <div class="card-header-left">
           <span class="stage-tag ${p.track}">${p.track === 'mvp' ? 'MVP' : 'Idea'}</span>
           ${buildCategoryPill(p.category)}
+          ${demoIndicator}${videoIndicator}
         </div>
         <div class="card-header-right">
           ${p.total_score !== null ? `<span class="score-badge">${p.total_score}/100</span>` : ''}
@@ -334,6 +340,23 @@ async function openProjectDetail(projectId) {
     }
   }
 
+  // MVP prototype section shown prominently at top
+  const mvpPrototypeSection = project.track === 'mvp' && (project.demo_link || project.video_link || project.current_team) ? `
+    <div class="modal-prototype-section">
+      <div class="modal-prototype-label">About the Prototype</div>
+      ${project.demo_link || project.video_link ? `
+        <div class="modal-prototype-links">
+          ${project.demo_link ? `<a href="${escapeHtml(project.demo_link)}" target="_blank" rel="noopener" class="modal-proto-link">↗ View Demo</a>` : ''}
+          ${project.video_link && !videoEmbed.includes('<iframe') ? `<a href="${escapeHtml(project.video_link)}" target="_blank" rel="noopener" class="modal-proto-link">▶ Watch Video</a>` : ''}
+        </div>
+        ${videoEmbed.includes('<iframe') ? videoEmbed : ''}
+      ` : ''}
+      ${project.current_team ? `
+        <div style="font-size:13px;color:var(--text);margin-top:8px;"><strong>Current Team:</strong> ${escapeHtml(project.current_team)}</div>
+      ` : ''}
+    </div>
+  ` : '';
+
   const content = `
     <div class="modal-track-tag">
       <span class="stage-tag ${project.track}">${project.track === 'mvp' ? 'MVP' : 'Idea'}</span>
@@ -346,6 +369,8 @@ async function openProjectDetail(projectId) {
         <span>Score: ${project.total_score}/100</span>
       </div>
     ` : ''}
+
+    ${mvpPrototypeSection}
 
     <div class="modal-section">
       <div class="modal-section-label">Problem</div>
@@ -367,16 +392,9 @@ async function openProjectDetail(projectId) {
       <div class="modal-section-text">${escapeHtml(project.mvp_scope)}</div>
     </div>
 
-    ${project.current_team ? `
-    <div class="modal-section">
-      <div class="modal-section-label">Current Team</div>
-      <div class="modal-section-text">${escapeHtml(project.current_team)}</div>
-    </div>
-    ` : ''}
-
     ${scoreBreakdown}
 
-    ${project.demo_link || project.video_link ? `
+    ${project.track !== 'mvp' && (project.demo_link || project.video_link) ? `
       <div class="modal-section">
         <div class="modal-section-label">Links</div>
         ${project.demo_link ? `<a href="${escapeHtml(project.demo_link)}" target="_blank" rel="noopener" class="modal-demo-link">↗ View Demo</a>` : ''}
