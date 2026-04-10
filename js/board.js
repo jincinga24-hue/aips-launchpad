@@ -4,6 +4,7 @@ import { escapeHtml, ROLE_COLORS, IDEA_CRITERIA, MVP_CRITERIA, CRITERIA, CATEGOR
 import { renderTradingCard, openPcModal } from './player-card.js';
 import { isLoggedIn, getUser } from './auth.js';
 import { getMyCard } from './my-card.js';
+import { fireConfetti, showCardFlipReveal } from './effects.js';
 
 // ─── Endorsement helpers ────────────────────────────────────────────────────
 
@@ -481,6 +482,7 @@ async function _joinWithSavedCard(projectId, btnEl) {
     superpower: profile.superpower,
     email:      user.email,
     abilities:  profile.abilities,
+    avatar_url: profile.avatar_url || null,
   };
 
   const { error } = await supabase.from('player_cards').insert(payload);
@@ -498,9 +500,17 @@ async function _joinWithSavedCard(projectId, btnEl) {
   }
 
   closeProjectModal();
-  _showToast('You\'re in! Card submitted successfully.', 'success');
-  // Re-open to show fresh card list
-  setTimeout(() => openProjectDetail(projectId), 400);
+  fireConfetti();
+  showCardFlipReveal({
+    name: profile.name,
+    degree: profile.degree,
+    roles: profile.roles,
+    superpower: profile.superpower,
+    abilities: profile.abilities,
+    avatar_url: profile.avatar_url,
+  });
+  // Re-open to show fresh card list after animation
+  setTimeout(() => openProjectDetail(projectId), 3500);
 }
 
 function _showToast(msg, type = 'success') {

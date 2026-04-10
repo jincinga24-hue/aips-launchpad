@@ -125,6 +125,7 @@ export function showCardFlipReveal(cardData) {
       <div class="card-flip-inner" id="flip-inner">
         <div class="card-flip-front">?</div>
         <div class="card-flip-back" style="padding:14px 12px;text-align:center;">
+          ${cardData.avatar_url ? `<img src="${escapeHtml(cardData.avatar_url)}" style="width:56px;height:56px;border-radius:50%;object-fit:cover;margin:0 auto 8px;display:block;border:2px solid ${color};" />` : ''}
           <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:${color};margin-bottom:8px;">${escapeHtml(primaryRole)}</div>
           <div style="font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;margin-bottom:2px;">${escapeHtml(cardData.name)}</div>
           <div style="font-size:11px;color:var(--text-secondary);margin-bottom:6px;">${escapeHtml(cardData.degree)}</div>
