@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AIPS Logo Export</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+<style>
+  body {
+    margin: 0;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap: 100px;
+    padding: 80px 20px;
+  }
+  .logo-variant { text-align: center; }
+  .logo-variant h3 {
+    font-family: sans-serif;
+    font-size: 12px;
+    color: #bbb;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* Re-use exact splash styles but without animation */
+  .logo-static {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .logo-static .splash-chevron {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    filter: drop-shadow(0 0 12px rgba(45,183,87,0.35));
+  }
+  .logo-static .splash-text {
+    margin-top: 0;
+  }
+  .logo-static .splash-text span {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Subtitle */
+  .logo-sub {
+    font-family: -apple-system, sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #86868b;
+    margin-top: 6px;
+  }
+
+  /* Dark variant */
+  .dark-wrap {
+    background: #1d1d1f;
+    padding: 60px 80px;
+    border-radius: 20px;
+  }
+  .dark-wrap .splash-text span { color: #fff; }
+  .dark-wrap .logo-sub { color: #666; }
+
+  /* Bigger variant */
+  .logo-big .splash-chevron { font-size: 160px; filter: drop-shadow(0 0 24px rgba(45,183,87,0.4)); }
+  .logo-big .splash-text { font-size: 56px; }
+</style>
+</head>
+<body>
+
+<!-- 1. PRIMARY — exact same as website splash -->
+<div class="logo-variant">
+  <h3>Primary (same as website)</h3>
+  <div class="logo-static">
+    <div class="splash-chevron">›</div>
+    <div class="splash-text">
+      <span>A</span><span>I</span><span>P</span><span>S</span>
+    </div>
+  </div>
+</div>
+
+<!-- 2. WITH SUBTITLE -->
+<div class="logo-variant">
+  <h3>With Subtitle</h3>
+  <div class="logo-static">
+    <div class="splash-chevron">›</div>
+    <div class="splash-text">
+      <span>A</span><span>I</span><span>P</span><span>S</span>
+    </div>
+    <div class="logo-sub">AI Prototyping Studio</div>
+  </div>
+</div>
+
+<!-- 3. WITH FULL NAME -->
+<div class="logo-variant">
+  <h3>With Full Name</h3>
+  <div class="logo-static">
+    <div class="splash-chevron">›</div>
+    <div class="splash-text">
+      <span>A</span><span>I</span><span>P</span><span>S</span>
+    </div>
+    <div class="logo-sub">AI Prototyping Studio · University of Melbourne</div>
+  </div>
+</div>
+
+<!-- 4. SCALED UP -->
+<div class="logo-variant">
+  <h3>Large</h3>
+  <div class="logo-static logo-big">
+    <div class="splash-chevron">›</div>
+    <div class="splash-text">
+      <span>A</span><span>I</span><span>P</span><span>S</span>
+    </div>
+    <div class="logo-sub">AI Prototyping Studio</div>
+  </div>
+</div>
+
+<!-- 5. DARK BACKGROUND -->
+<div class="logo-variant">
+  <h3>Dark Background</h3>
+  <div class="dark-wrap">
+    <div class="logo-static">
+      <div class="splash-chevron">›</div>
+      <div class="splash-text">
+        <span>A</span><span>I</span><span>P</span><span>S</span>
+      </div>
+      <div class="logo-sub">AI Prototyping Studio</div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. ICON ONLY -->
+<div class="logo-variant">
+  <h3>Icon Only</h3>
+  <div class="logo-static logo-big">
+    <div class="splash-chevron">›</div>
+  </div>
+</div>
+
+</body>
+</html>
